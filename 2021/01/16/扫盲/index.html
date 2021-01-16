@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-16 21:12" pubdate>
+        2021年1月16日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      30
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            <div class="markdown-body">
+              <h4 id="基金类型"><a href="#基金类型" class="headerlink" title="基金类型"></a>基金类型</h4><p>#####　债券型基金</p>
+<p>债券型基金是指<strong>80%以上</strong>的资产投资于债券的基金。</p>
+<p>债券主要分为政府债券，金融债券，企业债以及可转债，风险依次增大。</p>
+<p>债券型基金，波动率小，稳健，适合防守，稳固后方。</p>
+<p>混合型基金，风格可变，可攻可受，适合当中场，掌握中军。</p>
+<p>股票型、指数型、QDII型，风格激进，适合当前锋，冲锋陷阵。</p>
+<p>1） 货币型基金：主要投资银行货币间市场，风险极低。</p>
+<p>2） 债权型基金：主要投资债权，里面有个分支叫偏债基金可以投资不超过20%的股票。风险偏低</p>
+<p>3） 混合型基金：混合型基金同时投资于股票、债券和货币市场等工具，但投资比例灵活，几乎没有限制。风险和预期收益相对适中。</p>
+<p>4） 股票型基金：80%以上的资产要投资于股票，风险较大</p>
+<p>5） 指数型基金：全部投资股票，也可以理解为一种特殊的股票型基金。</p>
+<p>工具：<strong>天天基金网</strong>，可查看基金的<strong>资产配置</strong>（股票、债券、现金），<strong>投资风格</strong>，都在最下边，基金经理介绍上边。</p>
+<p>#####　股票分类</p>
+<p>１.<strong>根据公司市值的大小，可以把股票分成大盘股/小盘股。</strong></p>
+<p>大盘股风险低，收益也较低，小盘股风险高，收益也较高。</p>
+<p>例：总市值小于200亿定义为小盘股，200-500亿为中盘股，500亿以上是大盘股。</p>
+<p>大盘股的典型代表就是熟知的贵州茅台，总市值2万多亿。</p>
+<p>小盘股大多都在深交所上市，比较典型的有曙光股份，北纬科技等。</p>
+<p>２.<strong>根据成长性，可以把股票分为价值股和成长股</strong>。</p>
+<p>价值股一般属于传统行业，市值较高，赢收<strong>稳定</strong>，比如说可口可乐，五粮液；</p>
+<p>成长股一般是新兴行业，比如人工智能，互联网，同时具备较大的发展<strong>潜力</strong>。</p>
+<p>#####　业绩表现</p>
+<p>主要投资大盘股的基金会跟沪深300指数做对比，主要投资债券的基金会跟中债综合指数做对比。</p>
+<p>基金一段时期的最大跌幅叫做最大回撤，这个数字越低说明该选手的防守能力越强。</p>
+<h4 id="如何选择基金"><a href="#如何选择基金" class="headerlink" title="如何选择基金"></a>如何选择基金</h4><p><strong>１．选择基金类型</strong></p>
+<p><strong>２．查询过往业绩</strong></p>
+<p>​    a、 在同类基金里，选出最近6个月业绩前30名的基金；</p>
+<p>​    b、 在同类基金里，选出最近1年业绩前30名的基金。</p>
+<p>​    c、 在同类基金里，选出最近3年业绩前30名的基金。</p>
+<p>​    c、 在同类基金里，选出最近5年业绩前30名的基金。</p>
+<p>​    e、 在同类基金里，选出成立以来业绩前30名的基金。</p>
+<p><strong>３．选择基金公司</strong></p>
+<p>​    前十名基金公司：1）天弘、2）易方达、3）博时、4）南方、5）华夏、6）汇添富、7）广发、8）工银瑞信、    9）嘉实、10）鹏华。</p>
+<p>​    也有很多小而美的基金公司，例：富国擅长量化投资，交银施罗德擅长投科技领域、成长企业，兴全擅长价值    投资等。</p>
+<p><strong>４．选择基金经理</strong></p>
+<p>​    现任基金经理至少要管理这支基金三年以上，</p>
+<p><strong>５．选择投资风格</strong></p>
+<p>​    大盘股和小盘股、价值股和成长股。</p>
+<p><strong>６．选择三大细节</strong></p>
+<p>​    a、成立时间，最好是选成立5年以上。要观察基金穿越一个牛熊周期的表现。</p>
+<p>​    b、管理规模，30以内太小，100亿以上太大。</p>
+<p>​    c、回撤率，回撤率的意思是从高点买入，在到达最低点时，下跌了多少。最大回撤不要超过30%。在基金净值    走势图里，可以查到回撤率。</p>
+<h5 id="如何选择保守型基金"><a href="#如何选择保守型基金" class="headerlink" title="如何选择保守型基金"></a>如何选择保守型基金</h5><p>1.<strong>选择收益率高的货币基金</strong></p>
+<p>货币型基金<strong>近乎于无风险投资</strong>，因此<strong>收益率的高低</strong>是衡量货币基金的核心。</p>
+<p>２.<strong>选择基金规模中等的基金</strong></p>
+<p>在经济学中有一个叫做“<strong>规模经济</strong>”的概念。意思是说生产的产品越多，平摊到每一个产品的费用就越低。但随着<strong>基金份额过大</strong>，就有可能出现<strong>“规模不经济</strong>”效应。当规模过大时，无形中拉高了成本。</p>
+<p>选择的货币基金份额最好保持在<strong>200亿-1000亿</strong>之间，这样基金经理既有筹码去获得更高的利率，也不至于投资风格太过保守。</p>
+<h5 id="如何选择债券型基金"><a href="#如何选择债券型基金" class="headerlink" title="如何选择债券型基金"></a>如何选择债券型基金</h5><p>1.<strong>债券持仓</strong>：政府债券，金融债券，企业债券，风险和收益依次增大。</p>
+<p>2.<strong>杠杆比例</strong>：有个概念，加杠杆，杠杆比例越高，风险和收益也越高。</p>
+<p>3.<strong>收益率</strong></p>
+<p>4.<strong>回撤率</strong>：回撤率过高的债基已经失去了防守型资产的特性，不建议选择，不要挑选最大回撤<strong>超过10%以上</strong>的债基。</p>
+<h4 id="保守型基金投资时机"><a href="#保守型基金投资时机" class="headerlink" title="保守型基金投资时机"></a>保守型基金投资时机</h4><p>1.<strong>宏观经济数据</strong>：无论是货币型基金还是债券型基金，主要收益都和市场利率相关，当利率上升时，货币型和债券型基金的收益会下降。</p>
+<p>2.<strong>股市表现</strong></p>
+<h4 id="定投"><a href="#定投" class="headerlink" title="定投"></a>定投</h4><h5 id="定投原理"><a href="#定投原理" class="headerlink" title="定投原理"></a>定投原理</h5><p><strong>假如每期投入1000元</strong>，</p>
+<p><strong>买入时</strong>，每期定投金额/该期定投价格 = 该期定投份额，</p>
+<p>每期定投份额累加即为<strong>总份额</strong>，</p>
+<p>1000 * 投入期数 / 总份额 = 平均成本，</p>
+<p><strong>卖出时</strong>，(该期定投价格 - 平均成本) * 总份额 = 收益。</p>
+<h5 id="定投思想"><a href="#定投思想" class="headerlink" title="定投思想"></a>定投思想</h5><p>被动型投资和主动型投资。</p>
+<h6 id="指数基金"><a href="#指数基金" class="headerlink" title="指数基金"></a>指数基金</h6><p>被动投资，简单理解就是投资特定的指数基金，跟着市场走。指数基金就是以特定指数的成分股（沪深300，标普500）为投资标的，投资此类指数基金，就能<strong>复制该指数的表现</strong>。</p>
+<p>Ａ股指数介绍</p>
+<p><strong>1.上证50指数</strong>：从<strong>上海证券交易所</strong>的股票里挑选50支市值最大，流动性好的股票，组成一个组合。例：贵州茅台，伊利股份。**<em>注：道琼指数类似上证50。**</em></p>
+<p><strong>2.沪深300指数</strong>：沪深300指数更加全面一些，相比于上证50，加入了深交所的股票，从<strong>深交所</strong>和<strong>上交所</strong>挑选出市值最大，流动性最好的300支股票。</p>
+<p><strong>3.中证500指数</strong>：将沪深300的公司排除，在剩下的公司当中选择总市值前500的指数组成。例：光线传媒，森马服饰。</p>
+<p><strong>4.创业板指数</strong>：由创业板中最优秀的100家企业组成。创业板是以中小型企业为主，因此主要是成长型企业，容易暴涨暴跌。**<em>注：纳斯达克类似于创业板和科创板。**</em></p>
+<p><strong>5.科创50指数</strong>：由科创板中市值最大的50支股票组成。不稳定性较高。</p>
+<h6 id="指数增强型基金"><a href="#指数增强型基金" class="headerlink" title="指数增强型基金"></a>指数增强型基金</h6><p>基金经理可以通过自己的判断（<strong>主观选股</strong>）或者计算机的计算结果（<strong>量化选股</strong>）来调整指数中各个成分股的比例。</p>
+<p>例：中证500指数包含了500个中型公司，增强型的基金经理可以通过他的判断，多买一些优等公司，少买甚至不买劣等公司。他可能只买了300家公司。</p>
+<h6 id="主动型基金"><a href="#主动型基金" class="headerlink" title="主动型基金"></a>主动型基金</h6><p>完全跟指数没关系，基金经理完全根据自己的判断择时选股，投资主动型基金就等于投资基金经理。</p>
+<p><strong>资产配置，股票持仓，投资风格以及业绩表现</strong>是需要关注的重点。</p>
+<h5 id="如何定投"><a href="#如何定投" class="headerlink" title="如何定投"></a>如何定投</h5><p>1.股市长期走势是向上</p>
+<p>2.长期坚持，中国股市，一个牛熊市周期大概在5-7年。</p>
+<p>3.最基本的要点是要选择<strong>波动率大</strong>的基金（摊薄成本，涨幅）。</p>
+<p><strong>债权投资，货币投资</strong>（固收类投资）为主的基金<strong>波动率比较小</strong>，<strong>股票型，偏股混合型基金适用于定投；债券型，货币型基金不适合定投</strong>。</p>
+<p>1）<strong>不要选择被动型指数基金</strong>！ </p>
+<p>2）<strong>不要选择债券型基金</strong>，要选择波动率大的基金。</p>
+<p>3）选择<strong>主动管理型基金来搭配指数增强型基金</strong>。</p>
+<h4 id="基金组合"><a href="#基金组合" class="headerlink" title="基金组合"></a>基金组合</h4><h5 id="防守、中场、进攻如何选择"><a href="#防守、中场、进攻如何选择" class="headerlink" title="防守、中场、进攻如何选择"></a>防守、中场、进攻如何选择</h5><p><strong>１、防守型基金</strong></p>
+<p>主要选债权型基金，偏债和纯债都是可以的。</p>
+<p><strong>２、中场型基金</strong></p>
+<p>主要是一些价值型投资的混合&amp;股票基金。</p>
+<p>这些基金主要投资一些大盘股、价值股。比如：茅台、中国平安、格力电器这样的公司。另外大盘的一些指数基金，也适合做中场。例：沪深300，上证50指数。</p>
+<p><strong>３、进攻型基金</strong></p>
+<p>创业板指数、科创50指数、中证500指数，就适合做进攻，科技、5G、医疗、新能源这些产业的基金，都适合做进攻型基金。</p>
+<h5 id="如何搭配"><a href="#如何搭配" class="headerlink" title="如何搭配"></a>如何搭配</h5><p>根据个人能力和市场情况：</p>
+<p>防守：中场：进攻</p>
+<p><strong>保守型投资者</strong>：5：3：2，5年下来，平均年化回报，可能在0%-10%之间</p>
+<p><strong>稳健型投资者</strong>：3：4：3，5年下来，平均年化回报，可能在-5%-15%之间，可能会亏损。</p>
+<p><strong>进取型投资者</strong>：2：4：4，5年下来，平均年化回报，可能在-10%-20%之间。</p>
+<h4 id="打新基金"><a href="#打新基金" class="headerlink" title="打新基金"></a>打新基金</h4><p><strong>注意：</strong>具体还是没明白是什么…</p>
+<p>对于全职打新基金还是要注意<strong>资金规模，建议不要超过10亿元，5亿元以下最好</strong>。</p>
+<h4 id="宽基和窄基"><a href="#宽基和窄基" class="headerlink" title="宽基和窄基"></a>宽基和窄基</h4><p>宽基：</p>
+<p>1）含10个或更多个股票； </p>
+<p>2）单个成份股权重不超过30％；</p>
+<p>3）权重最大的5个股票累计权重不超过指数的60％；</p>
+<p>4）成份股平均日交易额超过5000万美元；</p>
+<p>5）包含行业种类要多，要至少有两个一级行业以上，要至少有三个二级行业以上。</p>
+<p>例：汇添富消费行业混合(000083)</p>
+<p>窄基：</p>
+<p>一般持有某种特定行业的基金。</p>
+<p>例：工银前沿医疗，全部持在医疗行业。招商中证白酒指数，全部持在白酒这个二级行业。</p>
+<p>长期效益来看，宽基完胜，短期效益可能会有几只窄基表现比较好，特别是一年以内。</p>
+<h4 id="实战方面看一个基金"><a href="#实战方面看一个基金" class="headerlink" title="实战方面看一个基金"></a>实战方面看一个基金</h4><p>以下以**兴全合润混合(163406)**为例。</p>
+<h5 id="基金公司"><a href="#基金公司" class="headerlink" title="基金公司"></a>基金公司</h5><p>资金规模</p>
+<p><img src="/images/licai/rumen/%E8%B5%84%E9%87%91%E8%A7%84%E6%A8%A1.png" srcset="/img/loading.gif" alt="资金规模"></p>
+<p>资金规模变动</p>
+<p><img src="/images/licai/rumen/%E8%B5%84%E9%87%91%E8%A7%84%E6%A8%A1%E5%8F%98%E5%8A%A8.png" srcset="/img/loading.gif" alt="资金规模变动"></p>
+<h5 id="大致看基金信息"><a href="#大致看基金信息" class="headerlink" title="大致看基金信息"></a>大致看基金信息</h5><p><img src="/images/licai/rumen/%E8%B5%84%E9%87%91%E5%A4%A7%E8%87%B4%E4%BF%A1%E6%81%AF.png" srcset="/img/loading.gif" alt="资金大致信息"></p>
+<ol>
+<li><p>名称看不出基金投资的行业。</p>
+</li>
+<li><p>成立时间，成立各期间的收益率。</p>
+</li>
+<li><p>资金管理规模：超过100亿，规模大，比较信赖，但是灵活度不够高，之前选择基金有说明。</p>
+</li>
+<li><p>基金类型：该基金混合型，配置灵活，中高风险，收益也适中。具体都是股票、债券、现金等的什么组合，可查看资产配置。</p>
+<p><img src="/images/licai/rumen/%E8%B5%84%E4%BA%A7%E9%85%8D%E7%BD%AE.png" srcset="/img/loading.gif" alt="资产配置"></p>
+<p><img src="/images/licai/rumen/%E8%B5%84%E4%BA%A7%E9%85%8D%E7%BD%AE%E6%98%8E%E7%BB%86.png" srcset="/img/loading.gif" alt="资产配置明细"></p>
+</li>
+<li><p>看持仓，该基金投资行业比较分散，但都是龙头企业，宽基。</p>
+<p><img src="/images/licai/rumen/%E6%8C%81%E4%BB%93%E6%AF%94.png" srcset="/img/loading.gif" alt="持仓比"></p>
+</li>
+<li><p>近几个月，仅今年收益。</p>
+</li>
+</ol>
+<h5 id="基金过往表现"><a href="#基金过往表现" class="headerlink" title="基金过往表现"></a>基金过往表现</h5><p>天天基金网产品信息查看涨幅更多信息。</p>
+<p><img src="/images/licai/rumen/%E8%BF%87%E5%BE%80%E4%B8%9A%E7%BB%A9.png" srcset="/img/loading.gif" alt="过往业绩"></p>
+<p>还有重点，查看<strong>最大回撤率</strong>。超过30%有些偏高，之前也有介绍。具体还没有找到地方查看，比如30%回撤率，假如买在了最高点，这个基金最大会让你亏损30%。</p>
+<h5 id="基金经理"><a href="#基金经理" class="headerlink" title="基金经理"></a>基金经理</h5><p>最近一任经理最好超过3年，还要查看任职回报。</p>
+<p><img src="/images/licai/rumen/%E5%9F%BA%E9%87%91%E7%BB%8F%E7%90%86%E4%BF%A1%E6%81%AF.png" srcset="/img/loading.gif" alt="基金经理信息"></p>
+<p>还有该经理的投资风格。风格之前也有说明，该基金比较稳重。</p>
+<p><img src="/images/licai/rumen/%E6%8A%95%E8%B5%84%E9%A3%8E%E6%A0%BC.png" srcset="/img/loading.gif" alt="投资风格"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/16/%E5%A4%8D%E4%B9%A0%E5%AF%B9%E8%AF%9D/">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
