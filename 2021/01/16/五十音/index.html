@@ -1,94 +1,233 @@
+
+
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>五十音 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
   
 
   
-  <title>五十音 | 沐子</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="五十音记忆、音节声调">
-<meta property="og:type" content="article">
-<meta property="og:title" content="五十音">
-<meta property="og:url" content="http://example.com/2021/01/16/%E4%BA%94%E5%8D%81%E9%9F%B3/index.html">
-<meta property="og:site_name" content="沐子">
-<meta property="og:description" content="五十音记忆、音节声调">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-01-16T13:11:56.130Z">
-<meta property="article:modified_time" content="2021-01-16T14:10:35.268Z">
-<meta property="article:author" content="jievhaha">
-<meta name="twitter:card" content="summary">
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
   
-    <link rel="alternate" href="/atom.xml" title="沐子" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
 
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 5.2.0"></head>
 
+
 <body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">沐子</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
         
-          <a class="main-nav-link" href="/">Home</a>
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
         
-      </nav>
-      <nav id="sub-nav">
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
     </div>
   </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-五十音" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/16/%E4%BA%94%E5%8D%81%E9%9F%B3/" class="article-date">
-  <time datetime="2021-01-16T13:11:56.130Z" itemprop="datePublished">2021-01-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="五十音">
+              
+            </span>
+
+            
+              <div class="mt-3">
   
-    <h1 class="article-title" itemprop="name">
-      五十音
-    </h1>
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-16 21:11" pubdate>
+        2021年1月16日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
   
 
-      </header>
+  
     
-    <div class="article-entry" itemprop="articleBody">
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
       
-        <div align="center"><font color="#000" size="5rem">五十音</font></div>
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">五十音</h1>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">五十音</font></div>
 
 <h4 id="五十音记忆"><a href="#五十音记忆" class="headerlink" title="五十音记忆"></a>五十音记忆</h4><h5 id="联想记忆"><a href="#联想记忆" class="headerlink" title="联想记忆"></a>联想记忆</h5><p>（い）理服人（イ）。<br>烟囱（ウ）放烟造成雾（u）霾，导致人弯腰咳嗽（う）。<br>爱（e）上了元（え）首的工（工）作。<br>大力（力）水手握拳（ka）（か）响。<br>在夕阳下（ku）（く）了好久，直到太阳落了山（ク）–和狠人、狼人一个梗。<br>浪客（ke）剑心举着刀（ケ），是名真正的武士（け）。<br>（こ）和（コ）是朝着不同方向张开的大口（ko）。<br>（さ）（サ）（sa）想到了（ki），但是（き）不知道怎么联想。<br>弯曲的（し）溪（shi）流溢满了水（シ）。<br>长着肚腩的人（す）做起了俯卧撑（ス），没有丝（su）毫懈怠。<br>（そ）（ソ）（so）求指点。<br>他（ta）的晚年好比午后的太（た）阳—夕（タ）阳。<br>千（チ）年古（ち）器（chi），或者5.7。<br>刺（tsu）猬慢慢蜷缩（ツ），直到看不见腿（つ）—先藏了两只腿。<br>他太（te）喜欢荡单杠（て）和双杠（テ）了。<br>独角兽（と）从网上淘（to）了一根萝卜（ト）。<br>一个人拿（na）着剑（ナ），骑着马（な）—右半部分一直看着像窝在地上的马，点是马头。<br>一个人用筷子（に ニ）吃到了泥（ni）。<br>（ぬ）（nu）隶又（ヌ）失去了自由。<br>权（ね）利让我对这种事视（ネ）而不见，很无奈（ne）。<br>（の）和（ノ）都是（no），禁止的意思—-有种一个圈一个斜杠，例如禁止停车的感觉。<br>卓别林拄着拐杖（は），走路外八（ハ），让人哈（ha）大笑。<br>他拿着刀（ヒ）切肉，端着酒碗（ひ），很（hi）是惬意。<br>他呼呼（huhu–fufu）地跑过去（ふ）抢猪耳朵（フ）吃—-自己想象一只猪头。<br>（へ）和（ヘ）都是黑（he）色的胡子—-哈哈哈毛利小五郎。<br>不管什么样的马路（ほ）边都种了好（ho）多树木（ホ）—-笔直的路弯曲的路十字路丁字路。<br>少了一只腿（マ）的蚂（ma）蚁（ま）—-圆圈很像蚂蚁屁股。<br>端午有甜米（mi）粽和带有好多木桨（ミ）的龙舟（み）—-姑且看成船。<br>坐在地上的和服姑娘（む）在纺织，她的旁边站了头母（mu）牛（ム）。<br>标着记号（メ）的绵羊（め）咩咩（me）叫—-上边有羊角的感觉，左边羊脸，小羊肖恩，养牧场经常看到牲畜有标记。<br>（も）像长满了毛（モ）的猫（mo）——猫的尾巴很灵活。<br>亚（ya）军也（や ヤ）行—注意和（se せ セ）区分。<br>第2（ユ）有点中（ゆ ）庸（yu）—像2有点勉强，倒是像礼帽，庸谐音。<br>音乐（yo よ）和梳子（ヨ）是歌妓必备—–音谱里的小蝌蚪。<br>眯着眼睛大声说（ラ）辣（ra）椒5（ら）元。<br>分离（ri）的人背对背离开（り リ）。<br>你是个歹（る）徒儿（ル），6陆（ru）—-儿化音，哈哈哈。<br>我从机（れ）构（レ）回来（re）。<br>老（ro）3（ろ）的口（ロ）才真好。<br>挖（wa）土机（わ ワ）—-很像挖土机的机械手臂。<br>我（wo）跨栏（を）就像张开翅膀在飞（ヲ）—-上边一个小人下边栏杆，火影里的中二跑法手臂向后。<br>（ん）是普通的椅子，（ン）是电影院或者礼堂的折叠椅。</p>
 <h5 id="成语记忆（涵盖浊音）"><a href="#成语记忆（涵盖浊音）" class="headerlink" title="成语记忆（涵盖浊音）"></a>成语记忆（涵盖浊音）</h5><table>
@@ -497,130 +636,205 @@
 </tr>
 </tbody></table>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/16/%E4%BA%94%E5%8D%81%E9%9F%B3/" data-id="ckjzshoka0002lzjo7ps4htm7" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2021/01/16/%E5%A4%8D%E4%B9%A0%E8%AF%AD%E6%B3%95/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          语法复习
-        
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/16/%E5%A4%8D%E4%B9%A0%E8%AF%AD%E6%B3%95/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">语法复习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/16/%E6%97%A5%E5%B8%B8%E8%AF%AD%E5%8F%A5%E7%A7%AF%E7%B4%AF/">
+                        <span class="hidden-mobile">日常积累</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
       </div>
-    </a>
-  
-  
-    <a href="/2021/01/16/%E6%97%A5%E5%B8%B8%E8%AF%AD%E5%8F%A5%E7%A7%AF%E7%B4%AF/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">日常积累</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li></ul>
     </div>
-  </div>
-
-
-  
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/01/16/%E7%90%86%E8%B4%A2%E6%8A%95%E8%B5%84%E6%89%AB%E7%9B%B2/">理财投资扫盲</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/16/%E5%A4%8D%E4%B9%A0%E5%AF%B9%E8%AF%9D/">对话复习</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/16/%E5%A4%8D%E4%B9%A0%E8%AF%AD%E6%B3%95/">语法复习</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/16/%E4%BA%94%E5%8D%81%E9%9F%B3/">五十音</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/16/%E6%97%A5%E5%B8%B8%E8%AF%AD%E5%8F%A5%E7%A7%AF%E7%B4%AF/">日常积累</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
-  
-</aside>
-        
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2021 jievhaha<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
   </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
 </footer>
-    </div>
-    <nav id="mobile-nav">
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <script  src="/js/lazyload.js" ></script>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
   
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
 
-
-<script src="/js/script.js"></script>
-
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
 
 
 
-  </div>
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
 </body>
 </html>
