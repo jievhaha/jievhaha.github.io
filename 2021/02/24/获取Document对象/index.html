@@ -1,0 +1,862 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>获取Document对象 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="获取Document对象">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 17:59" pubdate>
+        2021年2月24日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">获取Document对象</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">获取Document对象</font></div>
+
+<p>在 <code>XmlBeanDefinitionReader#doLoadDocument(InputSource inputSource, Resource resource)</code> 方法，中做了两件事情：</p>
+<ul>
+<li>调用 <code>#getValidationModeForResource(Resource resource)</code> 方法，获取指定资源（xml）的<strong>验证模式</strong>。</li>
+<li>调用 <code>DocumentLoader#loadDocument(InputSource inputSource, EntityResolver entityResolver, ErrorHandler errorHandler, int validationMode, boolean namespaceAware)</code> 方法，获取 XML Document 实例。</li>
+</ul>
+<h4 id="DocumentLoader"><a href="#DocumentLoader" class="headerlink" title="DocumentLoader"></a>DocumentLoader</h4><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">DocumentLoader</span> </span>&#123;
+	<span class="hljs-comment">/**</span>
+<span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> inputSource 要加载的文档来源</span>
+<span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> entityResolver 解析文件的解析器</span>
+<span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> errorHandler 处理加载Document对象过程中发生的错误</span>
+<span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> validationMode 验证模式</span>
+<span class="hljs-comment">	 * <span class="hljs-doctag">@param</span> namespaceAware 如果要提供对 XML 名称空间的支持，则需要值为 true 。</span>
+<span class="hljs-comment">	 */</span>
+	<span class="hljs-function">Document <span class="hljs-title">loadDocument</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">			InputSource inputSource, EntityResolver entityResolver,</span></span>
+<span class="hljs-function"><span class="hljs-params">			ErrorHandler errorHandler, <span class="hljs-keyword">int</span> validationMode, <span class="hljs-keyword">boolean</span> namespaceAware)</span></span>
+<span class="hljs-function">			<span class="hljs-keyword">throws</span> Exception</span>;
+&#125;</code></pre>
+
+<h5 id="DefaultDocumentLoader"><a href="#DefaultDocumentLoader" class="headerlink" title="DefaultDocumentLoader"></a>DefaultDocumentLoader</h5><p>该类是DocumentLoader的默认实现类。</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> Document <span class="hljs-title">loadDocument</span><span class="hljs-params">(InputSource inputSource, EntityResolver entityResolver,</span></span>
+<span class="hljs-function"><span class="hljs-params"> ErrorHandler errorHandler, <span class="hljs-keyword">int</span> validationMode, <span class="hljs-keyword">boolean</span> namespaceAware)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    <span class="hljs-comment">// &lt;1&gt; 创建 DocumentBuilderFactory</span>
+    DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
+    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+        logger.trace(<span class="hljs-string">&quot;Using JAXP provider [&quot;</span> + factory.getClass().getName() + <span class="hljs-string">&quot;]&quot;</span>);
+    &#125;
+    <span class="hljs-comment">// &lt;2&gt; 创建 DocumentBuilder</span>
+    DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);
+    <span class="hljs-comment">// &lt;3&gt; 解析 XML InputSource 返回 Document 对象</span>
+    <span class="hljs-keyword">return</span> builder.parse(inputSource);
+&#125;</code></pre>
+
+<p>第一步：调用<code>createDocumentBuilderFactory()</code>创建<code>DocumentBuilderFactory</code>对象。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String SCHEMA_LANGUAGE_ATTRIBUTE = <span class="hljs-string">&quot;http://java.sun.com/xml/jaxp/properties/schemaLanguage&quot;</span>;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String XSD_SCHEMA_LANGUAGE = <span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">protected</span> DocumentBuilderFactory <span class="hljs-title">createDocumentBuilderFactory</span><span class="hljs-params">(<span class="hljs-keyword">int</span> validationMode, <span class="hljs-keyword">boolean</span> namespaceAware)</span> <span class="hljs-keyword">throws</span> ParserConfigurationException </span>&#123;
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    <span class="hljs-comment">// 设置命名空间支持</span>
+    factory.setNamespaceAware(namespaceAware);
+    <span class="hljs-keyword">if</span> (validationMode != XmlValidationModeDetector.VALIDATION_NONE) &#123;
+        <span class="hljs-comment">// 开启校验</span>
+        factory.setValidating(<span class="hljs-keyword">true</span>);
+        <span class="hljs-comment">// XSD 模式下，设置 factory 的属性</span>
+        <span class="hljs-keyword">if</span> (validationMode == XmlValidationModeDetector.VALIDATION_XSD) &#123;
+            <span class="hljs-comment">// XSD 模式下，强制设置命名空间支持</span>
+            factory.setNamespaceAware(<span class="hljs-keyword">true</span>);
+            <span class="hljs-keyword">try</span> &#123;
+                <span class="hljs-comment">// 设置 SCHEMA_LANGUAGE_ATTRIBUTE</span>
+                factory.setAttribute(SCHEMA_LANGUAGE_ATTRIBUTE, XSD_SCHEMA_LANGUAGE);
+            &#125;
+            <span class="hljs-keyword">catch</span> (IllegalArgumentException ex) &#123;
+                ParserConfigurationException pcex = <span class="hljs-keyword">new</span> ParserConfigurationException(
+                    <span class="hljs-string">&quot;Unable to validate using XSD: Your JAXP provider [&quot;</span> + factory +
+                    <span class="hljs-string">&quot;] does not support XML Schema. Are you running on Java 1.4 with Apache Crimson? &quot;</span> +
+                    <span class="hljs-string">&quot;Upgrade to Apache Xerces (or Java 1.5) for full XSD support.&quot;</span>);
+                pcex.initCause(ex);
+                <span class="hljs-keyword">throw</span> pcex;
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> factory;
+&#125;</code></pre>
+
+<p>第二步：调用<code>createDocumentBuilder()</code>创建<code>DocumentBuilder</code>对象。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> DocumentBuilder <span class="hljs-title">createDocumentBuilder</span><span class="hljs-params">(DocumentBuilderFactory factory,<span class="hljs-meta">@Nullable</span> EntityResolver entityResolver, <span class="hljs-meta">@Nullable</span> ErrorHandler errorHandler)</span><span class="hljs-keyword">throws</span> ParserConfigurationException </span>&#123;
+    <span class="hljs-comment">// 创建 DocumentBuilder 对象</span>
+    DocumentBuilder docBuilder = factory.newDocumentBuilder();
+    <span class="hljs-keyword">if</span> (entityResolver != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// &lt;x&gt; 设置 EntityResolver 属性</span>
+        docBuilder.setEntityResolver(entityResolver);
+    &#125;
+    <span class="hljs-keyword">if</span> (errorHandler != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// 设置 ErrorHandler 属性</span>
+        docBuilder.setErrorHandler(errorHandler);
+    &#125;
+    <span class="hljs-keyword">return</span> docBuilder;
+&#125;</code></pre>
+
+<p>设置 DocumentBuilder 的 <strong>EntityResolver</strong> 属性。详解在**<em>EntityResolver**</em>段。</p>
+<p>第三步：调用<code>DocumentBuilder#parse(InputSource)</code> 方法，解析 InputSource ，返回 Document 对象。</p>
+<h4 id="EntityResolver"><a href="#EntityResolver" class="headerlink" title="EntityResolver"></a>EntityResolver</h4><p>在<code>XmlBeanDefinitionReader.doLoadDocument()</code>中通过 <code>DocumentLoader.loadDocument()</code> 方法来获取 Document 对象时，有一个方法参数 <code>entityResolver</code> 。该参数是通过 <code>XmlBeanDefinitionReader.getEntityResolver()</code> 方法来获取的。<strong>该类在于如何获取验证文件，从而验证用户写的 XML 是否通过验证。</strong></p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> EntityResolver <span class="hljs-title">getEntityResolver</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.entityResolver == <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// Determine default EntityResolver to use.</span>
+        ResourceLoader resourceLoader = getResourceLoader();
+        <span class="hljs-keyword">if</span> (resourceLoader != <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-comment">//如果 ResourceLoader不为null，则根据指定的ResourceLoader创建一个ResourceEntityResolver对象。</span>
+            <span class="hljs-keyword">this</span>.entityResolver = <span class="hljs-keyword">new</span> ResourceEntityResolver(resourceLoader);
+        &#125;
+        <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">//如果 ResourceLoader为null，则创建一个DelegatingEntityResolver对象。该Resolver委托给默认的BeansDtdResolver和PluggableSchemaResolver。</span>
+            <span class="hljs-keyword">this</span>.entityResolver = <span class="hljs-keyword">new</span> DelegatingEntityResolver(getBeanClassLoader());
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.entityResolver;
+&#125;</code></pre>
+
+<h5 id="EntityResoler子类"><a href="#EntityResoler子类" class="headerlink" title="EntityResoler子类"></a>EntityResoler子类</h5><p>上边获取EntityResolver的方法共涉及到４个EntityResolver的子类。</p>
+<h6 id="ResourceEntityResolver"><a href="#ResourceEntityResolver" class="headerlink" title="ResourceEntityResolver"></a>ResourceEntityResolver</h6><p><code>EntityResolverorg.springframework.beans.factory.xml.ResourceEntityResolver</code>继承自<code>DelegatingEntityResolver</code>，通过 ResourceLoader 来解析实体的引用。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ResourceLoader resourceLoader;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ResourceEntityResolver</span><span class="hljs-params">(ResourceLoader resourceLoader)</span> </span>&#123;
+    <span class="hljs-keyword">super</span>(resourceLoader.getClassLoader());<span class="hljs-comment">//下边紧接就是父类的构造器</span>
+    <span class="hljs-keyword">this</span>.resourceLoader = resourceLoader;
+&#125;</code></pre>
+
+<h6 id="DelegatingEntityResolver"><a href="#DelegatingEntityResolver" class="headerlink" title="DelegatingEntityResolver"></a>DelegatingEntityResolver</h6><p><code>org.springframework.beans.factory.xml.DelegatingEntityResolver</code>实现了<code>EntityResolver</code>接口，分别代理了<code>BeansDtdResolver</code>和<code>PluggableSchemaResolver</code>。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DTD_SUFFIX = <span class="hljs-string">&quot;.dtd&quot;</span>;
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String XSD_SUFFIX = <span class="hljs-string">&quot;.xsd&quot;</span>;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> EntityResolver dtdResolver;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> EntityResolver schemaResolver;
+
+<span class="hljs-comment">// 默认</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">DelegatingEntityResolver</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> ClassLoader classLoader)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.dtdResolver = <span class="hljs-keyword">new</span> BeansDtdResolver();
+    <span class="hljs-keyword">this</span>.schemaResolver = <span class="hljs-keyword">new</span> PluggableSchemaResolver(classLoader);
+&#125;
+
+<span class="hljs-comment">// 自定义</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">DelegatingEntityResolver</span><span class="hljs-params">(EntityResolver dtdResolver, EntityResolver schemaResolver)</span> </span>&#123;
+    Assert.notNull(dtdResolver, <span class="hljs-string">&quot;&#x27;dtdResolver&#x27; is required&quot;</span>);
+    Assert.notNull(schemaResolver, <span class="hljs-string">&quot;&#x27;schemaResolver&#x27; is required&quot;</span>);
+    <span class="hljs-keyword">this</span>.dtdResolver = dtdResolver;
+    <span class="hljs-keyword">this</span>.schemaResolver = schemaResolver;
+&#125;</code></pre>
+
+<h6 id="BeansDtdResolver"><a href="#BeansDtdResolver" class="headerlink" title="BeansDtdResolver"></a>BeansDtdResolver</h6><p><code>org.springframework.beans.factory.xml.BeansDtdResolver</code>实现了<code>EntityResolver</code>接口，Spring-Bean.dtd解码器，用来从<strong>classpath</strong>或者<strong>jar文件</strong>中加载 dtd ，源码注释有。</p>
+<pre><code class="hljs java"><span class="hljs-comment">//&quot;/org/springframework/beans/factory/xml/spring-beans.dtd&quot;</span>
+<span class="hljs-comment">//&quot;https://www.springframework.org/dtd/spring-beans-2.0.dtd&quot;</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DTD_EXTENSION = <span class="hljs-string">&quot;.dtd&quot;</span>;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DTD_NAME = <span class="hljs-string">&quot;spring-beans&quot;</span>;</code></pre>
+
+<h6 id="PluggableSchemaResolver"><a href="#PluggableSchemaResolver" class="headerlink" title="PluggableSchemaResolver"></a>PluggableSchemaResolver</h6><p><code>org.springframework.beans.factory.xml.PluggableSchemaResolver</code>实现了<code>EntityResolver</code>接口，读取 classpath 下的所有 <code>META-INF/spring.schemas</code> 成一个 namespaceURI 与 Schema 文件地址的 map 。</p>
+<h5 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h5><p>EntityResolver 的作用是项目本身就可以提供一个如何寻找 DTD 声明的方法，即由程序来实现寻找 DTD 声明的过程。比如我们将 DTD 文件放到项目中某处，在实现时直接将此文档读取并返回给 SAX 即可。这样就避免了通过网络来寻找相应的声明。－－《Spring 源码深度解析》</p>
+<p><code>org.xml.sax.EntityResolver</code> 接口：</p>
+<pre><code class="hljs java"><span class="hljs-comment">/* </span>
+<span class="hljs-comment"> *@param 被引用的外部实体的公共标识符，如果没有提供，则返回 null 。.</span>
+<span class="hljs-comment"> *@param 被引用的外部实体的系统标识符。</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> InputSource <span class="hljs-title">resolveEntity</span> <span class="hljs-params">(String publicId,String systemId)</span><span class="hljs-keyword">throws</span> SAXException, IOException</span>;</code></pre>
+
+<p>这两个参数的实际内容和具体的验证模式的如下：</p>
+<ul>
+<li><p>XSD验证模式：</p>
+<ul>
+<li>publicId ：null</li>
+<li>systemId：<a target="_blank" rel="noopener" href="http://www.springframework.org/schema/beans/spring-beans.xsd">http://www.springframework.org/schema/beans/spring-beans.xsd</a></li>
+</ul>
+</li>
+<li><p>DTD验证模式：</p>
+<ul>
+<li>publicId：-//SPRING//DTD BEAN 2.0//EN</li>
+<li>systemId：<a target="_blank" rel="noopener" href="http://www.springframework.org/dtd/spring-beans.dtd">http://www.springframework.org/dtd/spring-beans.dtd</a></li>
+</ul>
+</li>
+</ul>
+<h5 id="ResourceEntityResolver-1"><a href="#ResourceEntityResolver-1" class="headerlink" title="ResourceEntityResolver"></a>ResourceEntityResolver</h5><p>ResourceEntityResolver的解析过程：</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> InputSource <span class="hljs-title">resolveEntity</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String publicId, <span class="hljs-meta">@Nullable</span> String systemId)</span></span>
+<span class="hljs-function">    <span class="hljs-keyword">throws</span> SAXException, IOException </span>&#123;
+    <span class="hljs-comment">// 调用父类的方法，进行解析</span>
+    InputSource source = <span class="hljs-keyword">super</span>.resolveEntity(publicId, systemId);
+    <span class="hljs-comment">// 解析失败，resourceLoader 进行解析</span>
+    <span class="hljs-keyword">if</span> (source == <span class="hljs-keyword">null</span> &amp;&amp; systemId != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// 获得 resourcePath ，即 Resource 资源地址</span>
+        String resourcePath = <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">try</span> &#123;
+            String decodedSystemId = URLDecoder.decode(systemId, <span class="hljs-string">&quot;UTF-8&quot;</span>);<span class="hljs-comment">// 使用 UTF-8 ，解码 systemId</span>
+            String givenUrl = <span class="hljs-keyword">new</span> URL(decodedSystemId).toString();<span class="hljs-comment">// 转换成 URL 字符串</span>
+            <span class="hljs-comment">// 解析文件资源的相对路径（相对于系统根路径）</span>
+            String systemRootUrl = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;&quot;</span>).toURI().toURL().toString();
+            <span class="hljs-comment">// Try relative to resource base if currently in system root.</span>
+            <span class="hljs-keyword">if</span> (givenUrl.startsWith(systemRootUrl)) &#123;
+                resourcePath = givenUrl.substring(systemRootUrl.length());
+            &#125;
+        &#125;
+        <span class="hljs-keyword">catch</span> (Exception ex) &#123;
+            <span class="hljs-comment">// Typically a MalformedURLException or AccessControlException.</span>
+            <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+                logger.debug(<span class="hljs-string">&quot;Could not resolve XML entity [&quot;</span> + systemId + <span class="hljs-string">&quot;] against system root URL&quot;</span>, ex);
+            &#125;
+            <span class="hljs-comment">// No URL (or no resolvable URL) -&gt; try relative to resource base.</span>
+            resourcePath = systemId;
+        &#125;
+        <span class="hljs-keyword">if</span> (resourcePath != <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                logger.trace(<span class="hljs-string">&quot;Trying to locate XML entity [&quot;</span> + systemId + <span class="hljs-string">&quot;] as resource [&quot;</span> + resourcePath + <span class="hljs-string">&quot;]&quot;</span>);
+            &#125;
+            <span class="hljs-comment">// 获得 Resource 资源</span>
+            Resource resource = <span class="hljs-keyword">this</span>.resourceLoader.getResource(resourcePath);
+            <span class="hljs-comment">// 创建 InputSource 对象</span>
+            source = <span class="hljs-keyword">new</span> InputSource(resource.getInputStream());
+            <span class="hljs-comment">// 设置 publicId 和 systemId 属性</span>
+            source.setPublicId(publicId);
+            source.setSystemId(systemId);
+            <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+                logger.debug(<span class="hljs-string">&quot;Found XML entity [&quot;</span> + systemId + <span class="hljs-string">&quot;]: &quot;</span> + resource);
+            &#125;
+        &#125;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (systemId.endsWith(DTD_SUFFIX) || systemId.endsWith(XSD_SUFFIX)) &#123;
+            <span class="hljs-comment">//通过https进行外部dtdxsd查找</span>
+            String url = systemId;
+            <span class="hljs-keyword">if</span> (url.startsWith(<span class="hljs-string">&quot;http:&quot;</span>)) &#123;
+                url = <span class="hljs-string">&quot;https:&quot;</span> + url.substring(<span class="hljs-number">5</span>);
+            &#125;
+            <span class="hljs-keyword">try</span> &#123;
+                source = <span class="hljs-keyword">new</span> InputSource(<span class="hljs-keyword">new</span> URL(url).openStream());
+                source.setPublicId(publicId);
+                source.setSystemId(systemId);
+            &#125;
+            <span class="hljs-keyword">catch</span> (IOException ex) &#123;
+                <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+                    logger.debug(<span class="hljs-string">&quot;Could not resolve XML entity [&quot;</span> + systemId + <span class="hljs-string">&quot;] through URL [&quot;</span> + url + <span class="hljs-string">&quot;]&quot;</span>, ex);
+                &#125;
+                <span class="hljs-comment">//退回到解析器的默认行为</span>
+                source = <span class="hljs-keyword">null</span>;
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> source;
+&#125;</code></pre>
+
+<ul>
+<li>首先，调用<strong>父类</strong>的方法，进行解析。</li>
+<li>如果失败，使用 <code>resourceLoader</code> ，尝试读取 <code>systemId</code> 对应的 Resource 资源。</li>
+</ul>
+<h5 id="DelegatingEntityResolver-1"><a href="#DelegatingEntityResolver-1" class="headerlink" title="DelegatingEntityResolver"></a>DelegatingEntityResolver</h5><p><code>DelegatingEntityResolver</code>的解析过程：</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> InputSource <span class="hljs-title">resolveEntity</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String publicId, <span class="hljs-meta">@Nullable</span> String systemId)</span></span>
+<span class="hljs-function">    <span class="hljs-keyword">throws</span> SAXException, IOException </span>&#123;
+    <span class="hljs-keyword">if</span> (systemId != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// DTD 模式，使用BeansDtdResolver进行解析</span>
+        <span class="hljs-keyword">if</span> (systemId.endsWith(DTD_SUFFIX)) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.dtdResolver.resolveEntity(publicId, systemId);
+        &#125;
+        <span class="hljs-comment">// XSD 模式，使用PluggableSchemaResolver进行解析</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (systemId.endsWith(XSD_SUFFIX)) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.schemaResolver.resolveEntity(publicId, systemId);
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+&#125;</code></pre>
+
+<h5 id="BeansDtdResolver-1"><a href="#BeansDtdResolver-1" class="headerlink" title="BeansDtdResolver"></a>BeansDtdResolver</h5><p><code>BeansDtdResolver</code>的解析过程：</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> InputSource <span class="hljs-title">resolveEntity</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String publicId, <span class="hljs-meta">@Nullable</span> String systemId)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+        logger.trace(<span class="hljs-string">&quot;Trying to resolve XML entity with public ID [&quot;</span> + publicId +
+                     <span class="hljs-string">&quot;] and system ID [&quot;</span> + systemId + <span class="hljs-string">&quot;]&quot;</span>);
+    &#125;
+    <span class="hljs-comment">// 以 .dtd 结尾</span>
+    <span class="hljs-keyword">if</span> (systemId != <span class="hljs-keyword">null</span> &amp;&amp; systemId.endsWith(DTD_EXTENSION)) &#123;
+        <span class="hljs-comment">// 获取最后一个 / 的位置</span>
+        <span class="hljs-keyword">int</span> lastPathSeparator = systemId.lastIndexOf(<span class="hljs-string">&#x27;/&#x27;</span>);
+        <span class="hljs-comment">// 获取 spring-beans 的位置</span>
+        <span class="hljs-keyword">int</span> dtdNameStart = systemId.indexOf(DTD_NAME, lastPathSeparator);
+        <span class="hljs-keyword">if</span> (dtdNameStart != -<span class="hljs-number">1</span>) &#123;
+            String dtdFile = DTD_NAME + DTD_EXTENSION;
+            <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                logger.trace(<span class="hljs-string">&quot;Trying to locate [&quot;</span> + dtdFile + <span class="hljs-string">&quot;] in Spring jar on classpath&quot;</span>);
+            &#125;
+            <span class="hljs-keyword">try</span> &#123;
+                <span class="hljs-comment">// 创建 ClassPathResource 对象</span>
+                Resource resource = <span class="hljs-keyword">new</span> ClassPathResource(dtdFile, getClass());
+                <span class="hljs-comment">// 创建 InputSource 对象，并设置 publicId、systemId 属性</span>
+                InputSource source = <span class="hljs-keyword">new</span> InputSource(resource.getInputStream());
+                source.setPublicId(publicId);
+                source.setSystemId(systemId);
+                <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                    logger.trace(<span class="hljs-string">&quot;Found beans DTD [&quot;</span> + systemId + <span class="hljs-string">&quot;] in classpath: &quot;</span> + dtdFile);
+                &#125;
+                <span class="hljs-keyword">return</span> source;
+            &#125;
+            <span class="hljs-keyword">catch</span> (FileNotFoundException ex) &#123;
+                <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+                    logger.debug(<span class="hljs-string">&quot;Could not resolve beans DTD [&quot;</span> + systemId + <span class="hljs-string">&quot;]: not found in classpath&quot;</span>, ex);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-comment">// 使用默认行为，从网络上下载</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+&#125;</code></pre>
+
+<h5 id="PluggableSchemaResolver-1"><a href="#PluggableSchemaResolver-1" class="headerlink" title="PluggableSchemaResolver"></a>PluggableSchemaResolver</h5><p><code>PluggableSchemaResolver</code>解析过程：</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> InputSource <span class="hljs-title">resolveEntity</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String publicId, <span class="hljs-meta">@Nullable</span> String systemId)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+        logger.trace(<span class="hljs-string">&quot;Trying to resolve XML entity with public id [&quot;</span> + publicId +
+                     <span class="hljs-string">&quot;] and system id [&quot;</span> + systemId + <span class="hljs-string">&quot;]&quot;</span>);
+    &#125;
+    <span class="hljs-keyword">if</span> (systemId != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// 获得 Resource 所在位置</span>
+        String resourceLocation = getSchemaMappings().get(systemId);
+        <span class="hljs-keyword">if</span> (resourceLocation == <span class="hljs-keyword">null</span> &amp;&amp; systemId.startsWith(<span class="hljs-string">&quot;https:&quot;</span>)) &#123;
+            <span class="hljs-comment">// Retrieve canonical http schema mapping even for https declaration</span>
+            resourceLocation = getSchemaMappings().get(<span class="hljs-string">&quot;http:&quot;</span> + systemId.substring(<span class="hljs-number">6</span>));
+        &#125;
+        <span class="hljs-keyword">if</span> (resourceLocation != <span class="hljs-keyword">null</span>) &#123;
+            Resource resource = <span class="hljs-keyword">new</span> ClassPathResource(resourceLocation, <span class="hljs-keyword">this</span>.classLoader);
+            <span class="hljs-keyword">try</span> &#123;
+                <span class="hljs-comment">// 创建 InputSource 对象，并设置 publicId、systemId 属性</span>
+                InputSource source = <span class="hljs-keyword">new</span> InputSource(resource.getInputStream());
+                source.setPublicId(publicId);
+                source.setSystemId(systemId);
+                <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                    logger.trace(<span class="hljs-string">&quot;Found XML schema [&quot;</span> + systemId + <span class="hljs-string">&quot;] in classpath: &quot;</span> + resourceLocation);
+                &#125;
+                <span class="hljs-keyword">return</span> source;
+            &#125;
+            <span class="hljs-keyword">catch</span> (FileNotFoundException ex) &#123;
+                <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+                    logger.debug(<span class="hljs-string">&quot;Could not find XML schema [&quot;</span> + systemId + <span class="hljs-string">&quot;]: &quot;</span> + resource, ex);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+&#125;</code></pre>
+
+<p><code>getSchemaMappings()</code></p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> Map&lt;String, String&gt; <span class="hljs-title">getSchemaMappings</span><span class="hljs-params">()</span> </span>&#123;
+    Map&lt;String, String&gt; schemaMappings = <span class="hljs-keyword">this</span>.schemaMappings;
+    <span class="hljs-comment">// 双重检查锁，实现 schemaMappings 单例</span>
+    <span class="hljs-keyword">if</span> (schemaMappings == <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>) &#123;
+            schemaMappings = <span class="hljs-keyword">this</span>.schemaMappings;
+            <span class="hljs-keyword">if</span> (schemaMappings == <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                    logger.trace(<span class="hljs-string">&quot;Loading schema mappings from [&quot;</span> + <span class="hljs-keyword">this</span>.schemaMappingsLocation + <span class="hljs-string">&quot;]&quot;</span>);
+                &#125;
+                <span class="hljs-keyword">try</span> &#123;
+                    <span class="hljs-comment">// 以 Properties 的方式，读取 schemaMappingsLocation</span>
+                    Properties mappings =
+                        PropertiesLoaderUtils.loadAllProperties(<span class="hljs-keyword">this</span>.schemaMappingsLocation, <span class="hljs-keyword">this</span>.classLoader);
+                    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                        logger.trace(<span class="hljs-string">&quot;Loaded schema mappings: &quot;</span> + mappings);
+                    &#125;
+                    <span class="hljs-comment">// 将 mappings 初始化到 schemaMappings 中</span>
+                    schemaMappings = <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;&gt;(mappings.size());
+                    CollectionUtils.mergePropertiesIntoMap(mappings, schemaMappings);
+                    <span class="hljs-keyword">this</span>.schemaMappings = schemaMappings;
+                &#125;
+                <span class="hljs-keyword">catch</span> (IOException ex) &#123;
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(
+                        <span class="hljs-string">&quot;Unable to load schema mappings from location [&quot;</span> + <span class="hljs-keyword">this</span>.schemaMappingsLocation + <span class="hljs-string">&quot;]&quot;</span>, ex);
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> schemaMappings;
+&#125;</code></pre>
+
+<p>例：部分映射</p>
+<pre><code class="hljs java"><span class="hljs-string">&quot;http://www.springframework.org/schema/context/spring-context-3.2.xsd&quot;</span>-&gt;<span class="hljs-string">&quot;org/springframework/context/config/spring-context.xsd&quot;</span>
+<span class="hljs-string">&quot;http://www.springframework.org/schema/cache/spring-cache-4.3.xsd&quot;</span>-&gt;<span class="hljs-string">&quot;org/springframework/cache/config/spring-cache.xsd&quot;</span></code></pre>
+
+<h5 id="自定义EntityResolver"><a href="#自定义EntityResolver" class="headerlink" title="自定义EntityResolver"></a>自定义EntityResolver</h5><p>如果 SAX 应用程序需要实现自定义处理外部实体，则必须实现EntityResolver接口，并使用 <code>#setEntityResolver(EntityResolver entityResolver)</code> 方法，向 SAX 驱动器注册一个 EntityResolver 实例。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E6%B3%A8%E5%86%8CBeanDefinitions/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">注册BeanDefinitions</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E8%8E%B7%E5%8F%96%E9%AA%8C%E8%AF%81%E6%A8%A1%E5%9E%8B/">
+                        <span class="hidden-mobile">获取验证模型</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

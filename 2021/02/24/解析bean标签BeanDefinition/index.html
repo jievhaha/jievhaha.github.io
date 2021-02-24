@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>解析bean标签BeanDefinition - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="解析bean标签BeanDefinition">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 18:00" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">解析bean标签BeanDefinition</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">解析bean标签BeanDefinition</font></div>
+
+<p>bean标签的所有子元素在BeanDefinition对象中都有与之相对应的属性。</p>
+<h4 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h4><p>BeanDefinition是一个接口，描述了Bean实例的定义。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">BeanDefinition</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AttributeAccessor</span>, <span class="hljs-title">BeanMetadataElement</span> </span>&#123;
+	String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;
+	String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
+
+	<span class="hljs-keyword">int</span> ROLE_APPLICATION = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">int</span> ROLE_SUPPORT = <span class="hljs-number">1</span>;
+	<span class="hljs-keyword">int</span> ROLE_INFRASTRUCTURE = <span class="hljs-number">2</span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setParentName</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String parentName)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getParentName</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setBeanClassName</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String beanClassName)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getBeanClassName</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setScope</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String scope)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getScope</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setLazyInit</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> lazyInit)</span></span>;
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isLazyInit</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setDependsOn</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String... dependsOn)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	String[] getDependsOn();
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setAutowireCandidate</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> autowireCandidate)</span></span>;
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAutowireCandidate</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setPrimary</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> primary)</span></span>;
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isPrimary</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setFactoryBeanName</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String factoryBeanName)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getFactoryBeanName</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setFactoryMethodName</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String factoryMethodName)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getFactoryMethodName</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function">ConstructorArgumentValues <span class="hljs-title">getConstructorArgumentValues</span><span class="hljs-params">()</span></span>;
+	<span class="hljs-function"><span class="hljs-keyword">default</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasConstructorArgumentValues</span><span class="hljs-params">()</span> </span>&#123;
+		<span class="hljs-keyword">return</span> !getConstructorArgumentValues().isEmpty();
+	&#125;
+
+	<span class="hljs-function">MutablePropertyValues <span class="hljs-title">getPropertyValues</span><span class="hljs-params">()</span></span>;
+	<span class="hljs-function"><span class="hljs-keyword">default</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasPropertyValues</span><span class="hljs-params">()</span> </span>&#123;
+		<span class="hljs-keyword">return</span> !getPropertyValues().isEmpty();
+	&#125;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setInitMethodName</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String initMethodName)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getInitMethodName</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setDestroyMethodName</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String destroyMethodName)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getDestroyMethodName</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setRole</span><span class="hljs-params">(<span class="hljs-keyword">int</span> role)</span></span>;
+	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getRole</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setDescription</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String description)</span></span>;
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getDescription</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function">ResolvableType <span class="hljs-title">getResolvableType</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isSingleton</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isPrototype</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAbstract</span><span class="hljs-params">()</span></span>;
+
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">String <span class="hljs-title">getResourceDescription</span><span class="hljs-params">()</span></span>;
+    
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">BeanDefinition <span class="hljs-title">getOriginatingBeanDefinition</span><span class="hljs-params">()</span></span>;
+
+&#125;</code></pre>
+
+<p><img src="/images/spring_IOC/beandefinition%E7%88%B6%E7%B1%BB%E5%AD%90%E7%B1%BB%E7%BB%93%E6%9E%84%E5%9B%BE.png" srcset="/img/loading.gif" alt="beandefinition父类子类结构图"></p>
+<h5 id="BeanDefinition的父类"><a href="#BeanDefinition的父类" class="headerlink" title="BeanDefinition的父类"></a>BeanDefinition的父类</h5><p>如上可以看出<code>BeanDefinition</code>继承自<code>AttributeAccessor</code>和<code>BeanMetadataElement</code>。</p>
+<h6 id="AttributeAccessor"><a href="#AttributeAccessor" class="headerlink" title="AttributeAccessor"></a>AttributeAccessor</h6><p>该接口定义了与其他对象的元数据进行连接和访问的约定，即对属性的获取、设置、删除：</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">AttributeAccessor</span> </span>&#123;
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setAttribute</span><span class="hljs-params">(String name, <span class="hljs-meta">@Nullable</span> Object value)</span></span>;
+
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">Object <span class="hljs-title">getAttribute</span><span class="hljs-params">(String name)</span></span>;
+
+	<span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span>
+	<span class="hljs-keyword">default</span> &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">computeAttribute</span><span class="hljs-params">(String name, Function&lt;String, T&gt; computeFunction)</span> </span>&#123;
+		Assert.notNull(name, <span class="hljs-string">&quot;Name must not be null&quot;</span>);
+		Assert.notNull(computeFunction, <span class="hljs-string">&quot;Compute function must not be null&quot;</span>);
+		Object value = getAttribute(name);
+		<span class="hljs-keyword">if</span> (value == <span class="hljs-keyword">null</span>) &#123;
+			value = computeFunction.apply(name);
+			Assert.state(value != <span class="hljs-keyword">null</span>,
+					() -&gt; String.format(<span class="hljs-string">&quot;Compute function must not return null for attribute named &#x27;%s&#x27;&quot;</span>, name));
+			setAttribute(name, value);
+		&#125;
+		<span class="hljs-keyword">return</span> (T) value;
+	&#125;
+
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function">Object <span class="hljs-title">removeAttribute</span><span class="hljs-params">(String name)</span></span>;
+
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">hasAttribute</span><span class="hljs-params">(String name)</span></span>;
+
+	String[] attributeNames();
+
+&#125;</code></pre>
+
+<h6 id="BeanMetadataElement"><a href="#BeanMetadataElement" class="headerlink" title="BeanMetadataElement"></a>BeanMetadataElement</h6><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">BeanMetadataElement</span> </span>&#123;
+    <span class="hljs-comment">//返回此元数据元素的配置源，可能为null</span>
+	<span class="hljs-meta">@Nullable</span>
+	<span class="hljs-function"><span class="hljs-keyword">default</span> Object <span class="hljs-title">getSource</span><span class="hljs-params">()</span> </span>&#123;
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+	&#125;
+&#125;</code></pre>
+
+<h5 id="BeanDefinition的子类"><a href="#BeanDefinition的子类" class="headerlink" title="BeanDefinition的子类"></a>BeanDefinition的子类</h5><p>三个常用的子类：</p>
+<p><code>package org.springframework.beans.factory.support.RootBeanDefinition</code></p>
+<p><code>package org.springframework.beans.factory.support.ChildBeanDefinition</code></p>
+<p><code>package org.springframework.beans.factory.support.RootBeanDefinition</code></p>
+<p>如果配置文件中定义了父 <code>bean</code> 和 子 <code>bean</code> ，则父 <code>bean</code> 用 RootBeanDefinition 表示，子 <code>bean</code> 用 ChildBeanDefinition 表示，而没有父 <code>bean</code> 的就使用RootBeanDefinition 表示。</p>
+<h4 id="解析bean标签"><a href="#解析bean标签" class="headerlink" title="解析bean标签"></a>解析bean标签</h4><h5 id="createBeanDefinition-方法"><a href="#createBeanDefinition-方法" class="headerlink" title="createBeanDefinition()方法"></a><code>createBeanDefinition()</code>方法</h5><p>在 <code>BeanDefinitionParserDelegate.parseBeanDefinitionElement(Element ele, String beanName, BeanDefinition containingBean)</code> 方法中进行<code>bean</code>标签解析的过程中，内部调用了该方法。</p>
+<p><code>BeanDefinitionParserDelegate.createBeanDefinition()</code>返回<code>AbstractBeanDefinition</code>对象，方法内部调用的<code>BeanDefinitionReaderUtils.createBeanDefinition()</code>：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> AbstractBeanDefinition <span class="hljs-title">createBeanDefinition</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String className, <span class="hljs-meta">@Nullable</span> String parentName)</span></span>
+<span class="hljs-function">    <span class="hljs-keyword">throws</span> ClassNotFoundException </span>&#123;
+
+    <span class="hljs-keyword">return</span> BeanDefinitionReaderUtils.createBeanDefinition(
+        parentName, className, <span class="hljs-keyword">this</span>.readerContext.getBeanClassLoader());
+&#125;
+
+<span class="hljs-comment">//该方法主要是，创建 GenericBeanDefinition 对象，并设置 parentName、className、beanClass 属性。</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> AbstractBeanDefinition <span class="hljs-title">createBeanDefinition</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String parentName, <span class="hljs-meta">@Nullable</span> String className, <span class="hljs-meta">@Nullable</span> ClassLoader classLoader)</span> <span class="hljs-keyword">throws</span> ClassNotFoundException </span>&#123;
+
+    <span class="hljs-comment">// 创建 GenericBeanDefinition 对象</span>
+    GenericBeanDefinition bd = <span class="hljs-keyword">new</span> GenericBeanDefinition();
+    <span class="hljs-comment">// 设置 parentName</span>
+    bd.setParentName(parentName);
+    <span class="hljs-keyword">if</span> (className != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">if</span> (classLoader != <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-comment">// 如果有给定的classLoader，设置 beanClass</span>
+            bd.setBeanClass(ClassUtils.forName(className, classLoader));
+        &#125;
+        <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// 设置 beanClassName</span>
+            bd.setBeanClassName(className);
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> bd;
+&#125;</code></pre>
+
+<h5 id="parseBeanDefinitionAttributes-方法"><a href="#parseBeanDefinitionAttributes-方法" class="headerlink" title="parseBeanDefinitionAttributes()方法"></a><code>parseBeanDefinitionAttributes()</code>方法</h5><p>执行完<code>createBeanDefinition()</code>方法返回<code>AbstractBeanDefinition</code>对象后，进而执行该方法进行bean的属性设置。</p>
+<p><code>BeanDefinitionParserDelegate.parseBeanDefinitionAttributes()</code>：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> AbstractBeanDefinition <span class="hljs-title">parseBeanDefinitionAttributes</span><span class="hljs-params">(Element ele, String beanName,</span></span>
+<span class="hljs-function"><span class="hljs-params"><span class="hljs-meta">@Nullable</span> BeanDefinition containingBean, AbstractBeanDefinition bd)</span> </span>&#123;
+    <span class="hljs-comment">// 解析 scope 属性</span>
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(SINGLETON_ATTRIBUTE)) &#123;
+        error(<span class="hljs-string">&quot;Old 1.x &#x27;singleton&#x27; attribute in use - upgrade to &#x27;scope&#x27; declaration&quot;</span>, ele);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ele.hasAttribute(SCOPE_ATTRIBUTE)) &#123;
+        bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (containingBean != <span class="hljs-keyword">null</span>) &#123;
+        bd.setScope(containingBean.getScope());
+    &#125;
+
+    <span class="hljs-comment">// 解析 abstract 属性</span>
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) &#123;
+        bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
+    &#125;
+
+    <span class="hljs-comment">// 解析 lazy-init 属性</span>
+    String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);
+    <span class="hljs-keyword">if</span> (isDefaultValue(lazyInit)) &#123;
+        lazyInit = <span class="hljs-keyword">this</span>.defaults.getLazyInit();
+    &#125;
+    bd.setLazyInit(TRUE_VALUE.equals(lazyInit));
+
+    <span class="hljs-comment">// 解析 autowire 属性</span>
+    String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);
+    bd.setAutowireMode(getAutowireMode(autowire));
+
+    <span class="hljs-comment">// 解析 depends-on 属性</span>
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE)) &#123;
+        String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
+        bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
+    &#125;
+
+    <span class="hljs-comment">// 解析 autowire-candidate 属性</span>
+    String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);
+    <span class="hljs-keyword">if</span> (isDefaultValue(autowireCandidate)) &#123;
+        String candidatePattern = <span class="hljs-keyword">this</span>.defaults.getAutowireCandidates();
+        <span class="hljs-keyword">if</span> (candidatePattern != <span class="hljs-keyword">null</span>) &#123;
+            String[] patterns = StringUtils.commaDelimitedListToStringArray(candidatePattern);
+            bd.setAutowireCandidate(PatternMatchUtils.simpleMatch(patterns, beanName));
+        &#125;
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
+    &#125;
+
+    <span class="hljs-comment">// 解析 primary 标签</span>
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(PRIMARY_ATTRIBUTE)) &#123;
+        bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));
+    &#125;
+
+    <span class="hljs-comment">// 解析 init-method 属性</span>
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) &#123;
+        String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE);
+        bd.setInitMethodName(initMethodName);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.defaults.getInitMethod() != <span class="hljs-keyword">null</span>) &#123;
+        bd.setInitMethodName(<span class="hljs-keyword">this</span>.defaults.getInitMethod());
+        bd.setEnforceInitMethod(<span class="hljs-keyword">false</span>);
+    &#125;
+
+    <span class="hljs-comment">// 解析 destroy-method 属性</span>
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) &#123;
+        String destroyMethodName = ele.getAttribute(DESTROY_METHOD_ATTRIBUTE);
+        bd.setDestroyMethodName(destroyMethodName);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.defaults.getDestroyMethod() != <span class="hljs-keyword">null</span>) &#123;
+        bd.setDestroyMethodName(<span class="hljs-keyword">this</span>.defaults.getDestroyMethod());
+        bd.setEnforceDestroyMethod(<span class="hljs-keyword">false</span>);
+    &#125;
+
+    <span class="hljs-comment">// 解析 factory-method 属性</span>
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) &#123;
+        bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));
+    &#125;
+    <span class="hljs-keyword">if</span> (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) &#123;
+        bd.setFactoryBeanName(ele.getAttribute(FACTORY_BEAN_ATTRIBUTE));
+    &#125;
+
+    <span class="hljs-keyword">return</span> bd;
+&#125;</code></pre>
+
+<h4 id="BeanDefinition解析的整体流程"><a href="#BeanDefinition解析的整体流程" class="headerlink" title="BeanDefinition解析的整体流程"></a>BeanDefinition解析的整体流程</h4><p>下边四篇进行具体分析。</p>
+<p>解析 BeanDefinition 的<strong>入口在DefaultBeanDefinitionDocumentReader的<code>.parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate)</code> 方法</strong>。该方法会根据命令空间来判断标签是<strong>默认标签</strong>还是<strong>自定义标签</strong>，其中：</p>
+<ul>
+<li>默认标签，由 <code>parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate)</code> 方法来实现</li>
+<li>自定义标签，由 BeanDefinitionParserDelegate 的 <code>parseCustomElement(Element ele, @Nullable BeanDefinition containingBd)</code> 方法来实现。</li>
+</ul>
+<p>在默认标签解析中，会根据标签名称的不同进行 <code>import</code>、<code>alias</code>、<code>bean</code>、<code>beans</code> 四大标签进行处理。其中 <code>bean</code> 标签的解析为核心，它由 <code>processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate)</code> 方法实现。</p>
+<p><code>processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate)</code> 方法，开始进入解析核心工作，分为三步：</p>
+<ol>
+<li>解析默认标签的<strong>默认</strong>标签：<code>BeanDefinitionParserDelegate.parseBeanDefinitionElement(Element ele, ...)</code> 方法。该方法会依次解析 <code>bean</code> 标签的属性、各个子元素，解析完成后返回一个 GenericBeanDefinition 实例对象。</li>
+<li>解析默认标签下的<strong>自定义</strong>标签：<code>BeanDefinitionParserDelegate.decorateBeanDefinitionIfRequired(Element ele, BeanDefinitionHolder definitionHolder)</code> 方法。</li>
+<li>注册解析的 BeanDefinition：<code>BeanDefinitionReaderUtils#registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)</code> 方法。</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E8%A7%A3%E6%9E%90bean%E6%A0%87%E7%AD%BE%E5%AD%90%E5%85%83%E7%B4%A0%E4%B8%80/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">解析bean标签子元素一</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E5%BC%80%E5%90%AF%E8%A7%A3%E6%9E%90%E8%BF%9B%E7%A8%8B/">
+                        <span class="hidden-mobile">bean标签的解析准备</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
