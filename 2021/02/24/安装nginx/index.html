@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="jievhaha">
   <meta name="keywords" content="">
-  <title>IoC 之自定义类型转换器 - 沐子</title>
+  <title>nginx安装 - 沐子</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="IoC 之自定义类型转换器">
+            <span class="h2" id="subtitle" title="nginx安装">
               
             </span>
 
@@ -172,7 +172,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-02-24 21:58" pubdate>
+      <time datetime="2021-02-24 22:39" pubdate>
         2021年2月24日 晚上
       </time>
     </span>
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      541 字
+      832 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      10
        分钟
     </span>
   
@@ -224,7 +224,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">IoC 之自定义类型转换器</h1>
+            <h1 style="display: none">nginx安装</h1>
             
               <p class="note note-info">
                 
@@ -233,63 +233,68 @@
               </p>
             
             <div class="markdown-body">
-              <div align="center"><font color="#000" size="5rem">IoC 之自定义类型转换器</font></div>
+              <div align="center"><font color="#000" size="5rem">nginx安装</font></div>
 
-<p>ConversionService 是 Spring 类型转换器体系中的核心接口，它定义了是否可以完成转换（<code>canConvert(...)</code>） 与类型转换（<code>convert(...)</code>） 两类接口方法。</p>
-<p>ConversionService 有三个子类，每个子类针对不同的类型转换：</p>
-<ul>
-<li>Converter&lt;S,T&gt;: 将 S 类型对象转为 T 类型对象。</li>
-<li>GenericConverter: 会根据源类对象及目标类对象所在的宿主类中的上下文信息进行类型转换。</li>
-<li>ConverterFactory: 将相同系列多个 “同质” Converter 封装在一起。如果希望将一种类型的对象转换为另一种类型及其子类的对象(例如将 String 转换为 Number 及 Number 子类(Integer、Long、Double 等)对象)可使用该转换器工厂类。</li>
-</ul>
-<h4 id="ConversionServiceFactoryBean"><a href="#ConversionServiceFactoryBean" class="headerlink" title="ConversionServiceFactoryBean"></a><code>ConversionServiceFactoryBean</code></h4><p>如何自定义类型转换器：</p>
-<ol>
-<li>实现 Converter / GenericConverter / ConverterFactory 接口</li>
-<li>将该类注册到 ConversionServiceFactoryBean 中。</li>
-</ol>
-<p>ConversionServiceFactoryBean 实现了 InitializingBean 接口实现 <code>afterPropertiesSet()</code> 方法，之前分析了在 Bean 实例化 Bean 阶段，Spring 容器会检查当前 Bean 是否实现了 InitializingBean 接口，如果是则执行相应的初始化方法：</p>
-<pre><code class="hljs java"><span class="hljs-comment">// ConversionServiceFactoryBean.java</span>
-
-<span class="hljs-meta">@Override</span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">afterPropertiesSet</span><span class="hljs-params">()</span> </span>&#123;
-    <span class="hljs-comment">// 创建 DefaultConversionService 对象</span>
-    <span class="hljs-keyword">this</span>.conversionService = createConversionService();
-    <span class="hljs-comment">// 注册到 ConversionServiceFactory 中</span>
-    ConversionServiceFactory.registerConverters(<span class="hljs-keyword">this</span>.converters, <span class="hljs-keyword">this</span>.conversionService);
-&#125;</code></pre>
-
-<p>首先调用 <code>createConversionService()</code> 方法，初始化 <code>conversionService</code>：</p>
-<pre><code class="hljs java"><span class="hljs-comment">// ConversionServiceFactoryBean.java</span>
-
-<span class="hljs-function"><span class="hljs-keyword">protected</span> GenericConversionService <span class="hljs-title">createConversionService</span><span class="hljs-params">()</span> </span>&#123;
-	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefaultConversionService();
-&#125;</code></pre>
-
-<p>然后调用 <code>ConversionServiceFactory.registerConverters(Set converters, ConverterRegistry registry)</code> 方法，将定义的 <code>converters</code> 注入到类型转换体系中：</p>
-<pre><code class="hljs java"><span class="hljs-comment">// ConverterRegistry.java</span>
-
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">registerConverters</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Set&lt;?&gt; converters, ConverterRegistry registry)</span> </span>&#123;
-	<span class="hljs-keyword">if</span> (converters != <span class="hljs-keyword">null</span>) &#123;
-	    <span class="hljs-comment">// 遍历 converters 数组，逐个注解</span>
-		<span class="hljs-keyword">for</span> (Object converter : converters) &#123;
-			<span class="hljs-keyword">if</span> (converter <span class="hljs-keyword">instanceof</span> GenericConverter) &#123;
-				registry.addConverter((GenericConverter) converter);
-			&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (converter <span class="hljs-keyword">instanceof</span> Converter&lt;?, ?&gt;) &#123;
-				registry.addConverter((Converter&lt;?, ?&gt;) converter);
-			&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (converter <span class="hljs-keyword">instanceof</span> ConverterFactory&lt;?, ?&gt;) &#123;
-				registry.addConverterFactory((ConverterFactory&lt;?, ?&gt;) converter);
-			&#125; <span class="hljs-keyword">else</span> &#123;
-				<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;Each converter object must implement one of the &quot;</span> +
-						<span class="hljs-string">&quot;Converter, ConverterFactory, or GenericConverter interfaces&quot;</span>);
-			&#125;
-		&#125;
-	&#125;
-&#125;</code></pre>
-
-<ul>
-<li>ConverterRegistry 是一个 Converter 注册器，他定义了一系列注册方法。</li>
-<li>通过调用 ConverterRegistry 的 <code>addConverter(...)</code> 方法将转换器注册到容器中。所以在我们使用 Spring 容器的时候，Spring 将会自动识别出 IOC 容器中注册的 ConversionService 并且在 Bean 属性注入阶段使用自定义的转换器完成属性的转换了。</li>
-</ul>
+<p>安装nginx之前要保证各种依赖已经安装完成。<br>看自己想安装在哪个目录，我所有软件安装在<code>/home/muzili/Documents/apps/</code>下。</p>
+<h4 id="安装pcre"><a href="#安装pcre" class="headerlink" title="安装pcre"></a>安装<code>pcre</code></h4><h5 id="获取pcre压缩包"><a href="#获取pcre压缩包" class="headerlink" title="获取pcre压缩包"></a>获取pcre压缩包</h5><pre><code class="hljs shell">wget http://downloads.sourceforge.net/project/pcre/pcre/8.37/pcre-8.37.tar.gz</code></pre>
+<p>这样可能会比较慢，最好自己copy下载地址其他地方下载然后上传到相应位置。</p>
+<h5 id="解压文件"><a href="#解压文件" class="headerlink" title="解压文件"></a>解压文件</h5><pre><code class="hljs shell">tar -zxvf pcre-8.37.tar.gz</code></pre>
+<h5 id="进入解压后目录，执行-configure"><a href="#进入解压后目录，执行-configure" class="headerlink" title="进入解压后目录，执行./configure"></a>进入解压后目录，执行<code>./configure</code></h5><pre><code class="hljs shell">cd pcre-8.37
+./configure</code></pre>
+<p>最后可能会提示：</p>
+<pre><code class="hljs shell">configure: error: You need a C++ compiler for C++ support</code></pre>
+<p>那就安装依赖重新执行<code>./configure</code></p>
+<pre><code class="hljs shell">sudo yum install -y gcc gcc-c++</code></pre>
+<p>执行成功会提示：</p>
+<pre><code class="hljs shell">pcre-8.37 configuration summary:
+    Install prefix .................. : /usr/local
+    C preprocessor .................. : gcc -E
+    C compiler ...................... : gcc
+    C++ preprocessor ................ : g++ -E
+    C++ compiler .................... : g++
+    Linker .......................... : /usr/bin/ld -m elf_x86_64
+    省略...</code></pre>
+<h5 id="执行make-amp-make-install进行编译安装"><a href="#执行make-amp-make-install进行编译安装" class="headerlink" title="执行make &amp; make install进行编译安装"></a>执行<code>make &amp; make install</code>进行编译安装</h5><pre><code class="hljs shelll">make &amp; make install</code></pre>
+<h5 id="查看是否安装成功"><a href="#查看是否安装成功" class="headerlink" title="查看是否安装成功"></a>查看是否安装成功</h5><pre><code class="hljs shell">pcre-config --version
+返回：8.37（版本号）</code></pre>
+<h4 id="安装编译工具及库文件"><a href="#安装编译工具及库文件" class="headerlink" title="安装编译工具及库文件"></a>安装编译工具及库文件</h4><pre><code class="hljs shell">sudo yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel</code></pre>
+<h4 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h4><h5 id="下载nginx压缩包"><a href="#下载nginx压缩包" class="headerlink" title="下载nginx压缩包"></a>下载nginx压缩包</h5><pre><code class="hljs shell">wget http://nginx.org/download/nginx-1.12.2.tar.gz</code></pre>
+<h5 id="解压文件-1"><a href="#解压文件-1" class="headerlink" title="解压文件"></a>解压文件</h5><pre><code class="hljs shell">tar -xzvf nginx-1.12.2.tar.gz</code></pre>
+<h5 id="进入解压后目录，执行-configure-1"><a href="#进入解压后目录，执行-configure-1" class="headerlink" title="进入解压后目录，执行./configure"></a>进入解压后目录，执行<code>./configure</code></h5><pre><code class="hljs shell">cd nginx-1.12.2
+./configure</code></pre>
+<h5 id="执行make-amp-make-install进行编译安装-1"><a href="#执行make-amp-make-install进行编译安装-1" class="headerlink" title="执行make &amp; make install进行编译安装"></a>执行<code>make &amp; make install</code>进行编译安装</h5><pre><code class="hljs shelll">make &amp; make install</code></pre>
+<p>安装成功后会在<code>/usr/local/</code>下多个<code>nginx</code>目录（如果执行<code>./configure</code>没有配置参数的话默认是这个目录）</p>
+<h5 id="进入usr-local-nginx-sbin启动nginx"><a href="#进入usr-local-nginx-sbin启动nginx" class="headerlink" title="进入usr/local/nginx/sbin启动nginx"></a>进入<code>usr/local/nginx/sbin</code>启动nginx</h5><pre><code class="hljs shell">sudo ./nginx</code></pre>
+<p>因为默认端口号是80，好像nginx端口号小于1024需要root权限，不然会报</p>
+<pre><code class="hljs shell">nginx: [emerg] bind() to 0.0.0.0:80 failed (13: Permission denied)</code></pre>
+<p>大于1024的需要查看防火墙是否开放端口，没有的话需要开放端口即可</p>
+<h5 id="启动成功后浏览器输入nginx服务器IP"><a href="#启动成功后浏览器输入nginx服务器IP" class="headerlink" title="启动成功后浏览器输入nginx服务器IP"></a>启动成功后浏览器输入nginx服务器IP</h5><p>假如服务启动成功，但是访问失败，可能还是nginx端口未开放，手动开放重启防火墙和服务即可。</p>
+<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">（查看开放的端口）</span>
+sudo firewall-cmd --list-ports 
+<span class="hljs-meta">#</span><span class="bash">开放80端口</span>
+sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
+<span class="hljs-meta">#</span><span class="bash">重启防火墙</span>
+sudo firewall-cmd --reload</code></pre>
+<p>访问成功可看到：</p>
+<pre><code class="hljs shell">Welcome to nginx!
+省略...</code></pre>
+<h4 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h4><p>因为执行命令都要切入<code>/usr/local/nginx/sbin</code>目录才能执行命令，为了方便，直接配置到全局环境变量中。</p>
+<pre><code class="hljs shell">sudo vim /etc/profile
+<span class="hljs-meta">#</span><span class="bash">加入如下内容（因为之前自己配了java的，故在后边补加）</span>
+export PATH=$JAVA_HOME/bin:$PATH:/usr/local/nginx/sbin
+<span class="hljs-meta">#</span><span class="bash">或者之前没配过其他的，直接</span>
+export PATH=/usr/local/nginx/sbin
+<span class="hljs-meta">#</span><span class="bash">重新加载使其生效</span>
+source /etc/profile</code></pre>
+<p>然后就可以在任意地方使用<code>nginx</code>命令了，不知道什么原因默认低于1024的端口报没有权限，切到<code>root</code>用户或者<code>sudo nginx</code>还是会报找不到nginx命令。<br>所以建议修改nginx默认端口（我改的1025）。<br>假如修改了环境变量之前服务已经启动，直接执行<code>nginx</code>会提示</p>
+<pre><code class="hljs shell">nginx: [emerg] bind() to 0.0.0.0:1025 failed (98: Address already in use)</code></pre>
+<p>或者执行<code>nginx -s reload</code>没返回</p>
+<pre><code class="hljs shell">[muzili@jiev ~]$ nginx -s reload
+[muzili@jiev ~]$</code></pre>
+<p>说明配置成功，可以任意地方执行<code>nginx</code>命令了。</p>
+<p>以上是单机版。<br>假如为了做到高可用，那除了按照以上多几台nginx服务器外，还需要额外安装<code>keepalived</code></p>
+<pre><code class="hljs shell">yum install -y keepalived</code></pre>
+<p>安装成功后会在<code>/etc</code>目录生成<code>keepalived</code>目录。</p>
 
             </div>
             <hr>
@@ -301,9 +306,7 @@
                     
                       <a class="hover-with-bg" href="/categories/java/">java</a>
                     
-                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
-                    
-                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                      <a class="hover-with-bg" href="/categories/java/nginx/">nginx</a>
                     
                   </div>
                 
@@ -311,7 +314,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                      <a class="hover-with-bg" href="/tags/nginx/">nginx</a>
                     
                   </div>
                 
@@ -324,9 +327,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/02/24/%E5%AE%89%E8%A3%85nginx/">
+                      <a href="/2021/02/24/nginx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">nginx安装</span>
+                        <span class="hidden-mobile">nginx常用命令</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -334,8 +337,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/02/24/IoC%20%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20Bean%20%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E4%BD%93%E7%B3%BB/">
-                        <span class="hidden-mobile">IoC 之深入分析 Bean 的类型转换体系</span>
+                      <a href="/2021/02/24/IoC%20%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8/">
+                        <span class="hidden-mobile">IoC 之自定义类型转换器</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

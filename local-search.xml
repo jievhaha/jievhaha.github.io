@@ -4,6 +4,114 @@
   
   
   <entry>
+    <title>nginx动静分离</title>
+    <link href="/2021/02/24/nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/"/>
+    <url>/2021/02/24/nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/</url>
+    
+    <content type="html"><![CDATA[<div align="center"><font color="#000" size="5rem">nginx动静分离</font></div><p>动静分离指的是把动态和静态请求分开，不能简单地理解为动态页面和静态页面物理层面的分开，可以理解为nginx处理静态页面，tomcat处理动态页面。<br>动静分离的实现目前大致分为两种：</p><ol><li>纯粹的把静态文件独立成单独的域名，放在独立的服务器上（主流方案）。</li><li>动静态文件混合发布，通过nginx分开。<br>通过<code>location</code>指定不同的后缀名实现不同的请求转发，通过<code>expires</code>参数设置浏览器缓存过期时间，减少与服务器之间的请求和流量。</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+      <category>nginx</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>nginx</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>nginx负载均衡</title>
+    <link href="/2021/02/24/nginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"/>
+    <url>/2021/02/24/nginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
+    
+    <content type="html"><![CDATA[<div align="center"><font color="#000" size="5rem">nginx负载均衡</font></div><p>重点配置</p><h4 id="http根节点添加upstream节点"><a href="#http根节点添加upstream节点" class="headerlink" title="http根节点添加upstream节点"></a><code>http</code>根节点添加<code>upstream</code>节点</h4><pre><code class="hljs shell">upstream myserver(自己命名)&#123;    server IP:端口；server IP:端口；...&#125;</code></pre><h4 id="修改http根节点下server节点参数"><a href="#修改http根节点下server节点参数" class="headerlink" title="修改http根节点下server节点参数"></a>修改<code>http</code>根节点下<code>server</code>节点参数</h4><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">服务器IP和端口号</span><span class="hljs-meta">#</span><span class="bash">端口号默认</span>server_name serverIP；<span class="hljs-meta">#</span><span class="bash">映射http根节点配置的upstream节点</span>location / &#123;    proxy_pass http://myserver;&#125;</code></pre><h4 id="nginx分配服务器策略"><a href="#nginx分配服务器策略" class="headerlink" title="nginx分配服务器策略"></a>nginx分配服务器策略</h4><h5 id="轮询（默认的）"><a href="#轮询（默认的）" class="headerlink" title="轮询（默认的）"></a>轮询（默认的）</h5><p>每个请求按照时间顺序逐一分配到不同的服务器，如果服务器down掉，自动剔除。</p><h5 id="weight（权重）"><a href="#weight（权重）" class="headerlink" title="weight（权重）"></a>weight（权重）</h5><p>weight代表权重，默认为1，权重越高被分配的客户端越多</p><pre><code class="hljs shell">upstream myserver(自己命名)&#123;    server IP:端口 weight=num；server IP:端口 weight=num；...&#125;</code></pre><h5 id="ip-hash"><a href="#ip-hash" class="headerlink" title="ip_hash"></a>ip_hash</h5><p>每个请求按访问ip的hash结果分配，这样每个客户端固定访问一个服务器，可以解决session问题。</p><pre><code class="hljs shell">upstream myserver(自己命名)&#123;    ip_hash;    server IP:端口；server IP:端口；...&#125;</code></pre><h5 id="fair（第三方）"><a href="#fair（第三方）" class="headerlink" title="fair（第三方）"></a>fair（第三方）</h5><p>按服务器的响应时间来分配请求，响应时间短优先分配。</p><pre><code class="hljs shell">upstream myserver(自己命名)&#123;    fair;    server IP:端口；server IP:端口；...&#125;</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+      <category>nginx</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>nginx</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>nginx常用命令</title>
+    <link href="/2021/02/24/nginx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <url>/2021/02/24/nginx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    
+    <content type="html"><![CDATA[<div align="center"><font color="#000" size="5rem">nginx常用命令</font></div><p>之前已经配置了环境变量（参考安装部分末尾配置），所以可以任意地方使用<code>nginx</code>命令，否则切入nginx安装目录下使用（默认/usr/local/nginx/sbin/）。</p><h4 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h4><h5 id="查看版本号"><a href="#查看版本号" class="headerlink" title="查看版本号"></a>查看版本号</h5><pre><code class="hljs shell">nginx -v<span class="hljs-meta">#</span><span class="bash">返回结果</span>nginx version: nginx/1.12.2</code></pre><h5 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h5><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">直接输入以下回车</span>nginx</code></pre><h5 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h5><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">直接输入以下回车</span>nginx -s stop</code></pre><h5 id="重新加载nginx，重新加载配置文件"><a href="#重新加载nginx，重新加载配置文件" class="headerlink" title="重新加载nginx，重新加载配置文件"></a>重新加载nginx，重新加载配置文件</h5><pre><code class="hljs shell">nginx -s reload</code></pre><h4 id="未配置环境变量"><a href="#未配置环境变量" class="headerlink" title="未配置环境变量"></a>未配置环境变量</h4><h5 id="查看版本号-1"><a href="#查看版本号-1" class="headerlink" title="查看版本号"></a>查看版本号</h5><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">未配置环境变量</span>./nginx -v<span class="hljs-meta">#</span><span class="bash">返回结果</span>nginx version: nginx/1.12.2</code></pre><h5 id="启动-1"><a href="#启动-1" class="headerlink" title="启动"></a>启动</h5><pre><code class="hljs shell">./nginx</code></pre><h5 id="停止-1"><a href="#停止-1" class="headerlink" title="停止"></a>停止</h5><pre><code class="hljs shell">./nginx -s stop</code></pre><p>可能会提示：</p><pre><code class="hljs shell">nginx: [error] open() &quot;/usr/local/nginx/logs/nginx.pid&quot; failed (2: No such file or directory)</code></pre><p>需要使用nginx -c的参数指定nginx.conf文件的位置，执行如下命令解决：</p><pre><code class="hljs shell">/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf</code></pre><h5 id="重新加载nginx"><a href="#重新加载nginx" class="headerlink" title="重新加载nginx"></a>重新加载nginx</h5><pre><code class="hljs shell">./nginx -s reload</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+      <category>nginx</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>nginx</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>nginx安装</title>
+    <link href="/2021/02/24/%E5%AE%89%E8%A3%85nginx/"/>
+    <url>/2021/02/24/%E5%AE%89%E8%A3%85nginx/</url>
+    
+    <content type="html"><![CDATA[<div align="center"><font color="#000" size="5rem">nginx安装</font></div><p>安装nginx之前要保证各种依赖已经安装完成。<br>看自己想安装在哪个目录，我所有软件安装在<code>/home/muzili/Documents/apps/</code>下。</p><h4 id="安装pcre"><a href="#安装pcre" class="headerlink" title="安装pcre"></a>安装<code>pcre</code></h4><h5 id="获取pcre压缩包"><a href="#获取pcre压缩包" class="headerlink" title="获取pcre压缩包"></a>获取pcre压缩包</h5><pre><code class="hljs shell">wget http://downloads.sourceforge.net/project/pcre/pcre/8.37/pcre-8.37.tar.gz</code></pre><p>这样可能会比较慢，最好自己copy下载地址其他地方下载然后上传到相应位置。</p><h5 id="解压文件"><a href="#解压文件" class="headerlink" title="解压文件"></a>解压文件</h5><pre><code class="hljs shell">tar -zxvf pcre-8.37.tar.gz</code></pre><h5 id="进入解压后目录，执行-configure"><a href="#进入解压后目录，执行-configure" class="headerlink" title="进入解压后目录，执行./configure"></a>进入解压后目录，执行<code>./configure</code></h5><pre><code class="hljs shell">cd pcre-8.37./configure</code></pre><p>最后可能会提示：</p><pre><code class="hljs shell">configure: error: You need a C++ compiler for C++ support</code></pre><p>那就安装依赖重新执行<code>./configure</code></p><pre><code class="hljs shell">sudo yum install -y gcc gcc-c++</code></pre><p>执行成功会提示：</p><pre><code class="hljs shell">pcre-8.37 configuration summary:    Install prefix .................. : /usr/local    C preprocessor .................. : gcc -E    C compiler ...................... : gcc    C++ preprocessor ................ : g++ -E    C++ compiler .................... : g++    Linker .......................... : /usr/bin/ld -m elf_x86_64    省略...</code></pre><h5 id="执行make-amp-make-install进行编译安装"><a href="#执行make-amp-make-install进行编译安装" class="headerlink" title="执行make &amp; make install进行编译安装"></a>执行<code>make &amp; make install</code>进行编译安装</h5><pre><code class="hljs shelll">make &amp; make install</code></pre><h5 id="查看是否安装成功"><a href="#查看是否安装成功" class="headerlink" title="查看是否安装成功"></a>查看是否安装成功</h5><pre><code class="hljs shell">pcre-config --version返回：8.37（版本号）</code></pre><h4 id="安装编译工具及库文件"><a href="#安装编译工具及库文件" class="headerlink" title="安装编译工具及库文件"></a>安装编译工具及库文件</h4><pre><code class="hljs shell">sudo yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel</code></pre><h4 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h4><h5 id="下载nginx压缩包"><a href="#下载nginx压缩包" class="headerlink" title="下载nginx压缩包"></a>下载nginx压缩包</h5><pre><code class="hljs shell">wget http://nginx.org/download/nginx-1.12.2.tar.gz</code></pre><h5 id="解压文件-1"><a href="#解压文件-1" class="headerlink" title="解压文件"></a>解压文件</h5><pre><code class="hljs shell">tar -xzvf nginx-1.12.2.tar.gz</code></pre><h5 id="进入解压后目录，执行-configure-1"><a href="#进入解压后目录，执行-configure-1" class="headerlink" title="进入解压后目录，执行./configure"></a>进入解压后目录，执行<code>./configure</code></h5><pre><code class="hljs shell">cd nginx-1.12.2./configure</code></pre><h5 id="执行make-amp-make-install进行编译安装-1"><a href="#执行make-amp-make-install进行编译安装-1" class="headerlink" title="执行make &amp; make install进行编译安装"></a>执行<code>make &amp; make install</code>进行编译安装</h5><pre><code class="hljs shelll">make &amp; make install</code></pre><p>安装成功后会在<code>/usr/local/</code>下多个<code>nginx</code>目录（如果执行<code>./configure</code>没有配置参数的话默认是这个目录）</p><h5 id="进入usr-local-nginx-sbin启动nginx"><a href="#进入usr-local-nginx-sbin启动nginx" class="headerlink" title="进入usr/local/nginx/sbin启动nginx"></a>进入<code>usr/local/nginx/sbin</code>启动nginx</h5><pre><code class="hljs shell">sudo ./nginx</code></pre><p>因为默认端口号是80，好像nginx端口号小于1024需要root权限，不然会报</p><pre><code class="hljs shell">nginx: [emerg] bind() to 0.0.0.0:80 failed (13: Permission denied)</code></pre><p>大于1024的需要查看防火墙是否开放端口，没有的话需要开放端口即可</p><h5 id="启动成功后浏览器输入nginx服务器IP"><a href="#启动成功后浏览器输入nginx服务器IP" class="headerlink" title="启动成功后浏览器输入nginx服务器IP"></a>启动成功后浏览器输入nginx服务器IP</h5><p>假如服务启动成功，但是访问失败，可能还是nginx端口未开放，手动开放重启防火墙和服务即可。</p><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">（查看开放的端口）</span>sudo firewall-cmd --list-ports <span class="hljs-meta">#</span><span class="bash">开放80端口</span>sudo firewall-cmd --zone=public --add-port=80/tcp --permanent<span class="hljs-meta">#</span><span class="bash">重启防火墙</span>sudo firewall-cmd --reload</code></pre><p>访问成功可看到：</p><pre><code class="hljs shell">Welcome to nginx!省略...</code></pre><h4 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h4><p>因为执行命令都要切入<code>/usr/local/nginx/sbin</code>目录才能执行命令，为了方便，直接配置到全局环境变量中。</p><pre><code class="hljs shell">sudo vim /etc/profile<span class="hljs-meta">#</span><span class="bash">加入如下内容（因为之前自己配了java的，故在后边补加）</span>export PATH=$JAVA_HOME/bin:$PATH:/usr/local/nginx/sbin<span class="hljs-meta">#</span><span class="bash">或者之前没配过其他的，直接</span>export PATH=/usr/local/nginx/sbin<span class="hljs-meta">#</span><span class="bash">重新加载使其生效</span>source /etc/profile</code></pre><p>然后就可以在任意地方使用<code>nginx</code>命令了，不知道什么原因默认低于1024的端口报没有权限，切到<code>root</code>用户或者<code>sudo nginx</code>还是会报找不到nginx命令。<br>所以建议修改nginx默认端口（我改的1025）。<br>假如修改了环境变量之前服务已经启动，直接执行<code>nginx</code>会提示</p><pre><code class="hljs shell">nginx: [emerg] bind() to 0.0.0.0:1025 failed (98: Address already in use)</code></pre><p>或者执行<code>nginx -s reload</code>没返回</p><pre><code class="hljs shell">[muzili@jiev ~]$ nginx -s reload[muzili@jiev ~]$</code></pre><p>说明配置成功，可以任意地方执行<code>nginx</code>命令了。</p><p>以上是单机版。<br>假如为了做到高可用，那除了按照以上多几台nginx服务器外，还需要额外安装<code>keepalived</code></p><pre><code class="hljs shell">yum install -y keepalived</code></pre><p>安装成功后会在<code>/etc</code>目录生成<code>keepalived</code>目录。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+      <category>nginx</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>nginx</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>IoC 之自定义类型转换器</title>
     <link href="/2021/02/24/IoC%20%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8/"/>
     <url>/2021/02/24/IoC%20%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8/</url>
