@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="jievhaha">
   <meta name="keywords" content="">
-  <title>あすか栏目 - 沐子</title>
+  <title>获取验证模型 - 沐子</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="あすか栏目">
+            <span class="h2" id="subtitle" title="获取验证模型">
               
             </span>
 
@@ -172,8 +172,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-01-27 19:38" pubdate>
-        2021年1月27日 晚上
+      <time datetime="2021-02-24 17:40" pubdate>
+        2021年2月24日 下午
       </time>
     </span>
   
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      593 字
+      728 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      11
        分钟
     </span>
   
@@ -224,316 +224,144 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">あすか栏目</h1>
+            <h1 style="display: none">获取验证模型</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年2月18日 上午
+                  本文最后更新于：2021年2月24日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <div align="center"><font color="#000" size="5rem">飛鳥栏目</font></div>
+              <div align="center"><font color="#000" size="5rem">获取验证模型</font></div>
 
-<h4 id="句子"><a href="#句子" class="headerlink" title="句子"></a>句子</h4><blockquote>
-<p>わしのお釣りは？</p>
-<p>我的找零呢？（映像研1，鸟）</p>
-</blockquote>
-<p>汉字假名：</p>
+<p>接《加载BeanDefinition》文。</p>
+<h4 id="getValidationModeForResource"><a href="#getValidationModeForResource" class="headerlink" title="getValidationModeForResource"></a>getValidationModeForResource</h4><pre><code class="hljs java"><span class="hljs-comment">//禁用验证模式，值为0</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> VALIDATION_NONE = XmlValidationModeDetector.VALIDATION_NONE;
+<span class="hljs-comment">//自动获取验证模式，值为1</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> VALIDATION_AUTO = XmlValidationModeDetector.VALIDATION_AUTO;
+<span class="hljs-comment">//DTD 验证模式，值为2</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> VALIDATION_DTD = XmlValidationModeDetector.VALIDATION_DTD;
+<span class="hljs-comment">//XSD 验证模式，值为3</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> VALIDATION_XSD = XmlValidationModeDetector.VALIDATION_XSD;
+<span class="hljs-comment">//验证模式。默认为自动模式。</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> validationMode = VALIDATION_AUTO;
+
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getValidationModeForResource</span><span class="hljs-params">(Resource resource)</span> </span>&#123;
+    <span class="hljs-comment">// &lt;1&gt; 获取指定的验证模式</span>
+    <span class="hljs-keyword">int</span> validationModeToUse = getValidationMode();
+    <span class="hljs-comment">// 如果手动指定，则直接返回</span>
+    <span class="hljs-keyword">if</span> (validationModeToUse != VALIDATION_AUTO) &#123;
+        <span class="hljs-keyword">return</span> validationModeToUse;
+    &#125;
+    <span class="hljs-comment">// 自动获取验证模式</span>
+    <span class="hljs-keyword">int</span> detectedMode = detectValidationMode(resource);
+    <span class="hljs-keyword">if</span> (detectedMode != VALIDATION_AUTO) &#123;
+        <span class="hljs-keyword">return</span> detectedMode;
+    &#125;
+    <span class="hljs-comment">// 否则，使用 VALIDATION_XSD</span>
+    <span class="hljs-keyword">return</span> VALIDATION_XSD;
+&#125;</code></pre>
+
 <ul>
-<li>お釣り：おつり</li>
+<li><code>&lt;1&gt;</code> 处，调用 <code>getValidationMode()</code> 方法，获取指定的验证模式( <code>validationMode</code> )。如果有手动指定，则直接返回。</li>
 </ul>
-<p>知识点：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setValidationMode</span><span class="hljs-params">(<span class="hljs-keyword">int</span> validationMode)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.validationMode = validationMode;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getValidationMode</span><span class="hljs-params">()</span> </span>
+<span class="hljs-function">    <span class="hljs-comment">//如上段，该值默认为VALIDATION_AUTO</span></span>
+<span class="hljs-function">    return <span class="hljs-keyword">this</span>.validationMode</span>;
+&#125;</code></pre>
+
 <ul>
-<li><strong>「お釣り」</strong>是<strong>「找的零钱」</strong>的意思。</li>
-<li><strong>「お金」</strong>是<strong>「钱」</strong>的意思。–おかね</li>
+<li><code>&lt;2&gt;</code> 处，调用 <code>detectValidationMode(Resource resource)</code> 方法，自动获取验证模式。</li>
 </ul>
-<hr>
-<blockquote>
-<p>分かりません。不知道</p>
-<p>分かるか。没理解</p>
-</blockquote>
-<p>汉字假名：</p>
-<ul>
-<li>分：わ</li>
-</ul>
-<hr>
-<blockquote>
-<p>ホントですか？</p>
-<p>真的吗？</p>
-</blockquote>
-<p>知识点：</p>
-<ul>
-<li>「本当に」和「本当」要区分。</li>
-</ul>
-<hr>
-<blockquote>
-<p>どうしよう。</p>
-<p>怎么办。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>お誕生日おめでとう。</p>
-<p>生日快乐。</p>
-</blockquote>
-<p>汉字假名：</p>
-<ul>
-<li>誕生日：たんじょうび</li>
-</ul>
-<p>知识点：</p>
-<ul>
-<li>加「お」是比较郑重的说法。</li>
-<li>「おめでとう」是「恭喜」的意思。</li>
-</ul>
-<hr>
-<blockquote>
-<p>楽「たの」しい：时间上是持续的，快乐不是短暂的。</p>
-<p>嬉「うれ」しい：时间上是瞬间的，某刻的快乐。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>もういいよ。</p>
-<p>真是够了。（小鸟情人节被三杀）</p>
-</blockquote>
-<blockquote>
-<p>何「なん」だオマエ。</p>
-<p>你怎么回事啊？（莲加不会接设乐的梗）</p>
-</blockquote>
-<blockquote>
-<p>どうしよう。</p>
-<p>怎么办？</p>
-</blockquote>
-<blockquote>
-<p>かにうまい？</p>
-<p>螃蟹好吃？</p>
-<p>かにゅうまえに。</p>
-<p>加入之前。</p>
-<p>工事中这两个容易搞混</p>
-</blockquote>
-<h4 id="单词"><a href="#单词" class="headerlink" title="单词"></a>单词</h4><table>
-<thead>
-<tr>
-<th>单词</th>
-<th>词义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>自信満々「じしんまんまん」</td>
-<td>自信满满，充满信心。</td>
-</tr>
-<tr>
-<td>自信「じしん」</td>
-<td></td>
-</tr>
-<tr>
-<td>せーの</td>
-<td>一般用在口语，大意1、2…开始。但和1、2…没一点关系（可以想象中文里比如抬一个很重的东西，大家：1、2…起）。</td>
-</tr>
-<tr>
-<td>五時間「ごじかん」</td>
-<td>五小时。</td>
-</tr>
-<tr>
-<td>五時「ごじ」</td>
-<td>五点。</td>
-</tr>
-<tr>
-<td>財布「さいふ」</td>
-<td>钱包。</td>
-</tr>
-<tr>
-<td>おかゆ</td>
-<td>粥。</td>
-</tr>
-<tr>
-<td>プレゼント</td>
-<td>礼物（present）。</td>
-</tr>
-<tr>
-<td>漢字「かんじ」</td>
-<td></td>
-</tr>
-<tr>
-<td>大丈夫「だいじょうぶ」</td>
-<td>不用担心；不需要；没什么大事。</td>
-</tr>
-<tr>
-<td>怪我「けが」</td>
-<td>身体上受伤。</td>
-</tr>
-<tr>
-<td>勉強「べんきょう」</td>
-<td>学习。</td>
-</tr>
-<tr>
-<td>手紙「てがみ」</td>
-<td>信。</td>
-</tr>
-<tr>
-<td>経理「けいり」</td>
-<td>做会计工作的人。</td>
-</tr>
-<tr>
-<td>たこ焼き「たこやき」</td>
-<td>章鱼烧。</td>
-</tr>
-<tr>
-<td>お菓子「おかし」</td>
-<td>零食。</td>
-</tr>
-<tr>
-<td>好き「すき」</td>
-<td>喜欢。</td>
-</tr>
-<tr>
-<td>大好き「だいすき」</td>
-<td>超喜欢；最喜欢。</td>
-</tr>
-<tr>
-<td>嫌い「きらい」・キライ</td>
-<td>讨厌，不喜欢。</td>
-</tr>
-<tr>
-<td>怖い「こわい」</td>
-<td>害怕；可怕的。</td>
-</tr>
-<tr>
-<td>チョコレート</td>
-<td>巧克力（chocolate）。</td>
-</tr>
-<tr>
-<td>プレゼント</td>
-<td>礼物（present）。</td>
-</tr>
-<tr>
-<td>お嬢「じょう」様「さま」・お嬢</td>
-<td>大小姐。</td>
-</tr>
-<tr>
-<td>遅「おそ」いよ</td>
-<td>太慢了。</td>
-</tr>
-<tr>
-<td>もっと早「はや」く</td>
-<td>快一点。</td>
-</tr>
-<tr>
-<td>嫁「よめ」</td>
-<td>老婆。</td>
-</tr>
-<tr>
-<td>暑「あつ」い</td>
-<td>好烫。</td>
-</tr>
-<tr>
-<td>たぶん</td>
-<td>大概。</td>
-</tr>
-</tbody></table>
-<h4 id="同类型"><a href="#同类型" class="headerlink" title="同类型"></a>同类型</h4><h5 id="三餐"><a href="#三餐" class="headerlink" title="三餐"></a>三餐</h5><table>
-<thead>
-<tr>
-<th></th>
-<th>早饭</th>
-<th>午饭</th>
-<th>晚饭</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>ご飯（ごはん）</td>
-<td>朝ご飯（あさごはん）</td>
-<td>昼ご飯（ひるごはん）</td>
-<td>晩ご飯（ばんごはん）</td>
-</tr>
-<tr>
-<td>食（しょく）</td>
-<td>朝食（ちょうしょく）</td>
-<td>昼食（ちゅうしょく）</td>
-<td>夕食（ゆうしょく）</td>
-</tr>
-<tr>
-<td>飯（めし）</td>
-<td>朝飯（あさめし）</td>
-<td>昼飯（ひるめし）</td>
-<td>晩飯（ばんめし）</td>
-</tr>
-</tbody></table>
-<h5 id="星期（曜日）"><a href="#星期（曜日）" class="headerlink" title="星期（曜日）"></a>星期（曜日）</h5><p>〜曜日（ようび）</p>
-<table>
-<thead>
-<tr>
-<th align="center">星期日（日）</th>
-<th align="center">星期一（月）</th>
-<th align="center">星期二（火）</th>
-<th align="center">星期三（水）</th>
-<th align="center">星期四（木）</th>
-<th align="center">星期五（金）</th>
-<th align="center">星期六（土）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">にちようび「日曜日」</td>
-<td align="center">げつようび「月曜日」</td>
-<td align="center">かようび「火曜日」</td>
-<td align="center">すいようび「水曜日」</td>
-<td align="center">もくようび「木曜日」</td>
-<td align="center">きんようび「金曜日」</td>
-<td align="center">どようび「土曜日」</td>
-</tr>
-</tbody></table>
-<h5 id="方位（ほうこう）"><a href="#方位（ほうこう）" class="headerlink" title="方位（ほうこう）"></a>方位（ほうこう）</h5><table>
-<thead>
-<tr>
-<th align="center"><strong>上</strong></th>
-<th align="center"><strong>下</strong></th>
-<th align="center"><strong>里</strong></th>
-<th align="center"><strong>外</strong></th>
-<th align="center"><strong>前</strong></th>
-<th align="center"><strong>后</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">うえ「上」</td>
-<td align="center">した「下」</td>
-<td align="center">なか「中」</td>
-<td align="center">そと「外」</td>
-<td align="center">まえ「前」</td>
-<td align="center">うしろ「後ろ」</td>
-</tr>
-<tr>
-<td align="center"><strong>左</strong></td>
-<td align="center"><strong>右</strong></td>
-<td align="center"><strong>旁边</strong></td>
-<td align="center"><strong>旁边</strong></td>
-<td align="center"></td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">ひだり「左」</td>
-<td align="center">みぎ「右」</td>
-<td align="center">ちかく「近く」</td>
-<td align="center">となり「隣」</td>
-<td align="center"></td>
-<td align="center"></td>
-</tr>
-</tbody></table>
-<h5 id="四季（しき）"><a href="#四季（しき）" class="headerlink" title="四季（しき）"></a>四季（しき）</h5><p>日语对应的汉字和假名</p>
-<table>
-<thead>
-<tr>
-<th>春</th>
-<th>夏</th>
-<th>秋</th>
-<th>冬</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>はる</td>
-<td>なつ</td>
-<td>あき</td>
-<td>ふゆ</td>
-</tr>
-</tbody></table>
+<pre><code class="hljs java"><span class="hljs-comment">//下段介绍XmlValidationModeDetector</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> XmlValidationModeDetector validationModeDetector = <span class="hljs-keyword">new</span> XmlValidationModeDetector();
+
+<span class="hljs-comment">//检测对&#123;@link Resource&#125;标识的XML文件执行哪种验证。如果文件具有&#123;@code DOCTYPE&#125;定义，则使用DTD验证，否则采用XSD验证。在接下来的方法中可以看到。</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">int</span> <span class="hljs-title">detectValidationMode</span><span class="hljs-params">(Resource resource)</span> </span>&#123;
+    <span class="hljs-comment">// 不可读，抛出 BeanDefinitionStoreException 异常</span>
+    <span class="hljs-keyword">if</span> (resource.isOpen()) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(
+            <span class="hljs-string">&quot;Passed-in Resource [&quot;</span> + resource + <span class="hljs-string">&quot;] contains an open stream: &quot;</span> +
+            <span class="hljs-string">&quot;cannot determine validation mode automatically. Either pass in a Resource &quot;</span> +
+            <span class="hljs-string">&quot;that is able to create fresh streams, or explicitly specify the validationMode &quot;</span> +
+            <span class="hljs-string">&quot;on your XmlBeanDefinitionReader instance.&quot;</span>);
+    &#125;
+
+    InputStream inputStream;
+    <span class="hljs-keyword">try</span> &#123;
+        inputStream = resource.getInputStream();
+    &#125;
+    <span class="hljs-keyword">catch</span> (IOException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(
+            <span class="hljs-string">&quot;Unable to determine validation mode for [&quot;</span> + resource + <span class="hljs-string">&quot;]: cannot open InputStream. &quot;</span> +
+            <span class="hljs-string">&quot;Did you attempt to load directly from a SAX InputSource without specifying the &quot;</span> +
+            <span class="hljs-string">&quot;validationMode on your XmlBeanDefinitionReader instance?&quot;</span>, ex);
+    &#125;
+
+    <span class="hljs-comment">// &lt;x&gt; 获取相应的验证模式</span>
+    <span class="hljs-keyword">try</span> &#123;
+        <span class="hljs-comment">//XmlValidationModeDetector上边已经定义</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.validationModeDetector.detectValidationMode(inputStream);
+    &#125;
+    <span class="hljs-keyword">catch</span> (IOException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(<span class="hljs-string">&quot;Unable to determine validation mode for [&quot;</span> +
+                                               resource + <span class="hljs-string">&quot;]: an error occurred whilst reading from the InputStream.&quot;</span>, ex);
+    &#125;
+&#125;</code></pre>
+
+<h4 id="XmlValidationModeDetector"><a href="#XmlValidationModeDetector" class="headerlink" title="XmlValidationModeDetector"></a>XmlValidationModeDetector</h4><p><code>org.springframework.util.xml.XmlValidationModeDetector</code> ，XML 验证模式探测器。</p>
+<p>主要看上段return this.validationModeDetector.detectValidationMode(inputStream);</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">detectValidationMode</span><span class="hljs-params">(InputStream inputStream)</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
+    <span class="hljs-keyword">try</span> (BufferedReader reader = <span class="hljs-keyword">new</span> BufferedReader(<span class="hljs-keyword">new</span> InputStreamReader(inputStream))) &#123;
+        <span class="hljs-comment">// 是否为 DTD 校验模式。默认为，非 DTD 模式，即 XSD 模式</span>
+        <span class="hljs-keyword">boolean</span> isDtdValidated = <span class="hljs-keyword">false</span>;
+        String content;
+        <span class="hljs-comment">// &lt;0&gt; 循环，逐行读取 XML 文件的内容</span>
+        <span class="hljs-keyword">while</span> ((content = reader.readLine()) != <span class="hljs-keyword">null</span>) &#123;
+            content = consumeCommentTokens(content);
+            <span class="hljs-comment">// 如果是注释，或者没内容，跳过</span>
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.inComment || !StringUtils.hasText(content)) &#123;
+                <span class="hljs-keyword">continue</span>;
+            &#125;
+            <span class="hljs-comment">// &lt;1&gt; 包含 DOCTYPE 为 DTD 模式</span>
+            <span class="hljs-comment">//如下</span>
+            <span class="hljs-keyword">if</span> (hasDoctype(content)) &#123;
+                isDtdValidated = <span class="hljs-keyword">true</span>;
+                <span class="hljs-keyword">break</span>;
+            &#125;
+            <span class="hljs-comment">// &lt;2&gt;hasOpeningTag方法会校验，如果这一行有&lt;，并且&lt;后面跟着的是字母，则返回 true 。</span>
+            <span class="hljs-comment">//如下</span>
+            <span class="hljs-keyword">if</span> (hasOpeningTag(content)) &#123;
+                <span class="hljs-keyword">break</span>;
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> (isDtdValidated ? VALIDATION_DTD : VALIDATION_XSD);
+    &#125;
+    <span class="hljs-comment">//如果发生 CharConversionException 异常，则为 VALIDATION_AUTO 模式。</span>
+    <span class="hljs-keyword">catch</span> (CharConversionException ex) &#123;
+        <span class="hljs-keyword">return</span> VALIDATION_AUTO;
+    &#125;
+&#125;
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DOCTYPE = <span class="hljs-string">&quot;DOCTYPE&quot;</span>;
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasDoctype</span><span class="hljs-params">(String content)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> content.contains(DOCTYPE);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">hasOpeningTag</span><span class="hljs-params">(String content)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.inComment) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    &#125;
+    <span class="hljs-keyword">int</span> openTagIndex = content.indexOf(<span class="hljs-string">&#x27;&lt;&#x27;</span>);
+    <span class="hljs-keyword">return</span> (openTagIndex &gt; -<span class="hljs-number">1</span> &amp;&amp; (content.length() &gt; openTagIndex + <span class="hljs-number">1</span>) &amp;&amp;
+            Character.isLetter(content.charAt(openTagIndex + <span class="hljs-number">1</span>)));
+&#125;</code></pre>
+
 
             </div>
             <hr>
@@ -543,11 +371,11 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E8%AF%AD/">日语</a>
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
                     
-                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E8%AF%AD/%E8%AF%BE%E5%A4%96/">课外</a>
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
                     
-                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E8%AF%AD/%E8%AF%BE%E5%A4%96/%E7%BB%BC%E8%89%BA%E5%BD%B1%E8%A7%86/">综艺影视</a>
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
                     
                   </div>
                 
@@ -555,7 +383,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E6%97%A5%E8%AF%AD/">日语</a>
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
                     
                   </div>
                 
@@ -568,18 +396,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/02/24/IOC%E7%90%86%E8%AE%BA/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">IOC概要</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/01/27/%E5%BF%97%E6%9D%91%E3%81%9B%E3%82%93%E3%81%9B%E3%81%84/">
-                        <span class="hidden-mobile">志村せんせい</span>
+                      <a href="/2021/02/24/%E5%8A%A0%E8%BD%BDBeanDefinition/">
+                        <span class="hidden-mobile">加载BeanDefinition</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>加载BeanDefinition - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="加载BeanDefinition">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 17:40" pubdate>
+        2021年2月24日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">加载BeanDefinition</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">加载BeanDefinition</font></div>
+
+<pre><code class="hljs reasonml"><span class="hljs-comment">//获取资源</span>
+ClassPathResource resource = <span class="hljs-keyword">new</span> <span class="hljs-constructor">ClassPathResource(<span class="hljs-string">&quot;bean.xml&quot;</span>)</span>;
+<span class="hljs-comment">//获取 BeanFactory</span>
+DefaultListableBeanFactory factory = <span class="hljs-keyword">new</span> <span class="hljs-constructor">DefaultListableBeanFactory()</span>;
+<span class="hljs-comment">//根据新建的 BeanFactory 创建一个 BeanDefinitionReader 对象，该 Reader 对象为资源的解析器</span>
+XmlBeanDefinitionReader reader = <span class="hljs-keyword">new</span> <span class="hljs-constructor">XmlBeanDefinitionReader(<span class="hljs-params">factory</span>)</span>;
+<span class="hljs-comment">//装载资源</span>
+reader.load<span class="hljs-constructor">BeanDefinitions(<span class="hljs-params">resource</span>)</span>;</code></pre>
+
+<p>这段代码是 Spring 中编程式使用 IoC 容器，IoC 容器的使用过程如下：</p>
+<p>资源定位、装载、注册。</p>
+<p><strong>资源定位：</strong>IOC容器定位资源上一片《Spring统一资源加载策略》。</p>
+<p><strong>装载：</strong>装载就是 BeanDefinition 的载入，<em>BeanDefinitionReader 读取、解析 Resource 资源，也就是将用户定义的 Bean 表示成 IoC 容器的内部数据结构：BeanDefinition</em> 。</p>
+<ul>
+<li>在 IoC 容器内部维护着一个 BeanDefinition Map 的数据结构。</li>
+<li>在配置文件中每一个<bean>都对应着一个 BeanDefinition 对象。</li>
+</ul>
+<p><strong>注册：</strong>向 IoC 容器注册在第二步解析好的 BeanDefinition，其实就是将BeanDefinition注入到一个HashMap容器中，这个过程是通过 BeanDefinitionRegistry 接口来实现的，IoC 容器就是通过这个 HashMap 来维护这些 BeanDefinition 的。</p>
+<ul>
+<li>在这里需要注意的一点是这个过程并没有完成依赖注入（Bean 创建），Bean 创建是发生在应用第一次调用 <code>getBean(...)</code> 方法，向容器索要 Bean 时。</li>
+<li>当然我们可以通过设置预处理，即对某个 Bean 设置 <code>lazyinit = false</code> 属性，那么这个 Bean 的依赖注入就会在容器初始化的时候完成。</li>
+</ul>
+<h4 id="loadBeanDefinitions"><a href="#loadBeanDefinitions" class="headerlink" title="loadBeanDefinitions"></a>loadBeanDefinitions</h4><p>装载，通过reader.loadBeanDefinitions(resource);</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">loadBeanDefinitions</span><span class="hljs-params">(Resource resource)</span> <span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+    <span class="hljs-keyword">return</span> loadBeanDefinitions(<span class="hljs-keyword">new</span> EncodedResource(resource));
+&#125;</code></pre>
+
+<ul>
+<li><p>从指定的 xml 文件加载 BeanDefinition ，这里会先对 Resource 资源封装成 <code>org.springframework.core.io.support.EncodedResource</code> 对象。这里为什么需要将 Resource 封装成 EncodedResource 呢？主要是为了对 Resource 进行编码，保证内容读取的正确性。</p>
+</li>
+<li><p>然后，再调用 <code>#loadBeanDefinitions(EncodedResource encodedResource)</code> 方法，执行真正的逻辑实现。</p>
+</li>
+</ul>
+<pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ThreadLocal&lt;Set&lt;EncodedResource&gt;&gt; resourcesCurrentlyBeingLoaded =
+			<span class="hljs-keyword">new</span> NamedThreadLocal&lt;Set&lt;EncodedResource&gt;&gt;(<span class="hljs-string">&quot;XML bean definition resources currently being loaded&quot;</span>)&#123;
+				<span class="hljs-meta">@Override</span>
+				<span class="hljs-function"><span class="hljs-keyword">protected</span> Set&lt;EncodedResource&gt; <span class="hljs-title">initialValue</span><span class="hljs-params">()</span> </span>&#123;
+					<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HashSet&lt;&gt;(<span class="hljs-number">4</span>);
+				&#125;
+			&#125;;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">loadBeanDefinitions</span><span class="hljs-params">(EncodedResource encodedResource)</span> <span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+    Assert.notNull(encodedResource, <span class="hljs-string">&quot;EncodedResource must not be null&quot;</span>);
+    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+        logger.trace(<span class="hljs-string">&quot;Loading XML bean definitions from &quot;</span> + encodedResource);
+    &#125;
+
+    <span class="hljs-comment">// &lt;1&gt; 获取已经加载过的资源</span>
+    Set&lt;EncodedResource&gt; currentResources = <span class="hljs-keyword">this</span>.resourcesCurrentlyBeingLoaded.get();
+
+    <span class="hljs-keyword">if</span> (!currentResources.add(encodedResource)) &#123;<span class="hljs-comment">// 将当前资源加入记录中。如果已存在，抛出异常</span>
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(
+            <span class="hljs-string">&quot;Detected cyclic loading of &quot;</span> + encodedResource + <span class="hljs-string">&quot; - check your import definitions!&quot;</span>);
+    &#125;
+
+    <span class="hljs-comment">// &lt;2&gt; 从 EncodedResource 获取封装的 Resource ，并从 Resource 中获取其中的 InputStream</span>
+    <span class="hljs-keyword">try</span> (InputStream inputStream = encodedResource.getResource().getInputStream()) &#123;
+        InputSource inputSource = <span class="hljs-keyword">new</span> InputSource(inputStream);
+        <span class="hljs-keyword">if</span> (encodedResource.getEncoding() != <span class="hljs-keyword">null</span>) &#123;
+            inputSource.setEncoding(encodedResource.getEncoding());
+        &#125;
+        <span class="hljs-comment">// 核心逻辑部分，执行加载 BeanDefinition</span>
+        <span class="hljs-keyword">return</span> doLoadBeanDefinitions(inputSource, encodedResource.getResource());
+    &#125;
+    <span class="hljs-keyword">catch</span> (IOException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(
+            <span class="hljs-string">&quot;IOException parsing XML document from &quot;</span> + encodedResource.getResource(), ex);
+    &#125;
+    <span class="hljs-keyword">finally</span> &#123;
+        <span class="hljs-comment">// 从缓存中剔除该资源 &lt;3&gt;</span>
+        currentResources.remove(encodedResource);
+        <span class="hljs-keyword">if</span> (currentResources.isEmpty()) &#123;
+            <span class="hljs-keyword">this</span>.resourcesCurrentlyBeingLoaded.remove();
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p><code>&lt;1&gt;</code> 处，通过 <code>resourcesCurrentlyBeingLoaded.get()</code> 代码，来获取已经加载过的资源，然后将 <code>encodedResource</code> 加入其中，如果 <code>resourcesCurrentlyBeingLoaded</code> 中已经存在该资源，则抛出 BeanDefinitionStoreException 异常。</p>
+<ul>
+<li>为什么需要这么做呢？答案在 <code>&quot;Detected cyclic loading&quot;</code> ，避免一个 EncodedResource 在加载时，还没加载完成，又加载自身，从而导致<strong>死循环</strong>。</li>
+<li>也因此，在 <code>&lt;3&gt;</code> 处，当一个 EncodedResource 加载完成后，需要从缓存中剔除。</li>
+</ul>
+<p><code>&lt;2&gt;</code> 处理，从 <code>encodedResource</code> 获取封装的 Resource 资源，并从 Resource 中获取相应的 InputStream ，然后将 InputStream 封装为 InputSource ，最后调用 <code>#doLoadBeanDefinitions(InputSource inputSource, Resource resource)</code> 方法，执行加载 Bean Definition 的真正逻辑。</p>
+<h4 id="doLoadBeanDefinitions"><a href="#doLoadBeanDefinitions" class="headerlink" title="doLoadBeanDefinitions"></a>doLoadBeanDefinitions</h4><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">int</span> <span class="hljs-title">doLoadBeanDefinitions</span><span class="hljs-params">(InputSource inputSource, Resource resource)</span></span>
+<span class="hljs-function">			<span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+    <span class="hljs-keyword">try</span> &#123;
+        <span class="hljs-comment">// &lt;1&gt; 获取 XML Document 实例</span>
+        Document doc = doLoadDocument(inputSource, resource);
+        <span class="hljs-comment">// &lt;2&gt; 根据 Document 实例，注册 Bean 信息</span>
+        <span class="hljs-keyword">int</span> count = registerBeanDefinitions(doc, resource);
+        <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+            logger.debug(<span class="hljs-string">&quot;Loaded &quot;</span> + count + <span class="hljs-string">&quot; bean definitions from &quot;</span> + resource);
+        &#125;
+        <span class="hljs-keyword">return</span> count;
+    &#125;
+    <span class="hljs-keyword">catch</span> (BeanDefinitionStoreException ex) &#123;
+        <span class="hljs-keyword">throw</span> ex;
+    &#125;
+    <span class="hljs-keyword">catch</span> (SAXParseException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> XmlBeanDefinitionStoreException(resource.getDescription(),
+                                                  <span class="hljs-string">&quot;Line &quot;</span> + ex.getLineNumber() + <span class="hljs-string">&quot; in XML document from &quot;</span> + resource + <span class="hljs-string">&quot; is invalid&quot;</span>, ex);
+    &#125;
+    <span class="hljs-keyword">catch</span> (SAXException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> XmlBeanDefinitionStoreException(resource.getDescription(),
+                                                  <span class="hljs-string">&quot;XML document from &quot;</span> + resource + <span class="hljs-string">&quot; is invalid&quot;</span>, ex);
+    &#125;
+    <span class="hljs-keyword">catch</span> (ParserConfigurationException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(resource.getDescription(),
+                                               <span class="hljs-string">&quot;Parser configuration exception parsing XML from &quot;</span> + resource, ex);
+    &#125;
+    <span class="hljs-keyword">catch</span> (IOException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(resource.getDescription(),
+                                               <span class="hljs-string">&quot;IOException parsing XML document from &quot;</span> + resource, ex);
+    &#125;
+    <span class="hljs-keyword">catch</span> (Throwable ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(resource.getDescription(),
+                                               <span class="hljs-string">&quot;Unexpected exception parsing XML document from &quot;</span> + resource, ex);
+    &#125;
+&#125;</code></pre>
+
+<ul>
+<li>在 <code>&lt;1&gt;</code> 处，调用 <code>#doLoadDocument(InputSource inputSource, Resource resource)</code> 方法，根据 xml 文件，获取 Document 实例。</li>
+<li>在 <code>&lt;2&gt;</code> 处，调用 <code>#registerBeanDefinitions(Document doc, Resource resource)</code> 方法，根据获取的 Document 实例，注册 Bean 信息。</li>
+</ul>
+<h5 id="doLoadDocument"><a href="#doLoadDocument" class="headerlink" title="doLoadDocument"></a>doLoadDocument</h5><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> Document <span class="hljs-title">doLoadDocument</span><span class="hljs-params">(InputSource inputSource, Resource resource)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.documentLoader.loadDocument(inputSource, getEntityResolver(), <span class="hljs-keyword">this</span>.errorHandler,getValidationModeForResource(resource), isNamespaceAware());
+&#125;</code></pre>
+
+<p>调用 <code>#getValidationModeForResource(Resource resource)</code> 方法，获取指定资源（xml）的<strong>验证模式</strong>。**<em>看下一篇**</em></p>
+<p>调用 <code>DocumentLoader#loadDocument(InputSource inputSource, EntityResolver entityResolver, ErrorHandler errorHandler, int validationMode, boolean namespaceAware)</code> 方法，获取 XML Document 实例。</p>
+<h5 id="registerBeanDefinitions"><a href="#registerBeanDefinitions" class="headerlink" title="registerBeanDefinitions"></a>registerBeanDefinitions</h5><p><strong><em>看注册BeanDefinitions</em></strong></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E8%8E%B7%E5%8F%96%E9%AA%8C%E8%AF%81%E6%A8%A1%E5%9E%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">获取验证模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5/">
+                        <span class="hidden-mobile">spring统一资源加载策略</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

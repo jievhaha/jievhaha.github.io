@@ -17,9 +17,25 @@
   <meta name="description" content="">
   <meta name="author" content="jievhaha">
   <meta name="keywords" content="">
-  <title>分类 - java - 沐子</title>
+  <title>IOC概要 - 沐子</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
 
 
 
@@ -47,7 +63,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -146,9 +162,46 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="分类 - java">
+            <span class="h2" id="subtitle" title="IOC概要">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 17:40" pubdate>
+        2021年2月24日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      525 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      5
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -161,67 +214,132 @@
 
   <main>
     
-      <div class="container nopadding-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">IOC概要</h1>
+            
+              <p class="note note-info">
                 
+                  本文最后更新于：2021年2月24日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">IOC概要</font></div>
 
-<div class="list-group">
-  <p class="h4">共计 5 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2021</p>
-    
-    <a href="/2021/02/24/%E8%8E%B7%E5%8F%96%E9%AA%8C%E8%AF%81%E6%A8%A1%E5%9E%8B/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">获取验证模型</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/%E5%8A%A0%E8%BD%BDBeanDefinition/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">加载BeanDefinition</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">spring统一资源加载策略</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/IOC%E7%90%86%E8%AE%BA/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">IOC概要</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-      
-      <p class="h5">2020</p>
-    
-    <a href="/2020/11/09/idea%E5%AF%BC%E5%85%A5tomcat%E6%BA%90%E7%A0%81%E5%B9%B6%E5%90%AF%E5%8A%A8/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Tomcat源码运行</span>
-      <time style="float: right;">11-09</time>
-    </a>
-  
-</div>
+<blockquote>
+<table><tr><td bgcolor="#6495ED"><font color="#FFF">IOC ，就是由 Spring IOC 容器来负责对象的生命周期和对象之间的关系.</font></td></tr></table>
+</blockquote>
+<p>控制反转，是一种设计思想，依赖注入<code>DI</code>是一种具体实现。IOC意味着将设计好的对象交给容器控制，由容器帮我们查找及注入依赖对象（所以对象和对象之间是松散耦合的），对象只是被动的接受依赖对象，即为反转。</p>
+<p>在传统的开发模式下，我们都是采用直接 new 一个对象的方式来创建对象，也就是说依赖的对象直接由我们自己控制，但是有了 IoC 容器后，则直接由 IoC 容器来控制。</p>
+<p>没有 IoC 的时候我们都是在自己对象中主动去创建被依赖的对象，这是正转。但是有了 IoC 后，所依赖的对象直接由 IoC 容器创建后注入到被注入的对象中，依赖的对象由原来的主动获取变成被动接受，所以是反转。</p>
+<h4 id="IOC注入方式"><a href="#IOC注入方式" class="headerlink" title="IOC注入方式"></a>IOC注入方式</h4><ol>
+<li>构造器注入</li>
+<li>setter注入</li>
+<li>接口注入</li>
+</ol>
+<h4 id="重要组件"><a href="#重要组件" class="headerlink" title="重要组件"></a>重要组件</h4><p>主要有五个体系：<code>Resource</code>、<code>BeanFactory</code>、<code>BeanDefinition</code>、<code>BeanDefinitionReader</code>、<code>ApplicationContext</code>。</p>
+<h5 id="Resource"><a href="#Resource" class="headerlink" title="Resource"></a>Resource</h5><p>对资源的抽象，它的每一个实现类都代表了一种资源的访问策略。</p>
+<p><img src="/images/spring_IOC/Resource.png" srcset="/img/loading.gif" alt="Resource"></p>
+<p>有了资源，就应该有资源加载，<code>ResourceLoader</code>就是进行统一资源加载。</p>
+<p><img src="/images/spring_IOC/ResourceLoader.png" srcset="/img/loading.gif" alt="ResourceLoader"></p>
+<h5 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h5><p>是bean容器，<code>BeanDefinition</code> 是它的基本结构，它内部维护着一个 <code>BeanDefinition map </code>，并可根据 <code>BeanDefinition</code> 的描述进行 bean 的创建和管理。</p>
+<p><img src="/images/spring_IOC/BeanFactory.png" srcset="/img/loading.gif" alt="BeanFactory"></p>
+<p><code>BeanFacoty</code> 有三个直接子类 <code>ListableBeanFactory</code>、<code>HierarchicalBeanFactory</code> 和 <code>AutowireCapableBeanFactory</code>，<code>DefaultListableBeanFactory</code> 为最终默认实现，它实现了所有接口。</p>
+<h5 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h5><p>用来描述Spring中Bean对象。</p>
+<p><img src="/images/spring_IOC/BeanDefinition.png" srcset="/img/loading.gif" alt="BeanDefinition"></p>
+<h5 id="BeanDefinitionReader"><a href="#BeanDefinitionReader" class="headerlink" title="BeanDefinitionReader"></a>BeanDefinitionReader</h5><p>读取Spring配置文件内容，并将其转换成IOC容器内部的<code>BeanDefinition</code>。</p>
+<p><img src="/images/spring_IOC/BeanDefinitionReader.png" srcset="/img/loading.gif" alt="BeanDefinitionReader"></p>
+<h5 id="ApplicationContext"><a href="#ApplicationContext" class="headerlink" title="ApplicationContext"></a>ApplicationContext</h5><p>Spring容器，也叫**<em>应用上下文**</em>，继承自BeanFactory，二者主要区别：</p>
+<ol>
+<li>继承 <code>MessageSource</code>，提供国际化的标准访问策略。</li>
+<li>继承 <code>ApplicationEventPublisher </code>，提供强大的事件机制。</li>
+<li>扩展 <code>ResourceLoader</code>，可以用来加载多个 Resource，可以灵活访问不同的资源。</li>
+<li>对 Web 应用的支持。</li>
+</ol>
 
-
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">spring统一资源加载策略</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/01/27/%E3%81%82%E3%81%99%E3%81%8B%E6%A0%8F%E7%9B%AE/">
+                        <span class="hidden-mobile">あすか栏目</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -328,9 +446,15 @@
 
 
 
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
 
 
 
