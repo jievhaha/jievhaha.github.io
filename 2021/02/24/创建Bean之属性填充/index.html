@@ -1,0 +1,1023 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>创建Bean之属性填充 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="创建Bean之属性填充">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 21:38" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      52
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">创建Bean之属性填充</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">创建Bean之属性填充</font></div>
+
+<p><code>doCreateBean(...)</code> 方法，主要用于完成 bean 的创建和初始化工作，我们可以将其分为四个过程：</p>
+<ul>
+<li><code>createBeanInstance(String beanName, RootBeanDefinition mbd, Object[] args)</code> 方法，实例化 bean 。</li>
+<li>循环依赖的处理。</li>
+<li><code>populateBean(String beanName, RootBeanDefinition mbd, BeanWrapper bw)</code> 方法，进行属性填充。</li>
+<li><code>initializeBean(final String beanName, final Object bean, RootBeanDefinition mbd)</code> 方法，初始化 Bean 。</li>
+</ul>
+<h4 id="populateBean-方法"><a href="#populateBean-方法" class="headerlink" title="populateBean()方法"></a><code>populateBean()</code>方法</h4><p>该函数的作用是将 BeanDefinition 中的属性值赋值给 BeanWrapper 实例对象。</p>
+<pre><code class="hljs java"><span class="hljs-meta">@SuppressWarnings(&quot;deprecation&quot;)</span>  <span class="hljs-comment">// for postProcessPropertyValues</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">populateBean</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd, <span class="hljs-meta">@Nullable</span> BeanWrapper bw)</span> </span>&#123;
+    <span class="hljs-comment">// 没有实例化对象</span>
+    <span class="hljs-keyword">if</span> (bw == <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// 有属性，则抛出 BeanCreationException 异常</span>
+        <span class="hljs-keyword">if</span> (mbd.hasPropertyValues()) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanCreationException(
+                mbd.getResourceDescription(), beanName, <span class="hljs-string">&quot;Cannot apply property values to null instance&quot;</span>);
+        &#125;
+        <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// Skip property population phase for null instance.</span>
+            <span class="hljs-comment">// 没有属性，直接 return 返回</span>
+            <span class="hljs-keyword">return</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">// &lt;1&gt; 在设置属性之前给 InstantiationAwareBeanPostProcessors 最后一次改变 bean 的机会</span>
+    <span class="hljs-keyword">if</span> (!mbd.isSynthetic()  <span class="hljs-comment">// bean 不是&quot;合成&quot;的，即未由应用程序本身定义</span>
+        &amp;&amp; hasInstantiationAwareBeanPostProcessors()) &#123;<span class="hljs-comment">// 是否持有 InstantiationAwareBeanPostProcessor</span>
+        <span class="hljs-comment">// 迭代所有的 BeanPostProcessors</span>
+        <span class="hljs-keyword">for</span> (InstantiationAwareBeanPostProcessor bp : getBeanPostProcessorCache().instantiationAware) &#123;
+            <span class="hljs-comment">//此处for循环内和之前版本不一样，该处使用了缓存</span>
+            <span class="hljs-comment">// 返回值为是否继续填充 bean</span>
+            <span class="hljs-comment">// postProcessAfterInstantiation：如果应该在 bean上面设置属性则返回 true，否则返回 false</span>
+            <span class="hljs-comment">// 一般情况下，应该是返回true 。</span>
+            <span class="hljs-comment">// 返回 false 的话，将会阻止在此 Bean 实例上调用任何后续的 InstantiationAwareBeanPostProcessor 实例。</span>
+            <span class="hljs-keyword">if</span> (!bp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) &#123;
+                <span class="hljs-keyword">return</span>;
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">// bean 的属性值</span>
+    PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : <span class="hljs-keyword">null</span>);
+
+    <span class="hljs-comment">// &lt;2&gt; 自动注入</span>
+    <span class="hljs-keyword">int</span> resolvedAutowireMode = mbd.getResolvedAutowireMode();
+    <span class="hljs-keyword">if</span> (resolvedAutowireMode == AUTOWIRE_BY_NAME || resolvedAutowireMode == AUTOWIRE_BY_TYPE) &#123;
+        <span class="hljs-comment">// 将 PrbuopertyValues 封装成 MutablePropertyValues 对象</span>
+        <span class="hljs-comment">// MutablePropertyValues 允许对属性进行简单的操作，并提供构造函数以支持Map的深度复制和构造。</span>
+        MutablePropertyValues newPvs = <span class="hljs-keyword">new</span> MutablePropertyValues(pvs);
+        <span class="hljs-comment">// Add property values based on autowire by name if applicable.</span>
+        <span class="hljs-comment">// 根据名称自动注入</span>
+        <span class="hljs-keyword">if</span> (resolvedAutowireMode == AUTOWIRE_BY_NAME) &#123;
+            autowireByName(beanName, mbd, bw, newPvs);
+        &#125;
+        <span class="hljs-comment">// Add property values based on autowire by type if applicable.</span>
+        <span class="hljs-comment">// 根据类型自动注入</span>
+        <span class="hljs-keyword">if</span> (resolvedAutowireMode == AUTOWIRE_BY_TYPE) &#123;
+            autowireByType(beanName, mbd, bw, newPvs);
+        &#125;
+        pvs = newPvs;
+    &#125;
+
+    <span class="hljs-comment">// 是否已经注册了 InstantiationAwareBeanPostProcessors</span>
+    <span class="hljs-keyword">boolean</span> hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
+    <span class="hljs-comment">// 是否需要进行【依赖检查】</span>
+    <span class="hljs-keyword">boolean</span> needsDepCheck = (mbd.getDependencyCheck() != AbstractBeanDefinition.DEPENDENCY_CHECK_NONE);
+
+    <span class="hljs-comment">// &lt;3&gt; BeanPostProcessor 处理</span>
+    PropertyDescriptor[] filteredPds = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">if</span> (hasInstAwareBpps) &#123;
+        <span class="hljs-keyword">if</span> (pvs == <span class="hljs-keyword">null</span>) &#123;
+            pvs = mbd.getPropertyValues();
+        &#125;
+        <span class="hljs-comment">// 遍历 BeanPostProcessor 数组</span>
+        <span class="hljs-comment">// 此处for循环内和之前版本不一样，该处使用了缓存</span>
+        <span class="hljs-keyword">for</span> (InstantiationAwareBeanPostProcessor bp : getBeanPostProcessorCache().instantiationAware) &#123;
+            <span class="hljs-comment">// 对所有需要依赖检查的属性进行后处理</span>
+            PropertyValues pvsToUse = bp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
+            <span class="hljs-keyword">if</span> (pvsToUse == <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-comment">// 从 bw 对象中提取 PropertyDescriptor 结果集</span>
+                <span class="hljs-comment">// PropertyDescriptor：可以通过一对存取方法提取一个属性</span>
+                <span class="hljs-keyword">if</span> (filteredPds == <span class="hljs-keyword">null</span>) &#123;
+                    filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
+                &#125;
+                pvsToUse = bp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
+                <span class="hljs-keyword">if</span> (pvsToUse == <span class="hljs-keyword">null</span>) &#123;
+                    <span class="hljs-keyword">return</span>;
+                &#125;
+            &#125;
+            pvs = pvsToUse;
+        &#125;
+    &#125;
+    <span class="hljs-comment">// &lt;4&gt; 依赖检查</span>
+    <span class="hljs-keyword">if</span> (needsDepCheck) &#123;
+        <span class="hljs-keyword">if</span> (filteredPds == <span class="hljs-keyword">null</span>) &#123;
+            filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
+        &#125;
+        <span class="hljs-comment">// 依赖检查，对应 depends-on 属性</span>
+        checkDependencies(beanName, mbd, filteredPds, pvs);
+    &#125;
+
+    <span class="hljs-comment">// &lt;5&gt; 将属性应用到 bean 中</span>
+    <span class="hljs-keyword">if</span> (pvs != <span class="hljs-keyword">null</span>) &#123;
+        applyPropertyValues(beanName, mbd, bw, pvs);
+    &#125;
+&#125;</code></pre>
+
+<p>处理过程如下：</p>
+<ul>
+<li><p><code>&lt;1&gt;</code> ，根据 <code>hasInstantiationAwareBeanPostProcessors</code> 属性来判断，是否需要在注入属性之前给 InstantiationAwareBeanPostProcessors 最后一次改变 bean 的机会。<strong>此过程可以控制 Spring 是否继续进行属性填充</strong>。</p>
+</li>
+<li><p>统一存入到 PropertyValues 中，PropertyValues 用于描述 bean 的属性。</p>
+<p><code>&lt;2&gt;</code> ，根据注入类型( <code>AbstractBeanDefinition.getResolvedAutowireMode()</code> 方法的返回值 )的不同来判断：是根据名称来自动注入（autowireByName(…)），还是根据类型来自动注入（autowireByType(…)）。</p>
+</li>
+</ul>
+<ul>
+<li><code>&lt;3&gt;</code> ，进行 BeanPostProcessor 处理。</li>
+<li><code>&lt;4&gt;</code> ，依赖检测。</li>
+<li><code>&lt;5&gt;</code> ，将所有 PropertyValues 中的属性，填充到 BeanWrapper 中。</li>
+</ul>
+<h5 id="自动注入"><a href="#自动注入" class="headerlink" title="自动注入"></a>自动注入</h5><p>Spring 会根据注入类型（ <code>byName</code> / <code>byType</code> ）的不同，调用不同的方法来注入属性值。</p>
+<pre><code class="hljs java"><span class="hljs-comment">//AbstractAutowireCapableBeanFactory</span>
+<span class="hljs-keyword">int</span> resolvedAutowireMode = mbd.getResolvedAutowireMode();
+
+<span class="hljs-comment">// AbstractBeanDefinition.java</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> autowireMode = AUTOWIRE_NO;<span class="hljs-comment">//0</span>
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getResolvedAutowireMode</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.autowireMode == AUTOWIRE_AUTODETECT) &#123;<span class="hljs-comment">// 自动检测模式，获得对应的检测模式</span>
+        Constructor&lt;?&gt;[] constructors = getBeanClass().getConstructors();
+        <span class="hljs-keyword">for</span> (Constructor&lt;?&gt; constructor : constructors) &#123;
+            <span class="hljs-keyword">if</span> (constructor.getParameterCount() == <span class="hljs-number">0</span>) &#123;
+                <span class="hljs-keyword">return</span> AUTOWIRE_BY_TYPE;<span class="hljs-comment">//2</span>
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> AUTOWIRE_CONSTRUCTOR;<span class="hljs-comment">//3</span>
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.autowireMode;
+    &#125;
+&#125;</code></pre>
+
+<h6 id="autowireByName-方法"><a href="#autowireByName-方法" class="headerlink" title="autowireByName()方法"></a><code>autowireByName()</code>方法</h6><p>该方法，是根据<strong>属性名称</strong>，完成自动依赖注入的。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">autowireByName</span><span class="hljs-params">(String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs)</span> </span>&#123;
+
+    <span class="hljs-comment">// &lt;1&gt; 对 Bean 对象中非简单属性</span>
+    <span class="hljs-comment">// 非简单属性：类型为对象类型的属性，但这里并不是将所有的对象类型都会找到，比如8个原始类型，String类型、Number类型、Date类型等会被忽略</span>
+    String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
+    <span class="hljs-comment">// 遍历 propertyName 数组</span>
+    <span class="hljs-keyword">for</span> (String propertyName : propertyNames) &#123;
+        <span class="hljs-comment">// 如果容器中包含指定名称的 bean，则将该 bean 注入到 bean中</span>
+        <span class="hljs-keyword">if</span> (containsBean(propertyName)) &#123;
+            <span class="hljs-comment">// 递归初始化相关 bean</span>
+            Object bean = getBean(propertyName);
+            <span class="hljs-comment">// 为指定名称的属性赋予属性值</span>
+            pvs.add(propertyName, bean);
+            <span class="hljs-comment">// &lt;2&gt; 属性依赖注入</span>
+            registerDependentBean(propertyName, beanName);
+            <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                logger.trace(<span class="hljs-string">&quot;Added autowiring by name from bean name &#x27;&quot;</span> + beanName +
+                             <span class="hljs-string">&quot;&#x27; via property &#x27;&quot;</span> + propertyName + <span class="hljs-string">&quot;&#x27; to bean named &#x27;&quot;</span> + propertyName + <span class="hljs-string">&quot;&#x27;&quot;</span>);
+            &#125;
+        &#125;
+        <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                logger.trace(<span class="hljs-string">&quot;Not autowiring property &#x27;&quot;</span> + propertyName + <span class="hljs-string">&quot;&#x27; of bean &#x27;&quot;</span> + beanName +
+                             <span class="hljs-string">&quot;&#x27; by name: no matching bean found&quot;</span>);
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<ul>
+<li><p><code>&lt;1&gt;</code> 处，获取该 bean 的非简单属性。非简单属性就是类型为对象类型的属性，但是这里并不是将所有的对象类型都都会找到，比如 8 个原始类型，String 类型 ，Number类型、Date类型、URL类型、URI类型等都会被忽略。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">protected</span> String[] unsatisfiedNonSimpleProperties(AbstractBeanDefinition mbd, BeanWrapper bw) &#123;
+    <span class="hljs-comment">// 创建 result 集合</span>
+    Set&lt;String&gt; result = <span class="hljs-keyword">new</span> TreeSet&lt;&gt;();
+    PropertyValues pvs = mbd.getPropertyValues();
+    <span class="hljs-comment">// 遍历 PropertyDescriptor 数组</span>
+    PropertyDescriptor[] pds = bw.getPropertyDescriptors();
+    <span class="hljs-keyword">for</span> (PropertyDescriptor pd : pds) &#123;
+        <span class="hljs-keyword">if</span> (pd.getWriteMethod() != <span class="hljs-keyword">null</span> <span class="hljs-comment">// 有可写方法</span>
+            &amp;&amp; !isExcludedFromDependencyCheck(pd) <span class="hljs-comment">// 依赖检测中没有被忽略</span>
+            &amp;&amp; !pvs.contains(pd.getName()) &amp;&amp;<span class="hljs-comment">// pvs 不包含该属性名</span>
+            !BeanUtils.isSimpleProperty(pd.getPropertyType())) &#123; <span class="hljs-comment">// 不是简单属性类型</span>
+            result.add(pd.getName());<span class="hljs-comment">// 添加到 result 中</span>
+        &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> StringUtils.toStringArray(result);
+&#125;</code></pre>
+
+<ul>
+<li>过滤<strong>条件</strong>为：有可写方法、依赖检测中没有被忽略、不是简单属性类型。</li>
+<li>过滤<strong>结果</strong>为：其实这里获取的就是需要依赖注入的属性。</li>
+</ul>
+</li>
+<li><p>&lt;2&gt;处，获取需要依赖注入的属性后，通过迭代、递归的方式初始化相关的 bean ，然后调用 <code>registerDependentBean(String beanName, String dependentBeanName)</code> 方法，完成注册依赖。该方法之前《parentBeanFactory和依赖处理》已经分析过了。</p>
+</li>
+</ul>
+<h6 id="autowireByType-方法"><a href="#autowireByType-方法" class="headerlink" title="autowireByType()方法"></a><code>autowireByType()</code>方法</h6><p>该方法，是根据<strong>属性类型</strong>，完成自动依赖注入的。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">autowireByType</span><span class="hljs-params">(String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs)</span> </span>&#123;
+
+    <span class="hljs-comment">// 获取 TypeConverter 实例</span>
+    <span class="hljs-comment">// 使用自定义的 TypeConverter，用于取代默认的 PropertyEditor 机制</span>
+    TypeConverter converter = getCustomTypeConverter();
+    <span class="hljs-keyword">if</span> (converter == <span class="hljs-keyword">null</span>) &#123;
+        converter = bw;
+    &#125;
+
+    Set&lt;String&gt; autowiredBeanNames = <span class="hljs-keyword">new</span> LinkedHashSet&lt;&gt;(<span class="hljs-number">4</span>);
+    <span class="hljs-comment">// 获取非简单属性</span>
+    String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
+    <span class="hljs-comment">// 遍历 PROPERTYNAME 数组</span>
+    <span class="hljs-keyword">for</span> (String propertyName : propertyNames) &#123;
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-comment">// 获取 PropertyDescriptor 实例</span>
+            PropertyDescriptor pd = bw.getPropertyDescriptor(propertyName);
+            <span class="hljs-comment">// 不要尝试按类型</span>
+            <span class="hljs-keyword">if</span> (Object.class != pd.getPropertyType()) &#123;
+                <span class="hljs-comment">// 探测指定属性的 set 方法</span>
+                MethodParameter methodParam = BeanUtils.getWriteMethodParameter(pd);
+                <span class="hljs-keyword">boolean</span> eager = !(bw.getWrappedInstance() <span class="hljs-keyword">instanceof</span> PriorityOrdered);
+                DependencyDescriptor desc = <span class="hljs-keyword">new</span> AutowireByTypeDependencyDescriptor(methodParam, eager);
+                <span class="hljs-comment">// &lt;1&gt;解析指定 beanName 的属性所匹配的值，并把解析到的属性名称存储在 autowiredBeanNames 中</span>
+                <span class="hljs-comment">// 当属性存在多个封装 bean 时将会找到所有匹配的 bean 并将其注入</span>
+                Object autowiredArgument = resolveDependency(desc, beanName, autowiredBeanNames, converter);
+                <span class="hljs-keyword">if</span> (autowiredArgument != <span class="hljs-keyword">null</span>) &#123;
+                    pvs.add(propertyName, autowiredArgument);
+                &#125;
+                <span class="hljs-comment">// 遍历 autowiredBeanName 数组</span>
+                <span class="hljs-keyword">for</span> (String autowiredBeanName : autowiredBeanNames) &#123;
+                    <span class="hljs-comment">// 属性依赖注入</span>
+                    registerDependentBean(autowiredBeanName, beanName);
+                    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                        logger.trace(<span class="hljs-string">&quot;Autowiring by type from bean name &#x27;&quot;</span> + beanName + <span class="hljs-string">&quot;&#x27; via property &#x27;&quot;</span> +
+                                     propertyName + <span class="hljs-string">&quot;&#x27; to bean named &#x27;&quot;</span> + autowiredBeanName + <span class="hljs-string">&quot;&#x27;&quot;</span>);
+                    &#125;
+                &#125;
+                <span class="hljs-comment">// 清空 autowiredBeanName 数组</span>
+                autowiredBeanNames.clear();
+            &#125;
+        &#125;
+        <span class="hljs-keyword">catch</span> (BeansException ex) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UnsatisfiedDependencyException(mbd.getResourceDescription(), beanName, propertyName, ex);
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p>其实主要过程和根据名称自动注入<strong>差不多</strong>，都是找到需要依赖注入的属性，然后通过迭代的方式寻找所匹配的 bean，最后调用 <code>registerDependentBean(...)</code> 方法，来注册依赖。</p>
+<p>**resolveDependency()**方法。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultListableBeanFactory.java</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">resolveDependency</span><span class="hljs-params">(DependencyDescriptor descriptor, <span class="hljs-meta">@Nullable</span> String requestingBeanName,<span class="hljs-meta">@Nullable</span> Set&lt;String&gt; autowiredBeanNames, <span class="hljs-meta">@Nullable</span> TypeConverter typeConverter)</span> <span class="hljs-keyword">throws</span> BeansException </span>&#123;
+
+    <span class="hljs-comment">// 初始化参数名称发现器，该方法并不会在这个时候尝试检索参数名称</span>
+    <span class="hljs-comment">// getParameterNameDiscoverer 返回 parameterNameDiscoverer 实例，parameterNameDiscoverer 方法参数名称的解析器</span>
+    descriptor.initParameterNameDiscovery(getParameterNameDiscoverer());
+    <span class="hljs-comment">// 依赖类型为 Optional 类型</span>
+    <span class="hljs-keyword">if</span> (Optional.class == descriptor.getDependencyType()) &#123;
+        <span class="hljs-keyword">return</span> createOptionalDependency(descriptor, requestingBeanName);
+    &#125;
+    <span class="hljs-comment">// 依赖类型为ObjectFactory、ObjectProvider</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ObjectFactory.class == descriptor.getDependencyType() ||
+             ObjectProvider.class == descriptor.getDependencyType()) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DependencyObjectProvider(descriptor, requestingBeanName);
+    &#125;
+    <span class="hljs-comment">// javaxInjectProviderClass 类注入的特殊处理</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (javaxInjectProviderClass == descriptor.getDependencyType()) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Jsr330Factory().createDependencyProvider(descriptor, requestingBeanName);
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-comment">// 为实际依赖关系目标的延迟解析构建代理</span>
+        <span class="hljs-comment">// 默认实现返回 null</span>
+        Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
+            descriptor, requestingBeanName);
+        <span class="hljs-keyword">if</span> (result == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-comment">// 通用处理逻辑</span>
+            result = doResolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+&#125;</code></pre>
+
+<p><strong>通用处理逻辑</strong><code>doResolveDependency()</code>：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultListableBeanFactory.java</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">doResolveDependency</span><span class="hljs-params">(DependencyDescriptor descriptor, <span class="hljs-meta">@Nullable</span> String beanName,<span class="hljs-meta">@Nullable</span> Set&lt;String&gt; autowiredBeanNames, <span class="hljs-meta">@Nullable</span> TypeConverter typeConverter)</span> <span class="hljs-keyword">throws</span> BeansException </span>&#123;
+
+    <span class="hljs-comment">// 注入点</span>
+    InjectionPoint previousInjectionPoint = ConstructorResolver.setCurrentInjectionPoint(descriptor);
+    <span class="hljs-keyword">try</span> &#123;
+        <span class="hljs-comment">// 针对给定的工厂给定一个快捷实现的方式，例如考虑一些预先解析的信息</span>
+        <span class="hljs-comment">// 在进入所有bean的常规类型匹配算法之前，解析算法将首先尝试通过此方法解析快捷方式。</span>
+        <span class="hljs-comment">// 子类可以覆盖此方法</span>
+        Object shortcut = descriptor.resolveShortcut(<span class="hljs-keyword">this</span>);
+        <span class="hljs-keyword">if</span> (shortcut != <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-comment">// 返回快捷的解析信息</span>
+            <span class="hljs-keyword">return</span> shortcut;
+        &#125;
+
+        <span class="hljs-comment">// 依赖的类型</span>
+        Class&lt;?&gt; type = descriptor.getDependencyType();
+        <span class="hljs-comment">// 支持 Spring 的注解 @value</span>
+        Object value = getAutowireCandidateResolver().getSuggestedValue(descriptor);
+        <span class="hljs-keyword">if</span> (value != <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> String) &#123;
+                String strVal = resolveEmbeddedValue((String) value);
+                BeanDefinition bd = (beanName != <span class="hljs-keyword">null</span> &amp;&amp; containsBean(beanName) ?
+                                     getMergedBeanDefinition(beanName) : <span class="hljs-keyword">null</span>);
+                value = evaluateBeanDefinitionString(strVal, bd);
+            &#125;
+            TypeConverter converter = (typeConverter != <span class="hljs-keyword">null</span> ? typeConverter : getTypeConverter());
+            <span class="hljs-keyword">try</span> &#123;
+                <span class="hljs-keyword">return</span> converter.convertIfNecessary(value, type, descriptor.getTypeDescriptor());
+            &#125;
+            <span class="hljs-keyword">catch</span> (UnsupportedOperationException ex) &#123;
+                <span class="hljs-comment">// A custom TypeConverter which does not support TypeDescriptor resolution...</span>
+                <span class="hljs-keyword">return</span> (descriptor.getField() != <span class="hljs-keyword">null</span> ?
+                        converter.convertIfNecessary(value, type, descriptor.getField()) :
+                        converter.convertIfNecessary(value, type, descriptor.getMethodParameter()));
+            &#125;
+        &#125;
+
+        <span class="hljs-comment">// 解析复合 bean，其实就是对 bean 的属性进行解析</span>
+        <span class="hljs-comment">// 包括：数组、Collection 、Map 类型</span>
+        Object multipleBeans = resolveMultipleBeans(descriptor, beanName, autowiredBeanNames, typeConverter);
+        <span class="hljs-keyword">if</span> (multipleBeans != <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span> multipleBeans;
+        &#125;
+
+        <span class="hljs-comment">// 查找与类型相匹配的 bean</span>
+        <span class="hljs-comment">// 返回值构成为：key = 匹配的 beanName，value = beanName 对应的实例化 bean</span>
+        Map&lt;String, Object&gt; matchingBeans = findAutowireCandidates(beanName, type, descriptor);
+        <span class="hljs-comment">// 没有找到，检验 @autowire  的 require 是否为 true</span>
+        <span class="hljs-keyword">if</span> (matchingBeans.isEmpty()) &#123;
+            <span class="hljs-comment">// 如果 @autowire 的 require 属性为 true ，但是没有找到相应的匹配项，则抛出异常</span>
+            <span class="hljs-keyword">if</span> (isRequired(descriptor)) &#123;
+                raiseNoMatchingBeanFound(type, descriptor.getResolvableType(), descriptor);
+            &#125;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+        &#125;
+
+        String autowiredBeanName;
+        Object instanceCandidate;
+
+        <span class="hljs-keyword">if</span> (matchingBeans.size() &gt; <span class="hljs-number">1</span>) &#123;
+            <span class="hljs-comment">// 确认给定 bean autowire 的候选者</span>
+            <span class="hljs-comment">// 按照 @Primary 和 @Priority 的顺序</span>
+            autowiredBeanName = determineAutowireCandidate(matchingBeans, descriptor);
+            <span class="hljs-keyword">if</span> (autowiredBeanName == <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-keyword">if</span> (isRequired(descriptor) || !indicatesMultipleBeans(type)) &#123;
+                    <span class="hljs-comment">// 唯一性处理</span>
+                    <span class="hljs-keyword">return</span> descriptor.resolveNotUnique(descriptor.getResolvableType(), matchingBeans);
+                &#125;
+                <span class="hljs-keyword">else</span> &#123;
+                    <span class="hljs-comment">// In case of an optional Collection/Map, silently ignore a non-unique case:</span>
+                    <span class="hljs-comment">// possibly it was meant to be an empty collection of multiple regular beans</span>
+                    <span class="hljs-comment">// (before 4.3 in particular when we didn&#x27;t even look for collection beans).</span>
+                    <span class="hljs-comment">// 在可选的Collection / Map的情况下，默默地忽略一个非唯一的情况：可能它是一个多个常规bean的空集合</span>
+                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+                &#125;
+            &#125;
+            instanceCandidate = matchingBeans.get(autowiredBeanName);
+        &#125;
+        <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">// We have exactly one match.</span>
+            Map.Entry&lt;String, Object&gt; entry = matchingBeans.entrySet().iterator().next();
+            autowiredBeanName = entry.getKey();
+            instanceCandidate = entry.getValue();
+        &#125;
+
+        <span class="hljs-keyword">if</span> (autowiredBeanNames != <span class="hljs-keyword">null</span>) &#123;
+            autowiredBeanNames.add(autowiredBeanName);
+        &#125;
+        <span class="hljs-keyword">if</span> (instanceCandidate <span class="hljs-keyword">instanceof</span> Class) &#123;
+            instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, <span class="hljs-keyword">this</span>);
+        &#125;
+        Object result = instanceCandidate;
+        <span class="hljs-keyword">if</span> (result <span class="hljs-keyword">instanceof</span> NullBean) &#123;
+            <span class="hljs-keyword">if</span> (isRequired(descriptor)) &#123;
+                raiseNoMatchingBeanFound(type, descriptor.getResolvableType(), descriptor);
+            &#125;
+            result = <span class="hljs-keyword">null</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (!ClassUtils.isAssignableValue(type, result)) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanNotOfRequiredTypeException(autowiredBeanName, type, instanceCandidate.getClass());
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+    <span class="hljs-keyword">finally</span> &#123;
+        ConstructorResolver.setCurrentInjectionPoint(previousInjectionPoint);
+    &#125;
+&#125;</code></pre>
+
+<p>到这里就已经完成了所有属性的注入了。</p>
+<ul>
+<li>下一步，则是对依赖 bean 的依赖检测和 PostProcessor 处理（该分析放在最后）。</li>
+</ul>
+<ul>
+<li>最后一步：<code>applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs)</code> 方法。</li>
+</ul>
+<h5 id="applyPropertyValues-方法"><a href="#applyPropertyValues-方法" class="headerlink" title="applyPropertyValues()方法"></a><code>applyPropertyValues()</code>方法</h5><p>上面只是完成了所有注入属性的获取，将获取的属性封装在 PropertyValues 的实例对象 <code>pvs</code> 中，并没有应用到已经实例化的 bean 中。该方法是<code>populateBean()</code>的最后一步&lt;5&gt;，将属性添加到Bean。</p>
+<pre><code class="hljs java"><span class="hljs-comment">//AbstractAutowireCapableBeanFactory.java</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">applyPropertyValues</span><span class="hljs-params">(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (pvs.isEmpty()) &#123;
+        <span class="hljs-keyword">return</span>;
+    &#125;
+
+    <span class="hljs-comment">// 设置 BeanWrapperImpl 的 SecurityContext 属性</span>
+    <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-keyword">null</span> &amp;&amp; bw <span class="hljs-keyword">instanceof</span> BeanWrapperImpl) &#123;
+        ((BeanWrapperImpl) bw).setSecurityContext(getAccessControlContext());
+    &#125;
+
+    <span class="hljs-comment">// MutablePropertyValues 类型属性</span>
+    MutablePropertyValues mpvs = <span class="hljs-keyword">null</span>;
+    <span class="hljs-comment">// 原始类型</span>
+    List&lt;PropertyValue&gt; original;
+
+    <span class="hljs-comment">// 获得 original</span>
+    <span class="hljs-keyword">if</span> (pvs <span class="hljs-keyword">instanceof</span> MutablePropertyValues) &#123;
+        mpvs = (MutablePropertyValues) pvs;
+        <span class="hljs-comment">// 属性值已经转换</span>
+        <span class="hljs-keyword">if</span> (mpvs.isConverted()) &#123;
+            <span class="hljs-comment">// Shortcut: use the pre-converted values as-is.</span>
+            <span class="hljs-keyword">try</span> &#123;
+                <span class="hljs-comment">// 为实例化对象设置属性值 ，依赖注入真真正正地实现在此！！！！！</span>
+                bw.setPropertyValues(mpvs);
+                <span class="hljs-keyword">return</span>;
+            &#125;
+            <span class="hljs-keyword">catch</span> (BeansException ex) &#123;
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanCreationException(
+                    mbd.getResourceDescription(), beanName, <span class="hljs-string">&quot;Error setting property values&quot;</span>, ex);
+            &#125;
+        &#125;
+        original = mpvs.getPropertyValueList();
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-comment">// 如果 pvs 不是 MutablePropertyValues 类型，则直接使用原始类型</span>
+        original = Arrays.asList(pvs.getPropertyValues());
+    &#125;
+
+    <span class="hljs-comment">// 获取 TypeConverter = 获取用户自定义的类型转换</span>
+    TypeConverter converter = getCustomTypeConverter();
+    <span class="hljs-keyword">if</span> (converter == <span class="hljs-keyword">null</span>) &#123;
+        converter = bw;
+    &#125;
+    <span class="hljs-comment">// 获取对应的解析器</span>
+    BeanDefinitionValueResolver valueResolver = <span class="hljs-keyword">new</span> BeanDefinitionValueResolver(<span class="hljs-keyword">this</span>, beanName, mbd, converter);
+
+    <span class="hljs-comment">// Create a deep copy, resolving any references for values.</span>
+    List&lt;PropertyValue&gt; deepCopy = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(original.size());
+    <span class="hljs-keyword">boolean</span> resolveNecessary = <span class="hljs-keyword">false</span>;
+
+    <span class="hljs-comment">// 遍历属性，将属性转换为对应类的对应属性的类型</span>
+    <span class="hljs-keyword">for</span> (PropertyValue pv : original) &#123;
+        <span class="hljs-comment">// 属性值不需要转换</span>
+        <span class="hljs-keyword">if</span> (pv.isConverted()) &#123;
+            deepCopy.add(pv);
+        &#125;
+        <span class="hljs-comment">// 属性值需要转换</span>
+        <span class="hljs-keyword">else</span> &#123;
+            String propertyName = pv.getName();
+            Object originalValue = pv.getValue();<span class="hljs-comment">// 原始的属性值，即转换之前的属性值</span>
+            <span class="hljs-keyword">if</span> (originalValue == AutowiredPropertyMarker.INSTANCE) &#123;
+                Method writeMethod = bw.getPropertyDescriptor(propertyName).getWriteMethod();
+                <span class="hljs-keyword">if</span> (writeMethod == <span class="hljs-keyword">null</span>) &#123;
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;Autowire marker for property without write method: &quot;</span> + pv);
+                &#125;
+                originalValue = <span class="hljs-keyword">new</span> DependencyDescriptor(<span class="hljs-keyword">new</span> MethodParameter(writeMethod, <span class="hljs-number">0</span>), <span class="hljs-keyword">true</span>);
+            &#125;
+            Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue); <span class="hljs-comment">// 转换属性值，例如将引用转换为IoC容器中实例化对象引用 ！！！！！ 对属性值的解析！！</span>
+            Object convertedValue = resolvedValue;<span class="hljs-comment">// 转换之后的属性值</span>
+            <span class="hljs-keyword">boolean</span> convertible = bw.isWritableProperty(propertyName) &amp;&amp;
+                !PropertyAccessorUtils.isNestedOrIndexedProperty(propertyName);<span class="hljs-comment">// 属性值是否可以转换</span>
+            <span class="hljs-keyword">if</span> (convertible) &#123;
+                <span class="hljs-comment">// 使用用户自定义的类型转换器转换属性值</span>
+                convertedValue = convertForProperty(resolvedValue, propertyName, bw, converter);
+            &#125;
+            <span class="hljs-comment">// Possibly store converted value in merged bean definition,</span>
+            <span class="hljs-comment">// in order to avoid re-conversion for every created bean instance.</span>
+            <span class="hljs-comment">// 存储转换后的属性值，避免每次属性注入时的转换工作</span>
+            <span class="hljs-keyword">if</span> (resolvedValue == originalValue) &#123;
+                <span class="hljs-keyword">if</span> (convertible) &#123;
+                    <span class="hljs-comment">// 设置属性转换之后的值</span>
+                    pv.setConvertedValue(convertedValue);
+                &#125;
+                deepCopy.add(pv);
+            &#125;
+            <span class="hljs-comment">// 属性是可转换的，且属性原始值是字符串类型，且属性的原始类型值不是</span>
+            <span class="hljs-comment">// 动态生成的字符串，且属性的原始值不是集合或者数组类型</span>
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (convertible &amp;&amp; originalValue <span class="hljs-keyword">instanceof</span> TypedStringValue &amp;&amp;
+                     !((TypedStringValue) originalValue).isDynamic() &amp;&amp;
+                     !(convertedValue <span class="hljs-keyword">instanceof</span> Collection || ObjectUtils.isArray(convertedValue))) &#123;
+                pv.setConvertedValue(convertedValue);
+                deepCopy.add(pv);
+            &#125;
+            <span class="hljs-keyword">else</span> &#123;
+                resolveNecessary = <span class="hljs-keyword">true</span>;
+                <span class="hljs-comment">// 重新封装属性的值</span>
+                deepCopy.add(<span class="hljs-keyword">new</span> PropertyValue(pv, convertedValue));
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-comment">// 标记属性值已经转换过</span>
+    <span class="hljs-keyword">if</span> (mpvs != <span class="hljs-keyword">null</span> &amp;&amp; !resolveNecessary) &#123;
+        mpvs.setConverted();
+    &#125;
+
+    <span class="hljs-comment">// Set our (possibly massaged) deep copy.</span>
+    <span class="hljs-comment">// 进行属性依赖注入，依赖注入的真真正正实现依赖的注入方法在此！！！</span>
+    <span class="hljs-keyword">try</span> &#123;
+        bw.setPropertyValues(<span class="hljs-keyword">new</span> MutablePropertyValues(deepCopy));
+    &#125;
+    <span class="hljs-keyword">catch</span> (BeansException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanCreationException(
+            mbd.getResourceDescription(), beanName, <span class="hljs-string">&quot;Error setting property values&quot;</span>, ex);
+    &#125;
+&#125;</code></pre>
+
+<p>以上完成了属性转换：</p>
+<ul>
+<li>属性值类型<strong>不需要</strong>转换时，不需要解析属性值，直接准备进行依赖注入。</li>
+<li>属性值<strong>需要</strong>进行类型转换时，如对其他对象的引用等，首先需要解析属性值，然后对解析后的属性值进行依赖注入。</li>
+</ul>
+<p>其中调用了 <code>resolveValueIfNecessary(...)</code>方法对属性值的解析。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E5%88%9B%E5%BB%BABean%E4%B9%8B%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">创建Bean之循环依赖</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E5%88%9B%E5%BB%BABean%E4%B9%8B%E5%AE%9E%E4%BE%8B%E5%8C%96Bean%E5%AF%B9%E8%B1%A12/">
+                        <span class="hidden-mobile">创建Bean之实例化Bean对象二</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
