@@ -1,0 +1,591 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>IOC之深入分析 PropertyOverrideConfigurer - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="IOC之深入分析 PropertyOverrideConfigurer">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 21:55" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      698 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      10
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">IOC之深入分析 PropertyOverrideConfigurer</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">IOC之深入分析 PropertyOverrideConfigurer</font></div>
+
+<p>BeanFactoryPostProcessor 作用于 BeanDefinition 完成加载之后与 Bean 实例化之前，是 Spring 提供的一种强大的扩展机制。它有两个重要的子类，一个是 PropertyPlaceholderConfigurer，另一个是 PropertyOverrideConfigurer ，其中 PropertyPlaceholderConfigurer 允许我们通过配置 Properties 的方式来取代 Bean 中定义的占位符，PropertyOverrideConfigurer 允许我们对 Spring 容器中配置的任何我们想处理的 bean 定义的 property 信息进行覆盖替换。</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>UML图：</p>
+<p><img src="/images/spring_IOC/propertyOverrideConfigurer%E7%BB%93%E6%9E%84%E5%9B%BE.png" srcset="/img/loading.gif" alt="propertyOverrideConfigurer结构图"></p>
+<p>与 PropertyPlaceholderConfigurer 一样，也是继承 PropertyResourceConfigurer，我们知道 PropertyResourceConfigurer 对 BeanFactoryPostProcessor 的 <code>postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)</code> 方法提供了实现，在该实现中它会去读取指定配置文件中的内容，然后调用 <code>processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)</code> 方法。该方法是一个抽象方法，具体的实现由子类来实现，所以这里我们只需要看 PropertyOverrideConfigurer 中 <code>processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)</code> 方法的具体实现：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PropertyOverrideConfigurer.java</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">processProperties</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactory, Properties props)</span></span>
+<span class="hljs-function">    <span class="hljs-keyword">throws</span> BeansException </span>&#123;
+
+    <span class="hljs-comment">// 迭代配置文件中的内容</span>
+    <span class="hljs-keyword">for</span> (Enumeration&lt;?&gt; names = props.propertyNames(); names.hasMoreElements();) &#123;
+        String key = (String) names.nextElement();
+        <span class="hljs-keyword">try</span> &#123;
+            processKey(beanFactory, key, props.getProperty(key));
+        &#125;
+        <span class="hljs-keyword">catch</span> (BeansException ex) &#123;
+            String msg = <span class="hljs-string">&quot;Could not process key &#x27;&quot;</span> + key + <span class="hljs-string">&quot;&#x27; in PropertyOverrideConfigurer&quot;</span>;
+            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.ignoreInvalidKeys) &#123;
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanInitializationException(msg, ex);
+            &#125;
+            <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+                logger.debug(msg, ex);
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p>迭代 <code>props</code> 数组，依次调用 <code>processKey(ConfigurableListableBeanFactory factory, String key, String value)</code> 方法：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PropertyOverrideConfigurer.java</span>
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment">* Bean 名字的分隔符</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DEFAULT_BEAN_NAME_SEPARATOR = <span class="hljs-string">&quot;.&quot;</span>;
+<span class="hljs-keyword">private</span> String beanNameSeparator = DEFAULT_BEAN_NAME_SEPARATOR;
+
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">processKey</span><span class="hljs-params">(ConfigurableListableBeanFactory factory, String key, String value)</span> <span class="hljs-keyword">throws</span> BeansException </span>&#123;
+
+    <span class="hljs-comment">// 判断是否存在 &quot;.&quot;，即获取其索引位置</span>
+    <span class="hljs-keyword">int</span> separatorIndex = key.indexOf(<span class="hljs-keyword">this</span>.beanNameSeparator);
+    <span class="hljs-keyword">if</span> (separatorIndex == -<span class="hljs-number">1</span>) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanInitializationException(<span class="hljs-string">&quot;Invalid key &#x27;&quot;</span> + key +
+                                              <span class="hljs-string">&quot;&#x27;: expected &#x27;beanName&quot;</span> + <span class="hljs-keyword">this</span>.beanNameSeparator + <span class="hljs-string">&quot;property&#x27;&quot;</span>);
+    &#125;
+    <span class="hljs-comment">// 得到 beanName</span>
+    String beanName = key.substring(<span class="hljs-number">0</span>, separatorIndex);
+    <span class="hljs-comment">// 得到属性名</span>
+    String beanProperty = key.substring(separatorIndex + <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">this</span>.beanNames.add(beanName);
+    <span class="hljs-comment">// 替换</span>
+    applyPropertyValue(factory, beanName, beanProperty, value);
+    <span class="hljs-keyword">if</span> (logger.isDebugEnabled()) &#123;
+        logger.debug(<span class="hljs-string">&quot;Property &#x27;&quot;</span> + key + <span class="hljs-string">&quot;&#x27; set to value [&quot;</span> + value + <span class="hljs-string">&quot;]&quot;</span>);
+    &#125;
+&#125;</code></pre>
+
+<p>获取分割符 <code>“.”</code> 的索引位置，得到 <code>beanName</code> 以及相应的属性，然后调用 <code>applyPropertyValue(ConfigurableListableBeanFactory factory, String beanName, String property, String value)</code> 方法：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PropertyOverrideConfigurer.java</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">applyPropertyValue</span><span class="hljs-params">(ConfigurableListableBeanFactory factory, String beanName, String property, String value)</span> </span>&#123;
+
+    <span class="hljs-comment">// 获得 BeanDefinition 对象</span>
+    BeanDefinition bd = factory.getBeanDefinition(beanName);
+    BeanDefinition bdToUse = bd;
+    <span class="hljs-keyword">while</span> (bd != <span class="hljs-keyword">null</span>) &#123;
+        bdToUse = bd;
+        bd = bd.getOriginatingBeanDefinition();
+    &#125;
+    <span class="hljs-comment">// 设置 PropertyValue 到 BeanDefinition 中</span>
+    PropertyValue pv = <span class="hljs-keyword">new</span> PropertyValue(property, value);
+    pv.setOptional(<span class="hljs-keyword">this</span>.ignoreInvalidKeys);
+    bdToUse.getPropertyValues().addPropertyValue(pv);
+&#125;</code></pre>
+
+<p>从容器中获取 BeanDefinition ，然后根据属性 <code>property</code> 和其值 <code>value</code> 构造成一个 PropertyValue 对象，最后调用 <code>addPropertyValue(PropertyValue pv )</code> 方法。PropertyValue 是用于保存一组bean属性的信息和值的对像：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// MutablePropertyValues.java</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> MutablePropertyValues <span class="hljs-title">addPropertyValue</span><span class="hljs-params">(PropertyValue pv)</span> </span>&#123;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.propertyValueList.size(); i++) &#123;
+        PropertyValue currentPv = <span class="hljs-keyword">this</span>.propertyValueList.get(i);
+        <span class="hljs-comment">// 匹配</span>
+        <span class="hljs-keyword">if</span> (currentPv.getName().equals(pv.getName())) &#123;
+            <span class="hljs-comment">// 合并属性</span>
+            pv = mergeIfRequired(pv, currentPv);
+            <span class="hljs-comment">// 覆盖属性</span>
+            setPropertyValueAt(pv, i);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        &#125;
+    &#125;
+    <span class="hljs-comment">// 未匹配到，添加到 propertyValueList 中</span>
+    <span class="hljs-keyword">this</span>.propertyValueList.add(pv);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+&#125;</code></pre>
+
+<p>添加 PropertyValue 对象，替换或者合并相同的属性值。</p>
+<h4 id="propertyOverride和PropertyPlaceholder"><a href="#propertyOverride和PropertyPlaceholder" class="headerlink" title="propertyOverride和PropertyPlaceholder"></a>propertyOverride和PropertyPlaceholder</h4><p><img src="/images/spring_IOC/propertyOverride%E5%92%8CPropertyPlaceholder.png" srcset="/img/loading.gif" alt="propertyOverride和PropertyPlaceholder"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/IoC%20%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20Bean%20%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E4%BD%93%E7%B3%BB/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">IoC 之深入分析 Bean 的类型转换体系</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/IoC%20%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20PropertyPlaceholderConfigurer/">
+                        <span class="hidden-mobile">IoC 之深入分析 PropertyPlaceholderConfigurer</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

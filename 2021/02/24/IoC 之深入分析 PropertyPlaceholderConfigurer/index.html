@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>IoC 之深入分析 PropertyPlaceholderConfigurer - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="IoC 之深入分析 PropertyPlaceholderConfigurer">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 21:54" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">IoC 之深入分析 PropertyPlaceholderConfigurer</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">IoC 之深入分析 PropertyPlaceholderConfigurer</font></div>
+
+<p>BeanFactoryPostProcessor 作用：在容器启动阶段，可以对解析好的 BeanDefinition 进行定制化处理，而其中 <strong>PropertyPlaceholderConfigurer</strong> 是其一个非常重要的应用，也是其<strong>子类</strong>。</p>
+<p><code>PropertyPlaceholderConfigurer</code> 允许我们用 Properties 文件中的属性，来定义应用上下文（配置文件或者注解），即：我们可以在 XML 配置文件（或者其他方式，如注解方式）中使用<strong>占位符</strong>的方式来定义一些资源，并将这些占位符所代表的资源配置到 Properties 中，这样只需要对 Properties 文件进行修改即可。</p>
+<h4 id="PropertyPlaceholderConfigurer"><a href="#PropertyPlaceholderConfigurer" class="headerlink" title="PropertyPlaceholderConfigurer"></a><code>PropertyPlaceholderConfigurer</code></h4><p>该类间接实现了 Aware 和 BeanFactoryPostProcessor 两大扩展接口，之前介绍BeanFactoryPostProcessor，知道了BeanFactoryPostProcessor 提供了 <code>postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)</code> 接口方法，在这个体系中该方法的是在 <strong>PropertyResourceConfigurer</strong> 中实现，该类为属性资源的配置类，它实现了 BeanFactoryPostProcessor 接口：</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">postProcessBeanFactory</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactory)</span> <span class="hljs-keyword">throws</span> BeansException </span>&#123;
+    <span class="hljs-keyword">try</span> &#123;
+        <span class="hljs-comment">// &lt;1&gt; 返回合并的 Properties 实例</span>
+        Properties mergedProps = mergeProperties();
+
+        <span class="hljs-comment">// Convert the merged properties, if necessary.</span>
+        <span class="hljs-comment">// &lt;2&gt; 转换合并属性</span>
+        convertProperties(mergedProps);
+
+        <span class="hljs-comment">// Let the subclass process the properties.</span>
+        <span class="hljs-comment">// &lt;3&gt; 让子类处理属性</span>
+        processProperties(beanFactory, mergedProps);
+    &#125;
+    <span class="hljs-keyword">catch</span> (IOException ex) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanInitializationException(<span class="hljs-string">&quot;Could not load properties&quot;</span>, ex);
+    &#125;
+&#125;</code></pre>
+
+<ul>
+<li><code>&lt;1&gt;</code> 处，调用 <code>mergeProperties()</code> 方法，返回合并的 Properties 实例。Properties 实例维护着<strong>一组</strong> <code>key-value</code> ，其实就是 Properties 配置文件中的内容。</li>
+<li><code>&lt;2&gt;</code> 处，调用 <code>convertProperties(Properties props)</code> 方法，转换合并的值，其实就是将原始值替换为真正的值。</li>
+<li><code>&lt;3&gt;</code> 处，调用 <code>processProperties(ConfigurableListableBeanFactory beanFactory, Properties props)</code> 方法，前面两个步骤已经将配置文件中的值进行了处理，那么该方法就是真正的替换过程，该方法<strong>由子类实现</strong>。</li>
+</ul>
+<pre><code class="hljs java"><span class="hljs-comment">// PropertyResourceConfigurer.java</span>
+
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">processProperties</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactory, Properties props)</span> <span class="hljs-keyword">throws</span> BeansException</span>;</code></pre>
+
+<p><strong>注：</strong><code>PropertyPlaceholderConfigurer</code>继承了<code>PlaceholderConfigurerSupport</code>，<code>PlaceholderConfigurerSupport</code>继承了<code>PropertyResourceConfigurer</code>。</p>
+<h4 id="PropertyPlaceholderConfigurer-1"><a href="#PropertyPlaceholderConfigurer-1" class="headerlink" title="PropertyPlaceholderConfigurer"></a><code>PropertyPlaceholderConfigurer</code></h4><p>在 PropertyPlaceholderConfigurer 中，重写 <code>processProperties(ConfigurableListableBeanFactory beanFactory, Properties props)</code> 方法：</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">processProperties</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)</span> <span class="hljs-keyword">throws</span> BeansException </span>&#123;
+
+    <span class="hljs-comment">// &lt;1&gt; 创建 StringValueResolver 对象，PlaceholderResolvingStringValueResolver是个内部类</span>
+    StringValueResolver valueResolver = <span class="hljs-keyword">new</span> PlaceholderResolvingStringValueResolver(props);
+    <span class="hljs-comment">// &lt;2&gt; 处理</span>
+    doProcessProperties(beanFactoryToProcess, valueResolver);
+&#125;</code></pre>
+
+<h5 id="PlaceholderResolvingStringValueResolver类"><a href="#PlaceholderResolvingStringValueResolver类" class="headerlink" title="PlaceholderResolvingStringValueResolver类"></a><code>PlaceholderResolvingStringValueResolver</code>类</h5><p>首先，构造一个 PlaceholderResolvingStringValueResolver 类型的 StringValueResolver 实例，该类是个内部类。StringValueResolver 为一个解析 String 类型值的策略接口，该接口提供了 <code>resolveStringValue(String strVal)</code> 方法，用于解析 String 值。PlaceholderResolvingStringValueResolver 为其一个解析策略：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PropertyPlaceholderConfigurer.java</span>
+    
+<span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PlaceholderResolvingStringValueResolver</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">StringValueResolver</span> </span>&#123;
+    
+	<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> PropertyPlaceholderHelper helper;
+    
+	<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> PlaceholderResolver resolver;
+    
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">PlaceholderResolvingStringValueResolver</span><span class="hljs-params">(Properties props)</span> </span>&#123;
+		<span class="hljs-keyword">this</span>.helper = <span class="hljs-keyword">new</span> PropertyPlaceholderHelper(
+				placeholderPrefix, placeholderSuffix, valueSeparator, ignoreUnresolvablePlaceholders);
+		<span class="hljs-keyword">this</span>.resolver = <span class="hljs-keyword">new</span> PropertyPlaceholderConfigurerResolver(props);
+	&#125;
+	
+	<span class="hljs-comment">// ... 省略 resolveStringValue 方法</span>
+&#125;</code></pre>
+
+<ul>
+<li>在构造 String 值解析器 StringValueResolver 时，将已经解析的 Properties 实例对象封装在 PlaceholderResolver 实例 <code>resolver</code> 中。PlaceholderResolver 是一个用于解析字符串中包含占位符的替换值的策略接口，该接口有一个 <code>resolvePlaceholder(String strVa)</code> 方法，用于返回占位符的替换值。</li>
+<li>还有一个 PropertyPlaceholderHelper 工具 <code>helper</code> ，从名字上面看应该是进行替换的工具类。</li>
+</ul>
+<h5 id="doProcessProperties-方法"><a href="#doProcessProperties-方法" class="headerlink" title="doProcessProperties()方法"></a><code>doProcessProperties()</code>方法</h5><p>得到 String 解析器的实例 <code>valueResolver</code> 后，则会调用 <code>doProcessProperties(ConfigurableListableBeanFactory beanFactoryToProcess, StringValueResolver valueResolver)</code> 方法，来进行真值的替换操作。该方法在父类 PlaceholderConfigurerSupport 中实现：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PlaceholderConfigurerSupport.java</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doProcessProperties</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactoryToProcess,</span></span>
+<span class="hljs-function"><span class="hljs-params">                                   StringValueResolver valueResolver)</span> </span>&#123;
+
+    <span class="hljs-comment">// &lt;1&gt; 创建 BeanDefinitionVisitor 对象</span>
+    BeanDefinitionVisitor visitor = <span class="hljs-keyword">new</span> BeanDefinitionVisitor(valueResolver);
+
+    <span class="hljs-comment">// &lt;2&gt; 得到该容器的所有 BeanName</span>
+    String[] beanNames = beanFactoryToProcess.getBeanDefinitionNames();
+    <span class="hljs-keyword">for</span> (String curName : beanNames) &#123;
+        <span class="hljs-comment">// 校验</span>
+        <span class="hljs-comment">//检查我们是否没有解析我们自己的bean定义，以避免在属性文件位置中无法解析的占位符失败。</span>
+        <span class="hljs-keyword">if</span> (!(curName.equals(<span class="hljs-keyword">this</span>.beanName)<span class="hljs-comment">// 1. 当前实例 PlaceholderConfigurerSupport 不在解析范围内</span>
+              &amp;&amp; beanFactoryToProcess.equals(<span class="hljs-keyword">this</span>.beanFactory))) &#123;<span class="hljs-comment">// 2. 同一个 Spring 容器</span>
+            BeanDefinition bd = beanFactoryToProcess.getBeanDefinition(curName);
+            <span class="hljs-keyword">try</span> &#123;
+                visitor.visitBeanDefinition(bd);
+            &#125;
+            <span class="hljs-keyword">catch</span> (Exception ex) &#123;
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionStoreException(bd.getResourceDescription(), curName, ex.getMessage(), ex);
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">// &lt;3&gt; Spring 2.5的新功能：解析别名目标名称和别名中的占位符。</span>
+    beanFactoryToProcess.resolveAliases(valueResolver);
+
+    <span class="hljs-comment">// &lt;4&gt; Spring 3.0的新功能：解决嵌入值（例如注释属性）中的占位符。</span>
+    beanFactoryToProcess.addEmbeddedValueResolver(valueResolver);
+&#125;</code></pre>
+
+<ul>
+<li>&lt;1&gt; 处，根据 String 值解析策略 <code>valueResolver</code> 得到 BeanDefinitionVisitor 实例。BeanDefinitionVisitor 是 BeanDefinition 的访问者，我们通过它可以实现对 BeanDefinition 内容的进行访问，内容很多，例如 Scope、PropertyValues、FactoryMethodName 等等。</li>
+<li>&lt;2&gt; 处，得到该容器的所有 BeanName，然后对其进行访问（ <code>visitBeanDefinition(BeanDefinition beanDefinition)</code> 方法）。</li>
+<li>&lt;3&gt; 处，解析别名的占位符。</li>
+<li>&lt;4&gt; 处，解析嵌入值的占位符，例如注释属性。</li>
+</ul>
+<h6 id="visitBeanDefinition-方法"><a href="#visitBeanDefinition-方法" class="headerlink" title="visitBeanDefinition()方法"></a><code>visitBeanDefinition()</code>方法</h6><p><code>doProcessProperties()</code>的<strong>核心</strong>在于 <code>visitBeanDefinition(BeanDefinition beanDefinition)</code> 方法的调用：</p>
+<pre><code class="hljs java"><span class="hljs-comment">//BeanDefinitionVisitor.java</span>
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> *遍历给定的BeanDefinition对象以及其中包含的MutablePropertyValues和ConstructorArgumentValues。</span>
+<span class="hljs-comment"> */</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">visitBeanDefinition</span><span class="hljs-params">(BeanDefinition beanDefinition)</span> </span>&#123;
+    visitParentName(beanDefinition);
+    visitBeanClassName(beanDefinition);
+    visitFactoryBeanName(beanDefinition);
+    visitFactoryMethodName(beanDefinition);
+    visitScope(beanDefinition);
+    <span class="hljs-keyword">if</span> (beanDefinition.hasPropertyValues()) &#123;
+        <span class="hljs-comment">//本篇重点</span>
+        visitPropertyValues(beanDefinition.getPropertyValues());
+    &#125;
+    <span class="hljs-keyword">if</span> (beanDefinition.hasConstructorArgumentValues()) &#123;
+        ConstructorArgumentValues cas = beanDefinition.getConstructorArgumentValues();
+        visitIndexedArgumentValues(cas.getIndexedArgumentValues());
+        visitGenericArgumentValues(cas.getGenericArgumentValues());
+    &#125;
+&#125;</code></pre>
+
+<p>该方法基本访问了 BeanDefinition 中所有比较有用的东西了，包括 parent 、class 、factory-bean 、factory-method 、scope 、property 、constructor-arg 。</p>
+<h6 id="visitPropertyValues-方法"><a href="#visitPropertyValues-方法" class="headerlink" title="visitPropertyValues()方法"></a><code>visitPropertyValues()</code>方法</h6><p>因为该篇主要内容是<code>property</code>，所以重点只看<code>visitPropertyValues()</code>方法。</p>
+<p>过程就是对属性数组进行遍历，调用 <code>resolveValue(Object value)</code>方法，对属性进行解析获取最新值，如果新值和旧值不等，则用新值替换旧值。：</p>
+<pre><code class="hljs java"><span class="hljs-comment">//BeanDefinitionVisitor.java</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">visitPropertyValues</span><span class="hljs-params">(MutablePropertyValues pvs)</span> </span>&#123;
+    PropertyValue[] pvArray = pvs.getPropertyValues();
+    <span class="hljs-comment">// 遍历 PropertyValue 数组</span>
+    <span class="hljs-keyword">for</span> (PropertyValue pv : pvArray) &#123;
+        <span class="hljs-comment">// 解析真值</span>
+        Object newVal = resolveValue(pv.getValue());
+        <span class="hljs-keyword">if</span> (!ObjectUtils.nullSafeEquals(newVal, pv.getValue())) &#123;
+            <span class="hljs-comment">// 设置到 PropertyValue 中</span>
+            pvs.add(pv.getName(), newVal);
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p><code>resolveValue()</code>方法：</p>
+<pre><code class="hljs java"><span class="hljs-comment">//BeanDefinitionVisitor.java</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> Object <span class="hljs-title">resolveValue</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object value)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> BeanDefinition) &#123;
+        visitBeanDefinition((BeanDefinition) value);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> BeanDefinitionHolder) &#123;
+        visitBeanDefinition(((BeanDefinitionHolder) value).getBeanDefinition());
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> RuntimeBeanReference) &#123;
+        RuntimeBeanReference ref = (RuntimeBeanReference) value;
+        String newBeanName = resolveStringValue(ref.getBeanName());
+        <span class="hljs-keyword">if</span> (newBeanName == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (!newBeanName.equals(ref.getBeanName())) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> RuntimeBeanReference(newBeanName);
+        &#125;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> RuntimeBeanNameReference) &#123;
+        RuntimeBeanNameReference ref = (RuntimeBeanNameReference) value;
+        String newBeanName = resolveStringValue(ref.getBeanName());
+        <span class="hljs-keyword">if</span> (newBeanName == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+        &#125;
+        <span class="hljs-keyword">if</span> (!newBeanName.equals(ref.getBeanName())) &#123;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> RuntimeBeanNameReference(newBeanName);
+        &#125;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Object[]) &#123;
+        visitArray((Object[]) value);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> List) &#123;
+        visitList((List) value);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Set) &#123;
+        visitSet((Set) value);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> Map) &#123;
+        visitMap((Map) value);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> TypedStringValue) &#123;
+        TypedStringValue typedStringValue = (TypedStringValue) value;
+        String stringValue = typedStringValue.getValue();
+        <span class="hljs-keyword">if</span> (stringValue != <span class="hljs-keyword">null</span>) &#123;
+            String visitedString = resolveStringValue(stringValue);
+            typedStringValue.setValue(visitedString);
+        &#125;
+    &#125;
+    <span class="hljs-comment">// 由于 Properties 中的是 String，所以重点在此处</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">instanceof</span> String) &#123;
+        <span class="hljs-keyword">return</span> resolveStringValue((String) value);
+    &#125;
+    <span class="hljs-keyword">return</span> value;
+&#125;</code></pre>
+
+<p><code>resolveStringValue()</code>方法：</p>
+<pre><code class="hljs java"><span class="hljs-comment">/**</span>
+<span class="hljs-comment">* 解决给定的String值，例如解析占位符。</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> String <span class="hljs-title">resolveStringValue</span><span class="hljs-params">(String strVal)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.valueResolver == <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(<span class="hljs-string">&quot;No StringValueResolver specified - pass a resolver object into the constructor or override the &#x27;resolveStringValue&#x27; method&quot;</span>);
+    &#125;
+    <span class="hljs-comment">// 解析真值</span>
+    String resolvedValue = <span class="hljs-keyword">this</span>.valueResolver.resolveStringValue(strVal);
+    <span class="hljs-comment">// Return original String if not modified.</span>
+    <span class="hljs-keyword">return</span> (strVal.equals(resolvedValue) ? strVal : resolvedValue);
+&#125;</code></pre>
+
+<p><code>valueResolver</code> 是我们在构造 BeanDefinitionVisitor 实例时传入的 String 类型解析器 PlaceholderResolvingStringValueResolver，调用其 <code>resolveStringValue(String strVal)</code> 方法：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PropertyPlaceholderConfigurer.java</span>
+<span class="hljs-comment">// 内部类 PlaceholderResolvingStringValueResolver.java</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">PlaceholderResolvingStringValueResolver</span><span class="hljs-params">(Properties props)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.helper = <span class="hljs-keyword">new</span> PropertyPlaceholderHelper(placeholderPrefix, placeholderSuffix, valueSeparator, ignoreUnresolvablePlaceholders);
+    <span class="hljs-keyword">this</span>.resolver = <span class="hljs-keyword">new</span> PropertyPlaceholderConfigurerResolver(props);
+&#125;
+
+<span class="hljs-meta">@Override</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">resolveStringValue</span><span class="hljs-params">(String strVal)</span> <span class="hljs-keyword">throws</span> BeansException </span>&#123;
+    <span class="hljs-comment">// 解析真值</span>
+    String resolved = <span class="hljs-keyword">this</span>.helper.replacePlaceholders(strVal, <span class="hljs-keyword">this</span>.resolver);
+    <span class="hljs-keyword">if</span> (trimValues) &#123;
+        resolved = resolved.trim();
+    &#125;
+    <span class="hljs-comment">// 返回真值</span>
+    <span class="hljs-keyword">return</span> (resolved.equals(nullValue) ? <span class="hljs-keyword">null</span> : resolved);
+&#125;</code></pre>
+
+<p><code>helper</code> 为 PropertyPlaceholderHelper 实例对象，而 PropertyPlaceholderHelper 则是处理应用程序中包含占位符的字符串工具类。在构造 <code>helper</code> 实例对象时需要传入了几个参数：<code>placeholderPrefix</code>、<code>placeholderSuffix</code>、<code>valueSeparator</code>，这些值在 PlaceholderConfigurerSupport 中定义如下：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PlaceholderConfigurerSupport.java</span>
+	
+<span class="hljs-comment">/** Default placeholder prefix: &#123;<span class="hljs-doctag">@value</span>&#125;. */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DEFAULT_PLACEHOLDER_PREFIX = <span class="hljs-string">&quot;$&#123;&quot;</span>;
+<span class="hljs-comment">/** Default placeholder suffix: &#123;<span class="hljs-doctag">@value</span>&#125;. */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DEFAULT_PLACEHOLDER_SUFFIX = <span class="hljs-string">&quot;&#125;&quot;</span>;
+<span class="hljs-comment">/** Default value separator: &#123;<span class="hljs-doctag">@value</span>&#125;. */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DEFAULT_VALUE_SEPARATOR = <span class="hljs-string">&quot;:&quot;</span>;
+
+<span class="hljs-comment">/** Defaults to &#123;<span class="hljs-doctag">@value</span> #DEFAULT_PLACEHOLDER_PREFIX&#125;. */</span>
+<span class="hljs-keyword">protected</span> String placeholderPrefix = DEFAULT_PLACEHOLDER_PREFIX;
+<span class="hljs-comment">/** Defaults to &#123;<span class="hljs-doctag">@value</span> #DEFAULT_PLACEHOLDER_SUFFIX&#125;. */</span>
+<span class="hljs-keyword">protected</span> String placeholderSuffix = DEFAULT_PLACEHOLDER_SUFFIX;
+<span class="hljs-comment">/** Defaults to &#123;<span class="hljs-doctag">@value</span> #DEFAULT_VALUE_SEPARATOR&#125;. */</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-keyword">protected</span> String valueSeparator = DEFAULT_VALUE_SEPARATOR;</code></pre>
+
+<p><code>replacePlaceholders()</code>方法</p>
+<p>调用 PropertyPlaceholderHelper 的 <code>replacePlaceholders(String value, PlaceholderResolver placeholderResolver)</code> 方法，进行占位符替换：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// PropertyPlaceholderHelper.java</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">replacePlaceholders</span><span class="hljs-params">(String value, PlaceholderResolver placeholderResolver)</span> </span>&#123;
+    Assert.notNull(value, <span class="hljs-string">&quot;&#x27;value&#x27; must not be null&quot;</span>);
+    <span class="hljs-keyword">return</span> parseStringValue(value, placeholderResolver, <span class="hljs-keyword">null</span>);
+&#125;</code></pre>
+
+<p>调用 <code>parseStringValue(String value, PlaceholderResolver placeholderResolver, Set visitedPlaceholders)</code> 方法，<strong>该方法是本篇最核心的地方</strong>，<code>$&#123;&#125;</code> 占位符的替换：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> String <span class="hljs-title">parseStringValue</span><span class="hljs-params">(String value, PlaceholderResolver placeholderResolver, <span class="hljs-meta">@Nullable</span> Set&lt;String&gt; visitedPlaceholders)</span> </span>&#123;
+
+    <span class="hljs-comment">// 获取前缀 &quot;$&#123;&quot; 的索引位置</span>
+    <span class="hljs-keyword">int</span> startIndex = value.indexOf(<span class="hljs-keyword">this</span>.placeholderPrefix);
+    <span class="hljs-keyword">if</span> (startIndex == -<span class="hljs-number">1</span>) &#123;
+        <span class="hljs-keyword">return</span> value;
+    &#125;
+
+    StringBuilder result = <span class="hljs-keyword">new</span> StringBuilder(value);
+    <span class="hljs-keyword">while</span> (startIndex != -<span class="hljs-number">1</span>) &#123;
+        <span class="hljs-comment">// 获取 后缀 &quot;&#125;&quot; 的索引位置</span>
+        <span class="hljs-keyword">int</span> endIndex = findPlaceholderEndIndex(result, startIndex);
+        <span class="hljs-keyword">if</span> (endIndex != -<span class="hljs-number">1</span>) &#123;
+            <span class="hljs-comment">// 截取 &quot;$&#123;&quot; 和 &quot;&#125;&quot; 中间的内容，这也就是我们在配置文件中对应的值</span>
+            String placeholder = result.substring(startIndex + <span class="hljs-keyword">this</span>.placeholderPrefix.length(), endIndex);
+            String originalPlaceholder = placeholder;
+            <span class="hljs-keyword">if</span> (visitedPlaceholders == <span class="hljs-keyword">null</span>) &#123;
+                visitedPlaceholders = <span class="hljs-keyword">new</span> HashSet&lt;&gt;(<span class="hljs-number">4</span>);
+            &#125;
+            <span class="hljs-keyword">if</span> (!visitedPlaceholders.add(originalPlaceholder)) &#123;
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(
+                    <span class="hljs-string">&quot;Circular placeholder reference &#x27;&quot;</span> + originalPlaceholder + <span class="hljs-string">&quot;&#x27; in property definitions&quot;</span>);
+            &#125;
+            <span class="hljs-comment">// 解析占位符键中包含的占位符，真正的值</span>
+            placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
+            <span class="hljs-comment">// 从 Properties 中获取 placeHolder 对应的值 propVal</span>
+            String propVal = placeholderResolver.resolvePlaceholder(placeholder);
+            <span class="hljs-comment">// 如果不存在</span>
+            <span class="hljs-keyword">if</span> (propVal == <span class="hljs-keyword">null</span> &amp;&amp; <span class="hljs-keyword">this</span>.valueSeparator != <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-comment">// 查询 : 的位置</span>
+                <span class="hljs-keyword">int</span> separatorIndex = placeholder.indexOf(<span class="hljs-keyword">this</span>.valueSeparator);
+                <span class="hljs-comment">// 如果存在 :</span>
+                <span class="hljs-keyword">if</span> (separatorIndex != -<span class="hljs-number">1</span>) &#123;
+                    <span class="hljs-comment">// 获取 : 前面部分 actualPlaceholder</span>
+                    String actualPlaceholder = placeholder.substring(<span class="hljs-number">0</span>, separatorIndex);
+                    <span class="hljs-comment">// 获取 : 后面部分 defaultValue</span>
+                    String defaultValue = placeholder.substring(separatorIndex + <span class="hljs-keyword">this</span>.valueSeparator.length());
+                    <span class="hljs-comment">// 从 Properties 中获取 actualPlaceholder 对应的值</span>
+                    propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);
+                    <span class="hljs-comment">// 如果不存在 则返回 defaultValue</span>
+                    <span class="hljs-keyword">if</span> (propVal == <span class="hljs-keyword">null</span>) &#123;
+                        propVal = defaultValue;
+                    &#125;
+                &#125;
+            &#125;
+            <span class="hljs-keyword">if</span> (propVal != <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-comment">// 递归调用，解析先前解析的占位符值中包含的占位符。</span>
+                propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);
+                result.replace(startIndex, endIndex + <span class="hljs-keyword">this</span>.placeholderSuffix.length(), propVal);
+                <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;
+                    logger.trace(<span class="hljs-string">&quot;Resolved placeholder &#x27;&quot;</span> + placeholder + <span class="hljs-string">&quot;&#x27;&quot;</span>);
+                &#125;
+                startIndex = result.indexOf(<span class="hljs-keyword">this</span>.placeholderPrefix, startIndex + propVal.length());
+            &#125;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.ignoreUnresolvablePlaceholders) &#123;
+                <span class="hljs-comment">// 忽略值</span>
+                startIndex = result.indexOf(<span class="hljs-keyword">this</span>.placeholderPrefix, endIndex + <span class="hljs-keyword">this</span>.placeholderSuffix.length());
+            &#125;
+            <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;Could not resolve placeholder &#x27;&quot;</span> +
+                                                   placeholder + <span class="hljs-string">&quot;&#x27;&quot;</span> + <span class="hljs-string">&quot; in value \&quot;&quot;</span> + value + <span class="hljs-string">&quot;\&quot;&quot;</span>);
+            &#125;
+            visitedPlaceholders.remove(originalPlaceholder);
+        &#125;
+        <span class="hljs-keyword">else</span> &#123;
+            startIndex = -<span class="hljs-number">1</span>;
+        &#125;
+    &#125;
+    <span class="hljs-comment">// 返回propVal，就是替换之后的值</span>
+    <span class="hljs-keyword">return</span> result.toString();
+&#125;</code></pre>
+
+<ol>
+<li>获取占位符前缀 <code>&quot;$&#123;&quot;</code> 的索引位置 <code>startIndex</code> 。</li>
+<li>如果前缀 <code>&quot;$&#123;&quot;</code> 存在，则从 <code>“&#123;”</code> 后面开始获取占位符后缀 “}” 的索引位置 <code>endIndex</code> 。</li>
+<li>如果前缀 <code>“$&#123;”</code> 和后缀 <code>&quot;&#125;&quot;</code> 都存在，则截取中间部分 <code>placeholder</code> 。</li>
+<li>从 Properties 中获取 <code>placeHolder</code> 对应的值 <code>propVal</code> 。</li>
+<li>如果 <code>propVal</code> 为空，则判断占位符中是否存在 <code>&quot;:&quot;</code>，如果存在则对占位符进行分割处理，前面部分为 <code>actualPlaceholder</code>，后面部分 <code>defaultValue</code>，尝试从 Properties 中获取 <code>actualPlaceholder</code> 对应的值 <code>propVal</code>，如果不存在，则将 <code>defaultValue</code> 的值赋值给 <code>propVal</code></li>
+<li>返回 <code>propVal</code>，也就是 Properties 中对应的值。</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/IOC%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20PropertyOverrideConfigurer/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">IOC之深入分析 PropertyOverrideConfigurer</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/IOC%E4%B9%8BBeanFactoryPostProcessor/">
+                        <span class="hidden-mobile">IOC之BeanFactoryPostProcessor</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
