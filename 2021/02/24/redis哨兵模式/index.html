@@ -17,9 +17,25 @@
   <meta name="description" content="">
   <meta name="author" content="jievhaha">
   <meta name="keywords" content="">
-  <title>分类 - java - 沐子</title>
+  <title>Redis Sentinel哨兵模式 - 沐子</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
 
 
 
@@ -47,7 +63,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -146,9 +162,46 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="分类 - java">
+            <span class="h2" id="subtitle" title="Redis Sentinel哨兵模式">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 22:51" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      786 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -161,106 +214,141 @@
 
   <main>
     
-      <div class="container nopadding-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 42 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2021</p>
-    
-    <a href="/2021/02/24/redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Redis Sentinel哨兵模式</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/redis%E5%AE%89%E8%A3%85/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">redis安装配置</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">nginx动静分离</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/nginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">nginx负载均衡</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/nginx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">nginx常用命令</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/%E5%AE%89%E8%A3%85nginx/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">nginx安装</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/IoC%20%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">IoC 之自定义类型转换器</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/IoC%20%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20Bean%20%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E4%BD%93%E7%B3%BB/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">IoC 之深入分析 Bean 的类型转换体系</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/IOC%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20PropertyOverrideConfigurer/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">IOC之深入分析 PropertyOverrideConfigurer</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-    
-    <a href="/2021/02/24/IoC%20%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20PropertyPlaceholderConfigurer/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">IoC 之深入分析 PropertyPlaceholderConfigurer</span>
-      <time style="float: right;">02-24</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redis Sentinel哨兵模式</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">Redis Sentinel哨兵模式</font></div>
 
-  <nav aria-label="navigation">
-    <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/categories/java/page/2/">2</a><a class="page-number" href="/categories/java/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/categories/java/page/5/">5</a><a class="extend next" rel="next" href="/categories/java/page/2/"><i class="iconfont icon-arrowright"></i></a>
-    </span>
-  </nav>
-  
-  <script>
-    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
-      ele.href += '#board';
-    }
-  </script>
-
-
-
-
-              </div>
+<p>Redis 的 Sentinel 最小配置是 一主一从。</p>
+<h3 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h3><ol>
+<li>监控<br>Sentinel会不断的检查主服务器和从服务器是否正常运行。</li>
+<li>通知<br>当被监控的某个Redis 服务器出现问题，Sentinel通过API脚本向管理员或者其他的应用程序发送通知。</li>
+<li>自动故障转移<br>当主节点不能正常工作时，Sentinel会开始一次自动的故障转移操作，它会将失效主节点的其中一个从节点升级为新的主节点，并将其他从节点指向新的主节点。</li>
+</ol>
+<h3 id="主观下线和客观下线"><a href="#主观下线和客观下线" class="headerlink" title="主观下线和客观下线"></a>主观下线和客观下线</h3><p>默认情况下，每个Sentinel节点会以每秒一次的频率对Redis节点和其它的Sentinel节点发送PING命令，并通过节点的回复来判断该节点是否在线。</p>
+<ol>
+<li>主观下线</li>
+</ol>
+<p><strong>每个 sentinel 节点对 redis 节点失败的“偏见”</strong>。<br>如果在<code>down-after-milliseconds</code>毫秒内，Sentinel没有收到目标节点的有效回复，则会判定该节点下线。<br>2. 客观下线<br><strong>所有sentinel节点对master Redis节点失败“达成共识”</strong>。<br>Sentinel节点会通过<code>sentinel is-master-down-by-addr</code>命令，向其它Sentinel节点询问对该主节点的状态判断。如果超过<code>&lt;quorum&gt;</code>个数的节点判定该主节点不可达，则该Sentinel节点会判断该主节点下线。</p>
+<h4 id="哨兵模式设置"><a href="#哨兵模式设置" class="headerlink" title="哨兵模式设置"></a>哨兵模式设置</h4><p>一个稳健的 Redis Sentinel 集群，应该使用至少 三个 Sentinel 实例，并且保证讲这些实例放到 不同的机器 上，甚至不同的 物理区域。（没那么多服务器，只能自己本地跑了几台虚拟机，每台虚拟机一个redis数据节点，一个哨兵节点）<br>测试5个虚拟机<br>哨兵模式主要配置</p>
+<pre><code class="hljs shell">port 26379
+<span class="hljs-meta">#</span><span class="bash">sentinel日志文件</span>
+logfile &quot;&quot;
+<span class="hljs-meta">#</span><span class="bash">设置成后台运行</span>
+daemonize yes
+<span class="hljs-meta">#</span><span class="bash"> 工作目录</span>
+dir /tmp
+<span class="hljs-meta">#</span><span class="bash"> 这里定义主库的IP和端口，还有最后的5表示要达到5台sentinel认同才认为主库已经挂掉（即客观失效），quorum 要配置成 sentinel 节点数的一半 + 1；</span>
+sentinel monitor mymaster 127.0.0.1 6379 5
+<span class="hljs-meta">#</span><span class="bash"> 主库在30000毫秒（即30秒）内没有反应就认为主库挂掉（即主观失效）</span>
+sentinel down-after-milliseconds mymaster 30000
+<span class="hljs-meta">#</span><span class="bash"> 若新主库当选后，允许最大可以同时从新主库同步数据的从库数 </span>
+sentinel parallel-syncs mymaster 1
+<span class="hljs-meta">#</span><span class="bash"> 若在指定时间（即180000毫秒，即180秒）内没有实现故障转移，则会自动再发起一次</span>
+sentinel failover-timeout mymaster 180000
+sentinel deny-scripts-reconfig yes</code></pre>
+<p>主从复制依旧不变<br>哨兵模式配置结果</p>
+<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">sentinel配置文件里的port</span>
+redis-cli -p 26379
+<span class="hljs-meta">#</span><span class="bash">然后使用如下命令查看</span>
+info sentinel</code></pre>
+<p>成功结果：</p>
+<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> Sentinel</span>
+sentinel_masters:1
+sentinel_tilt:0
+sentinel_running_scripts:0
+sentinel_scripts_queue_length:0
+sentinel_simulate_failure_flags:0
+master0:name=mymaster,status=ok,address=192.168.31.44:6379,slaves=4,sentinels=5</code></pre>
+<p>设置主服务器要在前边</p>
+<pre><code class="hljs shell">sentinel monitor mymaster 127.0.0.1 6379 5 #master相当于一个变量
+<span class="hljs-meta">#</span><span class="bash"> 主库在30000毫秒（即30秒）内没有反应就认为主库挂掉（即主观失效）</span>
+sentinel down-after-milliseconds mymaster 30000
+...</code></pre>
+<p>不然启动会报：</p>
+<pre><code class="hljs shell">No such master with specified name.</code></pre>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/redis/">redis</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/redis/">redis</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/redis%E5%AE%89%E8%A3%85/">
+                        <span class="hidden-mobile">redis安装配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -367,9 +455,15 @@
 
 
 
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
 
 
 
