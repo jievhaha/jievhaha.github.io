@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>装载BeanDefinition总结 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="装载BeanDefinition总结">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 18:24" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      34
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">装载BeanDefinition总结</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">装载BeanDefinition总结</font></div>
+
+<p>该篇是对前边十几篇的总结。</p>
+<p>IOC容器初始化的过程：<strong>Resource定位</strong>、<strong>BeanDefinition的装载和解析</strong>、<strong>BeanDefinition注册</strong>。</p>
+<p><strong>Resource定位</strong>：一般使用外部资源描述<code>bean</code>对象，所以初始化IOC容器第一步需要定位这个外部资源（统一资源加载策略）。</p>
+<p><strong>BeanDefinition的装载和解析</strong>：装载就是BeanDefinition的载入，通过BeanDefinitionReader读取、解析Resource资源，也就是将用户定义的Bean表示成IOC容器内部的数据结构–BeanDefinition。</p>
+<blockquote>
+<p>注：1.IOC容器内部维护着一个BeanDefinitionMap的数据结构。</p>
+<p>​        2.配置文件中的每一个<bean>都对应着一个BeanDefinition对象。</p>
+</blockquote>
+<p><strong>BeanDefinition注册</strong>：向IOC容器内部维护的BeanDefinitionMap中注册第二步解析好的BeanDefinition对象，该过程通过BeanDefinitionRegistry接口实现。</p>
+<blockquote>
+<p>注：1.该过程并没有完成依赖注入（Bean创建），Bean创建发生在第一次调用<code>getBean()</code>方法，向容器索取             Bean时，因为默认是懒加载。</p>
+<p>​        2.可以修改加载方式，即设置某个Bean的<code>lazyinit=false</code>，那么这个Bean的依赖注入会在IOC容器初始化的时候完成。</p>
+</blockquote>
+<p>在初始阶段，做过一个实例：</p>
+<pre><code class="hljs java"><span class="hljs-comment">//①获取资源</span>
+ClassPathResource resource = <span class="hljs-keyword">new</span> ClassPathResource(<span class="hljs-string">&quot;bean.xml&quot;</span>);
+<span class="hljs-comment">//②获取 BeanFactory</span>
+DefaultListableBeanFactory factory = <span class="hljs-keyword">new</span> DefaultListableBeanFactory();
+<span class="hljs-comment">//③根据新建的 BeanFactory 创建一个 BeanDefinitionReader 对象，该 Reader 对象为资源的解析器</span>
+XmlBeanDefinitionReader reader = <span class="hljs-keyword">new</span> XmlBeanDefinitionReader(factory);
+<span class="hljs-comment">//④装载资源</span>
+reader.loadBeanDefinitions(resource);</code></pre>
+
+<p><strong>①</strong>：根据 Xml 配置文件创建 Resource 资源对象。ClassPathResource 是 Resource 接口的子类，bean.xml 文件中的内容是我们定义的 Bean 信息。</p>
+<p><strong>②</strong>：创建一个 BeanFactory 。DefaultListableBeanFactory 是 BeanFactory 的一个子类，BeanFactory 作为一个接口，其实它本身是不具有独立使用的功能的，而 DefaultListableBeanFactory 则是真正可以独立使用的 IoC 容器，它是整个 Spring IoC 的始祖。</p>
+<p><strong>③</strong>：创建 XmlBeanDefinitionReader 读取器，用于载入和解析 BeanDefinition 。</p>
+<p><strong>④</strong>：开始 BeanDefinition 的载入和注册进程，完成后的 BeanDefinition 放置在 IoC 容器中。</p>
+<h4 id="Resource定位"><a href="#Resource定位" class="headerlink" title="Resource定位"></a><code>Resource</code>定位</h4><p>Spring为了解决资源定位问题，提供了两个接口：<strong>Resource</strong>、<strong>ResourceLoader</strong>。</p>
+<blockquote>
+<p>Resource：Spring 统一资源的抽象接口。</p>
+<p>ResourceLoader：Spring 资源加载的统一抽象。</p>
+</blockquote>
+<p>Resource 资源的定位需要 Resource 和 ResourceLoader 两个接口互相配合，在上面那段代码中 <code>new ClassPathResource(&quot;bean.xml&quot;)</code> 为我们定义了Resource，那么 ResourceLoader 则是在什么时候初始化的呢？看 XmlBeanDefinitionReader 构造方法：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// XmlBeanDefinitionReader.java</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">XmlBeanDefinitionReader</span><span class="hljs-params">(BeanDefinitionRegistry registry)</span> </span>&#123;
+	<span class="hljs-keyword">super</span>(registry);
+&#125;
+<span class="hljs-comment">//第③步执行了XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);</span>
+<span class="hljs-comment">//注：DefaultListableBeanFactory是BeanDefinitionRegistry的子类。</span></code></pre>
+
+<p>直接调用父类 AbstractBeanDefinitionReader 构造方法：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-title">AbstractBeanDefinitionReader</span><span class="hljs-params">(BeanDefinitionRegistry registry)</span> </span>&#123;
+    Assert.notNull(registry, <span class="hljs-string">&quot;BeanDefinitionRegistry must not be null&quot;</span>);
+    <span class="hljs-keyword">this</span>.registry = registry;
+
+    <span class="hljs-comment">// 如果设置了 ResourceLoader 则用设置的，否则使用 PathMatchingResourcePatternResolver</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.registry <span class="hljs-keyword">instanceof</span> ResourceLoader) &#123;
+        <span class="hljs-keyword">this</span>.resourceLoader = (ResourceLoader) <span class="hljs-keyword">this</span>.registry;
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">this</span>.resourceLoader = <span class="hljs-keyword">new</span> PathMatchingResourcePatternResolver();
+    &#125;
+
+    <span class="hljs-comment">// Inherit Environment if possible</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.registry <span class="hljs-keyword">instanceof</span> EnvironmentCapable) &#123;
+        <span class="hljs-keyword">this</span>.environment = ((EnvironmentCapable) <span class="hljs-keyword">this</span>.registry).getEnvironment();
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">this</span>.environment = <span class="hljs-keyword">new</span> StandardEnvironment();
+    &#125;
+&#125;</code></pre>
+
+<h4 id="BeanDefinition的装载和解析"><a href="#BeanDefinition的装载和解析" class="headerlink" title="BeanDefinition的装载和解析"></a><code>BeanDefinition</code>的装载和解析</h4><p>第④步<code>reader.loadBeanDefinitions(resource);</code>开始BeanDefinition的解析过程：</p>
+<pre><code class="hljs java"><span class="hljs-comment">//XmlBeanDefinitionReader.java</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">loadBeanDefinitions</span><span class="hljs-params">(Resource resource)</span> <span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+    <span class="hljs-keyword">return</span> loadBeanDefinitions(<span class="hljs-keyword">new</span> EncodedResource(resource));
+&#125;</code></pre>
+
+<p>在这个方法会将资源 Resource 包装成一个 <code>EncodedResource</code>实例对象，然后调用 <code>loadBeanDefinitions(EncodedResource encodedResource)</code> 方法。而将 Resource 封装成 EncodedResource 主要是为了对 Resource 进行<strong>编码</strong>，保证内容读取的正确性。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// XmlBeanDefinitionReader.java</span>
+<span class="hljs-comment">// 具体过程查看之前的文章</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">loadBeanDefinitions</span><span class="hljs-params">(EncodedResource encodedResource)</span> <span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+	<span class="hljs-comment">// ... 省略一些代码</span>
+	<span class="hljs-keyword">try</span> &#123;
+		<span class="hljs-comment">// 将资源文件转为 InputStream 的 IO 流</span>
+		InputStream inputStream = encodedResource.getResource().getInputStream();
+		<span class="hljs-keyword">try</span> &#123;
+			<span class="hljs-comment">// 从 InputStream 中得到 XML 的解析源</span>
+			InputSource inputSource = <span class="hljs-keyword">new</span> InputSource(inputStream);
+			<span class="hljs-keyword">if</span> (encodedResource.getEncoding() != <span class="hljs-keyword">null</span>) &#123;
+				inputSource.setEncoding(encodedResource.getEncoding());
+			&#125;
+			<span class="hljs-comment">// 核心逻辑部分，执行加载 BeanDefinition</span>
+			<span class="hljs-keyword">return</span> doLoadBeanDefinitions(inputSource, encodedResource.getResource());
+		&#125;
+		<span class="hljs-keyword">finally</span> &#123;
+			inputStream.close();
+		&#125;
+	&#125;
+	<span class="hljs-comment">// 省略一些代码</span>
+&#125;</code></pre>
+
+<p>从 <code>encodedResource</code> 源中获取 xml 的解析源，然后调用 <code>doLoadBeanDefinitions(InputSource inputSource, Resource resource)</code> 方法，执行具体的解析过程。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// XmlBeanDefinitionReader.java</span>
+<span class="hljs-comment">// 具体过程查看之前的文章</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">int</span> <span class="hljs-title">doLoadBeanDefinitions</span><span class="hljs-params">(InputSource inputSource, Resource resource)</span></span>
+<span class="hljs-function">			<span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+	<span class="hljs-keyword">try</span> &#123;
+		<span class="hljs-comment">// 获取 XML Document 实例</span>
+		Document doc = doLoadDocument(inputSource, resource);
+		<span class="hljs-comment">// 根据 Document 实例，注册 BeanDefinition 信息</span>
+		<span class="hljs-keyword">int</span> count = registerBeanDefinitions(doc, resource);
+		<span class="hljs-keyword">return</span> count;
+	&#125;
+	<span class="hljs-comment">// ... 省略一堆配置</span>
+&#125;</code></pre>
+
+<p>在该方法中主要做两件事：</p>
+<p>1、调用<code>doLoadDocument(inputSource, resource)</code>根据 xml 解析源获取相应的 Document 对象。</p>
+<p>2、调用 <code>registerBeanDefinitions(Document doc, Resource resource)</code> 方法，开启 BeanDefinition 的解析注册过程。</p>
+<h5 id="获取相应的Document对象"><a href="#获取相应的Document对象" class="headerlink" title="获取相应的Document对象"></a>获取相应的<code>Document</code>对象</h5><p>调用<code>doLoadDocument(inputSource, resource)</code>根据 xml 解析源获取相应的 Document 对象。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> Document <span class="hljs-title">doLoadDocument</span><span class="hljs-params">(InputSource inputSource, Resource resource)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.documentLoader.loadDocument(inputSource, getEntityResolver(), <span class="hljs-keyword">this</span>.errorHandler,getValidationModeForResource(resource), isNamespaceAware());
+&#125;</code></pre>
+
+<p>五个参数：</p>
+<p>1、InputSource：加载 Document 的 Resource 源。</p>
+<p>2、EntityResolver：解析文件的解析器，重点，前边已经分析</p>
+<p>3、ErrorHandler：处理加载 Document 对象的过程的错误。</p>
+<p>4、validationMode：验证模式，重点，前边已经分析，默认自动获取，值为VALIDATION_AUTO，1。</p>
+<p>5、namespaceAware：命名空间支持。如果要提供对 XML 名称空间的支持，则为 <code>true</code> ，默认false。</p>
+<p><code>loadDocument(InputSource inputSource, EntityResolver entityResolver, ErrorHandler errorHandler, int validationMode, boolean namespaceAware)</code> 方法，在类 DefaultDocumentLoader 中提供了实现。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultDocumentLoader.java</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> Document <span class="hljs-title">loadDocument</span><span class="hljs-params">(InputSource inputSource, EntityResolver entityResolver,</span></span>
+<span class="hljs-function"><span class="hljs-params">		ErrorHandler errorHandler, <span class="hljs-keyword">int</span> validationMode, <span class="hljs-keyword">boolean</span> namespaceAware)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+	<span class="hljs-comment">// 创建 DocumentBuilderFactory</span>
+	DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
+	<span class="hljs-comment">// 创建 DocumentBuilder</span>
+	DocumentBuilder builder = createDocumentBuilder(factory, entityResolver, errorHandler);
+	<span class="hljs-comment">// 解析 XML InputSource 返回 Document 对象</span>
+	<span class="hljs-keyword">return</span> builder.parse(inputSource);
+&#125;</code></pre>
+
+<h5 id="解析注册BeanDefinition信息"><a href="#解析注册BeanDefinition信息" class="headerlink" title="解析注册BeanDefinition信息"></a>解析注册<code>BeanDefinition</code>信息</h5><p>根据上个步骤转换的Document实例，解析注册 BeanDefinition 信息，该过程调用<code>registerBeanDefinitions(doc, resource);</code>实现：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// XmlBeanDefinitionReader.java</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">registerBeanDefinitions</span><span class="hljs-params">(Document doc, Resource resource)</span> <span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+	<span class="hljs-comment">// 创建 BeanDefinitionDocumentReader 对象</span>
+	BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+	<span class="hljs-comment">// 获取已注册的 BeanDefinition 数量</span>
+	<span class="hljs-keyword">int</span> countBefore = getRegistry().getBeanDefinitionCount();
+	<span class="hljs-comment">// 创建 XmlReaderContext 对象</span>
+	<span class="hljs-comment">// 注册 BeanDefinition</span>
+	documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+	<span class="hljs-comment">// 计算新注册的 BeanDefinition 数量</span>
+	<span class="hljs-keyword">return</span> getRegistry().getBeanDefinitionCount() - countBefore;
+&#125;</code></pre>
+
+<p>1、首先，创建 BeanDefinition 的解析器 BeanDefinitionDocumentReader 。<br>2、然后，调用该 BeanDefinitionDocumentReader 的 <code>registerBeanDefinitions(Document doc, XmlReaderContext readerContext) </code>方法，开启解析过程，这里使用的是<strong>委派模式</strong>，具体的实现由子类 DefaultBeanDefinitionDocumentReader 完成。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultBeanDefinitionDocumentReader.java</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">registerBeanDefinitions</span><span class="hljs-params">(Document doc, XmlReaderContext readerContext)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>.readerContext = readerContext;
+    <span class="hljs-comment">// 获得 XML Document Root Element</span>
+    <span class="hljs-comment">// 执行注册 BeanDefinition</span>
+    doRegisterBeanDefinitions(doc.getDocumentElement());
+&#125;</code></pre>
+
+<h6 id="对Document对象进行解析"><a href="#对Document对象进行解析" class="headerlink" title="对Document对象进行解析"></a>对<code>Document</code>对象进行解析</h6><p>从 Document 对象中获取<strong>根元素 root</strong>，然后调用 ``doRegisterBeanDefinitions(Element root)` 方法，开启真正的解析过程。</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultBeanDefinitionDocumentReader.java</span>
+<span class="hljs-comment">//前边文章有分析</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doRegisterBeanDefinitions</span><span class="hljs-params">(Element root)</span> </span>&#123;
+    <span class="hljs-comment">// ... 省略部分代码（非核心）</span>
+    <span class="hljs-keyword">this</span>.delegate = createDelegate(getReaderContext(), root, parent);
+    <span class="hljs-comment">// 解析前处理</span>
+    preProcessXml(root);
+    <span class="hljs-comment">// 解析</span>
+    parseBeanDefinitions(root, <span class="hljs-keyword">this</span>.delegate);
+    <span class="hljs-comment">// 解析后处理</span>
+    postProcessXml(root);
+&#125;</code></pre>
+
+<p>注：<code>preProcessXml(Element root)</code>、#po<code>stProcessXml(Element root) </code>为前置、后置增强处理，目前 Spring 中都是空实现。</p>
+<p><code>parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate)</code> 是对根元素 root 的解析注册过程：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultBeanDefinitionDocumentReader.java</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">parseBeanDefinitions</span><span class="hljs-params">(Element root, BeanDefinitionParserDelegate delegate)</span> </span>&#123;
+    <span class="hljs-comment">// 如果根节点使用默认命名空间，执行默认解析</span>
+    <span class="hljs-keyword">if</span> (delegate.isDefaultNamespace(root)) &#123;
+        <span class="hljs-comment">// 遍历子节点</span>
+        NodeList nl = root.getChildNodes();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;
+            Node node = nl.item(i);
+            <span class="hljs-keyword">if</span> (node <span class="hljs-keyword">instanceof</span> Element) &#123;
+                Element ele = (Element) node;
+                <span class="hljs-comment">// 如果该节点使用默认命名空间，执行默认解析</span>
+                <span class="hljs-keyword">if</span> (delegate.isDefaultNamespace(ele)) &#123;
+                    parseDefaultElement(ele, delegate);
+                <span class="hljs-comment">// 如果该节点非默认命名空间，执行自定义解析</span>
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    delegate.parseCustomElement(ele);
+                &#125;
+            &#125;
+        &#125;
+    <span class="hljs-comment">// 如果根节点非默认命名空间，执行自定义解析</span>
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        delegate.parseCustomElement(root);
+    &#125;
+&#125;</code></pre>
+
+<p>迭代 root 元素的所有子节点，对其进行判断：</p>
+<p>1、若节点为默认命名空间，则调用 <code>parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate)</code> 方法，开启默认标签的解析注册过程。</p>
+<p>2、否则，调用 <code>BeanDefinitionParserDelegate.parseCustomElement(Element ele)</code> 方法，开启自定义标签的解析注册过程。</p>
+<p>两个过程前边都有介绍。</p>
+<p><strong>对默认标签的解析</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultBeanDefinitionDocumentReader.java</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">parseDefaultElement</span><span class="hljs-params">(Element ele, BeanDefinitionParserDelegate delegate)</span> </span>&#123;
+	<span class="hljs-keyword">if</span> (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) &#123; <span class="hljs-comment">// import</span>
+		importBeanDefinitionResource(ele);
+	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) &#123; <span class="hljs-comment">// alias</span>
+		processAliasRegistration(ele);
+	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) &#123; <span class="hljs-comment">// bean</span>
+		processBeanDefinition(ele, delegate);
+	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) &#123; <span class="hljs-comment">// beans</span>
+		<span class="hljs-comment">// recurse</span>
+		doRegisterBeanDefinitions(ele);
+	&#125;
+&#125;</code></pre>
+
+<p>对四大标签：<code>&lt;import&gt;</code>、<code>&lt;alias&gt;</code>、<code>&lt;bean&gt;</code>、<code>&lt;beans&gt;</code> 进行解析。<strong>其中 <code>&lt;bean&gt;</code> 标签的解析为核心工作，解析为BeanDefinition</strong>。</p>
+<p><strong>对自定义标签的解析</strong></p>
+<pre><code class="hljs java"><span class="hljs-comment">// BeanDefinitionParserDelegate.java</span>
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> BeanDefinition <span class="hljs-title">parseCustomElement</span><span class="hljs-params">(Element ele)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> parseCustomElement(ele, <span class="hljs-keyword">null</span>);
+&#125;
+<span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> BeanDefinition <span class="hljs-title">parseCustomElement</span><span class="hljs-params">(Element ele, <span class="hljs-meta">@Nullable</span> BeanDefinition containingBd)</span> </span>&#123;
+    <span class="hljs-comment">// 获取 namespaceUri</span>
+    String namespaceUri = getNamespaceURI(ele);
+    <span class="hljs-keyword">if</span> (namespaceUri == <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    &#125;
+    <span class="hljs-comment">// 根据 namespaceUri 获取相应的 Handler</span>
+    NamespaceHandler handler = <span class="hljs-keyword">this</span>.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
+    <span class="hljs-keyword">if</span> (handler == <span class="hljs-keyword">null</span>) &#123;
+        error(<span class="hljs-string">&quot;Unable to locate Spring NamespaceHandler for XML schema namespace [&quot;</span> + namespaceUri + <span class="hljs-string">&quot;]&quot;</span>, ele);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    &#125;
+    <span class="hljs-comment">// 调用自定义的 Handler 处理</span>
+    <span class="hljs-keyword">return</span> handler.parse(ele, <span class="hljs-keyword">new</span> ParserContext(<span class="hljs-keyword">this</span>.readerContext, <span class="hljs-keyword">this</span>, containingBd));
+&#125;</code></pre>
+
+<p>获取节点的 <code>namespaceUri</code>，然后根据该 <code>namespaceUri</code> 获取相对应的 NamespaceHandler，最后调用 NamespaceHandler 的 <code>parse(Element element, ParserContext parserContext)</code> 方法，即完成自定义标签的解析和注入。</p>
+<h6 id="注册BeanDefinition"><a href="#注册BeanDefinition" class="headerlink" title="注册BeanDefinition"></a>注册<code>BeanDefinition</code></h6><p>将 Document 对象里面的 Bean 标签解析成了一个个的 BeanDefinition 后，下一步则是将这些 BeanDefinition 注册到 IoC 容器中。动作的触发是在解析 Bean 标签完成后：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultBeanDefinitionDocumentReader.java</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">processBeanDefinition</span><span class="hljs-params">(Element ele, BeanDefinitionParserDelegate delegate)</span> </span>&#123;
+    <span class="hljs-comment">// 进行 bean 元素解析。</span>
+    <span class="hljs-comment">// 如果解析成功，则返回 BeanDefinitionHolder 对象。而 BeanDefinitionHolder 为 name 和 alias 的 BeanDefinition 对象</span>
+    <span class="hljs-comment">// 如果解析失败，则返回 null 。</span>
+    BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
+    <span class="hljs-keyword">if</span> (bdHolder != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// 进行自定义标签处理</span>
+        bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-comment">// 进行 BeanDefinition 的注册</span>
+            BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
+        &#125; <span class="hljs-keyword">catch</span> (BeanDefinitionStoreException ex) &#123;
+            getReaderContext().error(<span class="hljs-string">&quot;Failed to register bean definition with name &#x27;&quot;</span> +
+                    bdHolder.getBeanName() + <span class="hljs-string">&quot;&#x27;&quot;</span>, ele, ex);
+        &#125;
+        <span class="hljs-comment">// 发出响应事件，通知相关的监听器，已完成该 Bean 标签的解析。</span>
+        <span class="hljs-comment">// Send registration event.</span>
+        getReaderContext().fireComponentRegistered(<span class="hljs-keyword">new</span> BeanComponentDefinition(bdHolder));
+    &#125;
+&#125;</code></pre>
+
+<p>调用 <code>BeanDefinitionReaderUtils.registerBeanDefinition()</code> 方法来注册。其实，这里面也是调用 BeanDefinitionRegistry 的 <code>.registerBeanDefinition(String beanName, BeanDefinition beanDefinition)</code> 方法，来注册 BeanDefinition 。不过，最终的实现是在 DefaultListableBeanFactory 中实现：</p>
+<pre><code class="hljs java"><span class="hljs-comment">// DefaultListableBeanFactory.java</span>
+<span class="hljs-comment">// 所谓注册，就是添加到了一个Map集合，key是beanName，value是BeanDefinition对象。</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">registerBeanDefinition</span><span class="hljs-params">(String beanName, BeanDefinition beanDefinition)</span></span>
+<span class="hljs-function">        <span class="hljs-keyword">throws</span> BeanDefinitionStoreException </span>&#123;
+    <span class="hljs-comment">// ...省略校验相关的代码</span>
+    <span class="hljs-comment">// 从缓存中获取指定 beanName 的 BeanDefinition</span>
+    BeanDefinition existingDefinition = <span class="hljs-keyword">this</span>.beanDefinitionMap.get(beanName);
+    <span class="hljs-comment">// 如果已经存在</span>
+    <span class="hljs-keyword">if</span> (existingDefinition != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-comment">// 如果存在但是不允许覆盖，抛出异常</span>
+        <span class="hljs-keyword">if</span> (!isAllowBeanDefinitionOverriding()) &#123;
+             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+           <span class="hljs-comment">// ...省略 logger 打印日志相关的代码</span>
+        &#125;
+        <span class="hljs-comment">// 【重点】允许覆盖，直接覆盖原有的 BeanDefinition 到 beanDefinitionMap 中。</span>
+        <span class="hljs-keyword">this</span>.beanDefinitionMap.put(beanName, beanDefinition);
+    <span class="hljs-comment">// 如果未存在</span>
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-comment">// ... 省略非核心的代码</span>
+        <span class="hljs-comment">// 【重点】添加到 BeanDefinition 到 beanDefinitionMap 中。</span>
+        <span class="hljs-keyword">this</span>.beanDefinitionMap.put(beanName, beanDefinition);
+    &#125;
+    <span class="hljs-comment">// 重新设置 beanName 对应的缓存</span>
+    <span class="hljs-keyword">if</span> (existingDefinition != <span class="hljs-keyword">null</span> || containsSingleton(beanName)) &#123;
+        resetBeanDefinition(beanName);
+    &#125;
+&#125;</code></pre>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>现在 IoC 容器中已经建立了整个 Bean 的配置信息，这些 Bean 可以被检索、使用、维护，他们是控制反转的基础，是后面注入 Bean 的依赖。</p>
+<p>流程图：</p>
+<p><img src="/images/sprin_IOC/IOC%E5%AE%B9%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" alt="IOC容器初始化流程"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E5%BC%80%E5%90%AFBean%E5%8A%A0%E8%BD%BD/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">开启Bean加载</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E6%B3%A8%E5%86%8CBeanDefinition/">
+                        <span class="hidden-mobile">BeanDefinition对象的注册</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

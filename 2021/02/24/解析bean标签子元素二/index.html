@@ -1,0 +1,823 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>解析bean标签子元素二 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="解析bean标签子元素二">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 18:17" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">解析bean标签子元素二</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月24日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">解析bean标签子元素二</font></div>
+
+<p>其他三个子元素：<code>constructor-arg</code>、<code>property</code>、<code>qualifier</code>。</p>
+<h4 id="constructor-arg子元素"><a href="#constructor-arg子元素" class="headerlink" title="constructor-arg子元素"></a><code>constructor-arg</code>子元素</h4><h5 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h5><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Hello</span> </span>&#123;
+	<span class="hljs-keyword">private</span> Integer age;
+	<span class="hljs-keyword">private</span> String name;
+	<span class="hljs-keyword">private</span> String address;
+
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Hello</span><span class="hljs-params">(Integer age, String name, String address)</span> </span>&#123;
+		<span class="hljs-keyword">this</span>.age = age;
+		<span class="hljs-keyword">this</span>.name = name;
+		<span class="hljs-keyword">this</span>.address = address;
+	&#125;
+
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sayHello</span><span class="hljs-params">()</span> </span>&#123;
+		System.out.println(<span class="hljs-keyword">this</span>.name + <span class="hljs-string">&quot;今年&quot;</span> + <span class="hljs-keyword">this</span>.age + <span class="hljs-string">&quot;岁，&quot;</span> + <span class="hljs-string">&quot;住在&quot;</span> + <span class="hljs-keyword">this</span>.address);
+	&#125;
+&#125;
+
+<span class="hljs-comment">//spring配置文件</span>
+&lt;bean id=<span class="hljs-string">&quot;hello&quot;</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">&quot;com.jievhaha.Hello&quot;</span>&gt;
+    &lt;constructor-arg type=<span class="hljs-string">&quot;java.lang.Integer&quot;</span> value=<span class="hljs-string">&quot;27&quot;</span>/&gt;
+    &lt;constructor-arg name=<span class="hljs-string">&quot;name&quot;</span> value=<span class="hljs-string">&quot;jievhaha&quot;</span>/&gt;
+    &lt;constructor-arg index=<span class="hljs-string">&quot;2&quot;</span> value=<span class="hljs-string">&quot;山西&quot;</span>/&gt;
+&lt;/bean&gt;</code></pre>
+
+<h5 id="parseConstructorArgElements-方法"><a href="#parseConstructorArgElements-方法" class="headerlink" title="parseConstructorArgElements()方法"></a><code>parseConstructorArgElements()</code>方法</h5><p><code>BeanDefinitionParserDelegate.parseConstructorArgElements()</code>对<code>constructor-arg</code>子元素进行解析。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">parseConstructorArgElements</span><span class="hljs-params">(Element beanEle, BeanDefinition bd)</span> </span>&#123;
+    NodeList nl = beanEle.getChildNodes();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;
+        Node node = nl.item(i);
+        <span class="hljs-keyword">if</span> (isCandidateElement(node) &amp;&amp; nodeNameEquals(node, CONSTRUCTOR_ARG_ELEMENT)) &#123;
+            parseConstructorArgElement((Element) node, bd);
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p>遍历所有的子元素，如果为<code>constructor-arg</code>标签，则执行<code>parseConstructorArgElement()</code>方法，和之前其他三个子元素解析不同的是，当匹配了某个标签后，直接在if段执行逻辑，此处单独提取了一个<code>parseConstructorArgElement()</code>方法。</p>
+<h5 id="parseConstructorArgElement-方法"><a href="#parseConstructorArgElement-方法" class="headerlink" title="parseConstructorArgElement()方法"></a><code>parseConstructorArgElement()</code>方法</h5><p>该方法是真正解析constructor-arg的方法：</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">parseConstructorArgElement</span><span class="hljs-params">(Element ele, BeanDefinition bd)</span> </span>&#123;
+    String indexAttr = ele.getAttribute(INDEX_ATTRIBUTE);<span class="hljs-comment">//index属性</span>
+    String typeAttr = ele.getAttribute(TYPE_ATTRIBUTE);<span class="hljs-comment">//type属性</span>
+    String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);<span class="hljs-comment">//name属性</span>
+    <span class="hljs-comment">//是否设置了index属性</span>
+    <span class="hljs-comment">// index较type、name的区别：</span>
+    <span class="hljs-comment">// 1.构造ConstructorArgumentEntry对象时，index调用了有参构造函数</span>
+    <span class="hljs-comment">// 2.index最后保存到了indexedArgumentValues集合，另外两个保存到了genericArgumentValues集合中。</span>
+    <span class="hljs-keyword">if</span> (StringUtils.hasLength(indexAttr)) &#123;
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-keyword">int</span> index = Integer.parseInt(indexAttr);
+            <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span>) &#123;
+                error(<span class="hljs-string">&quot;&#x27;index&#x27; cannot be lower than 0&quot;</span>, ele);
+            &#125;
+            <span class="hljs-keyword">else</span> &#123;
+                <span class="hljs-keyword">try</span> &#123;
+                    <span class="hljs-comment">//多上送了index，构造 ConstructorArgumentEntry 对象并将其加入到 ParseState 队列中。</span>
+                    <span class="hljs-keyword">this</span>.parseState.push(<span class="hljs-keyword">new</span> ConstructorArgumentEntry(index));
+                    <span class="hljs-comment">// &lt;2&gt; 解析 ele 对应的属性，返回结果值。</span>
+                    Object value = parsePropertyValue(ele, bd, <span class="hljs-keyword">null</span>);
+                    <span class="hljs-comment">// &lt;3&gt; 根据解析的属性元素构造一个 ValueHolder 对象</span>
+                    ConstructorArgumentValues.ValueHolder valueHolder = <span class="hljs-keyword">new</span> ConstructorArgumentValues.ValueHolder(value);
+                    <span class="hljs-comment">//将 type、name 设置到 ValueHolder 中</span>
+                    <span class="hljs-keyword">if</span> (StringUtils.hasLength(typeAttr)) &#123;
+                        valueHolder.setType(typeAttr);
+                    &#125;
+                    <span class="hljs-keyword">if</span> (StringUtils.hasLength(nameAttr)) &#123;
+                        valueHolder.setName(nameAttr);
+                    &#125;
+                    valueHolder.setSource(extractSource(ele));
+                    <span class="hljs-comment">// 不允许重复指定相同参数</span>
+                    <span class="hljs-keyword">if</span> (bd.getConstructorArgumentValues().hasIndexedArgumentValue(index)) &#123;
+                        error(<span class="hljs-string">&quot;Ambiguous constructor-arg entries for index &quot;</span> + index, ele);
+                    &#125;
+                    <span class="hljs-keyword">else</span> &#123;
+                        <span class="hljs-comment">// &lt;4&gt; 加入到 indexedArgumentValues 中</span>
+                        bd.getConstructorArgumentValues().addIndexedArgumentValue(index, valueHolder);
+                    &#125;
+                &#125;
+                <span class="hljs-keyword">finally</span> &#123;
+                    <span class="hljs-keyword">this</span>.parseState.pop();
+                &#125;
+            &#125;
+        &#125;
+        <span class="hljs-keyword">catch</span> (NumberFormatException ex) &#123;
+            error(<span class="hljs-string">&quot;Attribute &#x27;index&#x27; of tag &#x27;constructor-arg&#x27; must be an integer&quot;</span>, ele);
+        &#125;
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-keyword">this</span>.parseState.push(<span class="hljs-keyword">new</span> ConstructorArgumentEntry());
+            Object value = parsePropertyValue(ele, bd, <span class="hljs-keyword">null</span>);
+            ConstructorArgumentValues.ValueHolder valueHolder = <span class="hljs-keyword">new</span> ConstructorArgumentValues.ValueHolder(value);
+            <span class="hljs-keyword">if</span> (StringUtils.hasLength(typeAttr)) &#123;
+                valueHolder.setType(typeAttr);
+            &#125;
+            <span class="hljs-keyword">if</span> (StringUtils.hasLength(nameAttr)) &#123;
+                valueHolder.setName(nameAttr);
+            &#125;
+            valueHolder.setSource(extractSource(ele));
+            <span class="hljs-comment">//加入到genericArgumentValues集合中</span>
+            bd.getConstructorArgumentValues().addGenericArgumentValue(valueHolder);
+        &#125;
+        <span class="hljs-keyword">finally</span> &#123;
+            <span class="hljs-keyword">this</span>.parseState.pop();
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<h5 id="parsePropertyValue-方法"><a href="#parsePropertyValue-方法" class="headerlink" title="parsePropertyValue()方法"></a><code>parsePropertyValue()</code>方法</h5><p>解析constructor-arg的过程中，调用了<code>parsePropertyValue()</code>方法，返回结果值。</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">parsePropertyValue</span><span class="hljs-params">(Element ele, BeanDefinition bd, <span class="hljs-meta">@Nullable</span> String propertyName)</span> </span>&#123;
+    String elementName = (propertyName != <span class="hljs-keyword">null</span> ?
+                          <span class="hljs-string">&quot;&lt;property&gt; element for property &#x27;&quot;</span> + propertyName + <span class="hljs-string">&quot;&#x27;&quot;</span> :
+                          <span class="hljs-string">&quot;&lt;constructor-arg&gt; element&quot;</span>);
+
+    <span class="hljs-comment">// Should only have one child element: ref, value, list, etc.</span>
+    <span class="hljs-comment">// &lt;1&gt; 查找子节点中，是否有 ref、value、list 等元素</span>
+    NodeList nl = ele.getChildNodes();
+    Element subElement = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;
+        Node node = nl.item(i);
+        <span class="hljs-comment">// meta 、description 不处理</span>
+        <span class="hljs-keyword">if</span> (node <span class="hljs-keyword">instanceof</span> Element &amp;&amp; !nodeNameEquals(node, DESCRIPTION_ELEMENT) &amp;&amp;
+            !nodeNameEquals(node, META_ELEMENT)) &#123;
+            <span class="hljs-comment">// Child element is what we&#x27;re looking for.</span>
+            <span class="hljs-keyword">if</span> (subElement != <span class="hljs-keyword">null</span>) &#123;
+                error(elementName + <span class="hljs-string">&quot; must not contain more than one sub-element&quot;</span>, ele);
+            &#125;
+            <span class="hljs-keyword">else</span> &#123;
+                subElement = (Element) node;
+            &#125;
+        &#125;
+    &#125;
+
+    <span class="hljs-comment">// &lt;1&gt; 是否有 ref 属性</span>
+    <span class="hljs-keyword">boolean</span> hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);
+    <span class="hljs-comment">// &lt;1&gt; 是否有 value 属性</span>
+    <span class="hljs-keyword">boolean</span> hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE);
+    <span class="hljs-comment">// &lt;1&gt; 多个元素存在，报错，存在冲突。</span>
+    <span class="hljs-keyword">if</span> ((hasRefAttribute &amp;&amp; hasValueAttribute) ||<span class="hljs-comment">// 1. ref 和 value 都存在</span>
+        ((hasRefAttribute || hasValueAttribute) &amp;&amp; subElement != <span class="hljs-keyword">null</span>)) &#123;<span class="hljs-comment">// 2. ref 和 value 存在其一，并且 subElement 存在</span>
+        error(elementName +
+              <span class="hljs-string">&quot; is only allowed to contain either &#x27;ref&#x27; attribute OR &#x27;value&#x27; attribute OR sub-element&quot;</span>, ele);
+    &#125;
+
+    <span class="hljs-comment">// &lt;2&gt; 将 ref 属性值，构造为 RuntimeBeanReference 实例对象</span>
+    <span class="hljs-keyword">if</span> (hasRefAttribute) &#123;
+        String refName = ele.getAttribute(REF_ATTRIBUTE);
+        <span class="hljs-keyword">if</span> (!StringUtils.hasText(refName)) &#123;
+            error(elementName + <span class="hljs-string">&quot; contains empty &#x27;ref&#x27; attribute&quot;</span>, ele);
+        &#125;
+        RuntimeBeanReference ref = <span class="hljs-keyword">new</span> RuntimeBeanReference(refName);
+        ref.setSource(extractSource(ele));
+        <span class="hljs-keyword">return</span> ref;
+    &#125;
+    <span class="hljs-comment">// &lt;3&gt; 将 value 属性值，构造为 TypedStringValue 实例对象</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hasValueAttribute) &#123;
+        TypedStringValue valueHolder = <span class="hljs-keyword">new</span> TypedStringValue(ele.getAttribute(VALUE_ATTRIBUTE));
+        valueHolder.setSource(extractSource(ele));
+        <span class="hljs-keyword">return</span> valueHolder;
+    &#125;
+    <span class="hljs-comment">// &lt;4&gt; 解析子元素</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (subElement != <span class="hljs-keyword">null</span>) &#123;
+        <span class="hljs-keyword">return</span> parsePropertySubElement(subElement, bd);
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-comment">// Neither child element nor &quot;ref&quot; or &quot;value&quot; attribute found.</span>
+        error(elementName + <span class="hljs-string">&quot; must specify a ref or value&quot;</span>, ele);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    &#125;
+&#125;</code></pre>
+
+<h5 id="parsePropertySubElement-方法"><a href="#parsePropertySubElement-方法" class="headerlink" title="parsePropertySubElement()方法"></a><code>parsePropertySubElement()</code>方法</h5><p>在调用<code>parsePropertyValue()</code>返回结果值的时候，假如解析了子元素，会调用<code>parsePropertySubElement()</code>方法，主要是针对各种子标签进行不同的处理：</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Nullable</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">parsePropertySubElement</span><span class="hljs-params">(Element ele, <span class="hljs-meta">@Nullable</span> BeanDefinition bd, <span class="hljs-meta">@Nullable</span> String defaultValueType)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (!isDefaultNamespace(ele)) &#123;
+        <span class="hljs-keyword">return</span> parseNestedCustomElement(ele, bd);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, BEAN_ELEMENT)) &#123;<span class="hljs-comment">// bean 标签</span>
+        BeanDefinitionHolder nestedBd = parseBeanDefinitionElement(ele, bd);
+        <span class="hljs-keyword">if</span> (nestedBd != <span class="hljs-keyword">null</span>) &#123;
+            nestedBd = decorateBeanDefinitionIfRequired(ele, nestedBd, bd);
+        &#125;
+        <span class="hljs-keyword">return</span> nestedBd;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, REF_ELEMENT)) &#123;<span class="hljs-comment">// ref 标签</span>
+        <span class="hljs-comment">// A generic reference to any name of any bean.</span>
+        String refName = ele.getAttribute(BEAN_REF_ATTRIBUTE);
+        <span class="hljs-keyword">boolean</span> toParent = <span class="hljs-keyword">false</span>;
+        <span class="hljs-keyword">if</span> (!StringUtils.hasLength(refName)) &#123;
+            <span class="hljs-comment">// A reference to the id of another bean in a parent context.</span>
+            refName = ele.getAttribute(PARENT_REF_ATTRIBUTE);
+            toParent = <span class="hljs-keyword">true</span>;
+            <span class="hljs-keyword">if</span> (!StringUtils.hasLength(refName)) &#123;
+                error(<span class="hljs-string">&quot;&#x27;bean&#x27; or &#x27;parent&#x27; is required for &lt;ref&gt; element&quot;</span>, ele);
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+            &#125;
+        &#125;
+        <span class="hljs-keyword">if</span> (!StringUtils.hasText(refName)) &#123;
+            error(<span class="hljs-string">&quot;&lt;ref&gt; element contains empty target attribute&quot;</span>, ele);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+        &#125;
+        RuntimeBeanReference ref = <span class="hljs-keyword">new</span> RuntimeBeanReference(refName, toParent);
+        ref.setSource(extractSource(ele));
+        <span class="hljs-keyword">return</span> ref;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, IDREF_ELEMENT)) &#123;<span class="hljs-comment">// idref 标签</span>
+        <span class="hljs-keyword">return</span> parseIdRefElement(ele);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, VALUE_ELEMENT)) &#123;<span class="hljs-comment">// value 标签</span>
+        <span class="hljs-keyword">return</span> parseValueElement(ele, defaultValueType);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, NULL_ELEMENT)) &#123;<span class="hljs-comment">// null 标签</span>
+        <span class="hljs-comment">// It&#x27;s a distinguished null value. Let&#x27;s wrap it in a TypedStringValue</span>
+        <span class="hljs-comment">// object in order to preserve the source location.</span>
+        TypedStringValue nullHolder = <span class="hljs-keyword">new</span> TypedStringValue(<span class="hljs-keyword">null</span>);
+        nullHolder.setSource(extractSource(ele));
+        <span class="hljs-keyword">return</span> nullHolder;
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, ARRAY_ELEMENT)) &#123;<span class="hljs-comment">// array 标签</span>
+        <span class="hljs-keyword">return</span> parseArrayElement(ele, bd);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, LIST_ELEMENT)) &#123;<span class="hljs-comment">// list 标签</span>
+        <span class="hljs-keyword">return</span> parseListElement(ele, bd);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, SET_ELEMENT)) &#123;<span class="hljs-comment">// set 标签</span>
+        <span class="hljs-keyword">return</span> parseSetElement(ele, bd);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, MAP_ELEMENT)) &#123;<span class="hljs-comment">// map 标签</span>
+        <span class="hljs-keyword">return</span> parseMapElement(ele, bd);
+    &#125;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, PROPS_ELEMENT)) &#123;<span class="hljs-comment">// props 标签</span>
+        <span class="hljs-keyword">return</span> parsePropsElement(ele);<span class="hljs-comment">// 未知标签</span>
+    &#125;
+    <span class="hljs-keyword">else</span> &#123;
+        error(<span class="hljs-string">&quot;Unknown property sub-element: [&quot;</span> + ele.getNodeName() + <span class="hljs-string">&quot;]&quot;</span>, ele);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    &#125;
+&#125;</code></pre>
+
+<h4 id="property子元素"><a href="#property子元素" class="headerlink" title="property子元素"></a><code>property</code>子元素</h4><h5 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h5><pre><code class="hljs java"><span class="hljs-comment">//spring配置文件</span>
+&lt;bean id=<span class="hljs-string">&quot;hello&quot;</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">&quot;com.jievhaha.Hello&quot;</span>&gt;
+    &lt;property name=<span class="hljs-string">&quot;name&quot;</span> value=<span class="hljs-string">&quot;chenssy&quot;</span>/&gt;
+    &lt;property name=<span class="hljs-string">&quot;age&quot;</span> value=<span class="hljs-string">&quot;18&quot;</span>/&gt;
+    &lt;property name=<span class="hljs-string">&quot;address&quot;</span> value=<span class="hljs-string">&quot;山西&quot;</span>/&gt;
+&lt;/bean&gt;</code></pre>
+
+<h5 id="parsePropertyElement-方法"><a href="#parsePropertyElement-方法" class="headerlink" title="parsePropertyElement()方法"></a><code>parsePropertyElement()</code>方法</h5><p>和上边解析<code>constructor-arg</code>一样，遍历所有子元素，匹配到了<code>property</code>子元素，调用相应的逻辑方法<code>parsePropertyElement</code>。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">parsePropertyElement</span><span class="hljs-params">(Element ele, BeanDefinition bd)</span> </span>&#123;
+    String propertyName = ele.getAttribute(NAME_ATTRIBUTE);<span class="hljs-comment">// 获取 name 属性</span>
+    <span class="hljs-keyword">if</span> (!StringUtils.hasLength(propertyName)) &#123;
+        error(<span class="hljs-string">&quot;Tag &#x27;property&#x27; must have a &#x27;name&#x27; attribute&quot;</span>, ele);
+        <span class="hljs-keyword">return</span>;
+    &#125;
+    <span class="hljs-keyword">this</span>.parseState.push(<span class="hljs-keyword">new</span> PropertyEntry(propertyName));
+    <span class="hljs-keyword">try</span> &#123;
+        <span class="hljs-comment">// 如果存在相同的 name ，报错</span>
+        <span class="hljs-keyword">if</span> (bd.getPropertyValues().contains(propertyName)) &#123;
+            error(<span class="hljs-string">&quot;Multiple &#x27;property&#x27; definitions for property &#x27;&quot;</span> + propertyName + <span class="hljs-string">&quot;&#x27;&quot;</span>, ele);
+            <span class="hljs-keyword">return</span>;
+        &#125;
+        <span class="hljs-comment">// 解析属性值，解析constructor-arg子元素的时候，已经分析了该方法</span>
+        Object val = parsePropertyValue(ele, bd, propertyName);
+        <span class="hljs-comment">// 创建 PropertyValue 对象</span>
+        PropertyValue pv = <span class="hljs-keyword">new</span> PropertyValue(propertyName, val);
+        parseMetaElements(ele, pv);
+        pv.setSource(extractSource(ele));
+        <span class="hljs-comment">// 添加到 PropertyValue 集合中</span>
+        bd.getPropertyValues().addPropertyValue(pv);
+    &#125;
+    <span class="hljs-keyword">finally</span> &#123;
+        <span class="hljs-keyword">this</span>.parseState.pop();
+    &#125;
+&#125;</code></pre>
+
+<h4 id="qualifier子元素"><a href="#qualifier子元素" class="headerlink" title="qualifier子元素"></a><code>qualifier</code>子元素</h4><h5 id="parseQualifierElements-方法"><a href="#parseQualifierElements-方法" class="headerlink" title="parseQualifierElements()方法"></a><code>parseQualifierElements()</code>方法</h5><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">parseQualifierElements</span><span class="hljs-params">(Element beanEle, AbstractBeanDefinition bd)</span> </span>&#123;
+    NodeList nl = beanEle.getChildNodes();
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;
+        Node node = nl.item(i);
+        <span class="hljs-keyword">if</span> (isCandidateElement(node) &amp;&amp; nodeNameEquals(node, QUALIFIER_ELEMENT)) &#123;
+            parseQualifierElement((Element) node, bd);
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<h5 id="parseQualifierElement-方法"><a href="#parseQualifierElement-方法" class="headerlink" title="parseQualifierElement()方法"></a><code>parseQualifierElement()</code>方法</h5><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">parseQualifierElement</span><span class="hljs-params">(Element ele, AbstractBeanDefinition bd)</span> </span>&#123;
+   String typeName = ele.getAttribute(TYPE_ATTRIBUTE);<span class="hljs-comment">// 解析 type 属性</span>
+   <span class="hljs-keyword">if</span> (!StringUtils.hasLength(typeName)) &#123;<span class="hljs-comment">// 必须有 type</span>
+      error(<span class="hljs-string">&quot;Tag &#x27;qualifier&#x27; must have a &#x27;type&#x27; attribute&quot;</span>, ele);
+      <span class="hljs-keyword">return</span>;
+   &#125;
+   <span class="hljs-keyword">this</span>.parseState.push(<span class="hljs-keyword">new</span> QualifierEntry(typeName));
+   <span class="hljs-keyword">try</span> &#123;
+      <span class="hljs-comment">// 创建 AutowireCandidateQualifier 对象</span>
+      AutowireCandidateQualifier qualifier = <span class="hljs-keyword">new</span> AutowireCandidateQualifier(typeName);
+      qualifier.setSource(extractSource(ele));
+      <span class="hljs-comment">// 解析 value 属性，并设置到 AutowireCandidateQualifier 中</span>
+      String value = ele.getAttribute(VALUE_ATTRIBUTE);
+      <span class="hljs-keyword">if</span> (StringUtils.hasLength(value)) &#123;
+         qualifier.setAttribute(AutowireCandidateQualifier.VALUE_KEY, value);
+      &#125;
+      <span class="hljs-comment">// 遍历子节点</span>
+      NodeList nl = ele.getChildNodes();
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;
+         Node node = nl.item(i);
+         <span class="hljs-keyword">if</span> (isCandidateElement(node) &amp;&amp; nodeNameEquals(node, QUALIFIER_ATTRIBUTE_ELEMENT)) &#123;<span class="hljs-comment">// attribute 标签</span>
+            Element attributeEle = (Element) node;
+            String attributeName = attributeEle.getAttribute(KEY_ATTRIBUTE);<span class="hljs-comment">// attribute 标签的 key 属性</span>
+            String attributeValue = attributeEle.getAttribute(VALUE_ATTRIBUTE);<span class="hljs-comment">// attribute 标签的 value 属性</span>
+            <span class="hljs-keyword">if</span> (StringUtils.hasLength(attributeName) &amp;&amp; StringUtils.hasLength(attributeValue)) &#123;
+               <span class="hljs-comment">// 创建 BeanMetadataAttribute 对象</span>
+               BeanMetadataAttribute attribute = <span class="hljs-keyword">new</span> BeanMetadataAttribute(attributeName, attributeValue);
+               attribute.setSource(extractSource(attributeEle));
+               <span class="hljs-comment">// 添加到 attributes 中</span>
+               qualifier.addMetadataAttribute(attribute);
+            &#125;
+            <span class="hljs-keyword">else</span> &#123;
+               error(<span class="hljs-string">&quot;Qualifier &#x27;attribute&#x27; tag must have a &#x27;name&#x27; and &#x27;value&#x27;&quot;</span>, attributeEle);
+               <span class="hljs-keyword">return</span>;
+            &#125;
+         &#125;
+      &#125;
+      <span class="hljs-comment">// 添加到 qualifiers 中</span>
+      bd.addQualifier(qualifier);
+   &#125;
+   <span class="hljs-keyword">finally</span> &#123;
+      <span class="hljs-keyword">this</span>.parseState.pop();
+   &#125;
+&#125;</code></pre>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/">spring</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/spring/IOC/">IOC</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spring/">spring</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E8%A7%A3%E6%9E%90%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">解析自定义标签一</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/24/%E8%A7%A3%E6%9E%90bean%E6%A0%87%E7%AD%BE%E5%AD%90%E5%85%83%E7%B4%A0%E4%B8%80/">
+                        <span class="hidden-mobile">解析bean标签子元素一</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
