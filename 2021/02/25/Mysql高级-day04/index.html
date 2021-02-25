@@ -361,7 +361,7 @@ mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span clas
 
 
 <h3 id="2-Mysql-日志"><a href="#2-Mysql-日志" class="headerlink" title="2. Mysql 日志"></a>2. Mysql 日志</h3><p>在任何一种数据库中，都会有各种各样的日志，记录着数据库工作的方方面面，以帮助数据库管理员追踪数据库曾经发生过的各种事件。MySQL 也不例外，在 MySQL 中，有 4 种不同的日志，分别是错误日志、二进制日志（BINLOG 日志）、查询日志和慢查询日志，这些日志记录着数据库在不同方面的踪迹。</p>
-<h4 id="2-1-错误日志"><a href="#2-1-错误日志" class="headerlink" title="2.1 错误日志"></a>2.1 错误日志</h4><p>错误日志是 MySQL 中最重要的���志之一，它记录了当 mysqld 启动和停止时，以及服务器在运行过程中发生任何严重错误时的相关信息。当数据库出现任何故障导致无法正常使用时，可以首先查看此日志。</p>
+<h4 id="2-1-错误日志"><a href="#2-1-错误日志" class="headerlink" title="2.1 错误日志"></a>2.1 错误日志</h4><p>错误日志是 MySQL 中最重要的标志之一，它记录了当 mysqld 启动和停止时，以及服务器在运行过程中发生任何严重错误时的相关信息。当数据库出现任何故障导致无法正常使用时，可以首先查看此日志。</p>
 <p>该日志是默认开启的 ， 默认存放目录为 mysql 的数据目录（var/lib/mysql）, 默认的日志文件名为  hostname.err（hostname是主机名）。</p>
 <p>查看日志位置指令 ： </p>
 <pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">variables</span> <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;log_error%&#x27;</span>;</code></pre>
@@ -444,7 +444,7 @@ mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span clas
 <p><strong>方式四</strong></p>
 <p>设置参数 –expire_logs_days=# ，此参数的含义是设置日志的过期天数， 过了指定的天数后日志将会被自动删除，这样将有利于减少DBA 管理日志的工作量。</p>
 <p>配置如下 ： </p>
-<p><img src="assets/1554125506938.png" srcset="/img/loading.gif" alt="1554125506938"> </p>
+<p><img src="/images/mysql/1554125506938.png" srcset="/img/loading.gif" alt="1554125506938"> </p>
 <h4 id="2-3-查询日志"><a href="#2-3-查询日志" class="headerlink" title="2.3 查询日志"></a>2.3 查询日志</h4><p>查询日志中记录了客户端的所有操作语句，而二进制日志不包含查询数据的SQL语句。</p>
 <p>默认情况下， 查询日志是未开启的。如果需要开启查询日志，可以设置以下配置 ：</p>
 <pre><code class="hljs ini"><span class="hljs-comment">#该选项用来开启查询日志 ， 可选值 ： 0 或者 1 ； 0 代表关闭， 1 代表开启 </span>
@@ -455,7 +455,7 @@ mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span clas
 </code></pre>
 
 <p>在 mysql 的配置文件 /usr/my.cnf 中配置如下内容 ： </p>
-<p><img src="assets/1554128184632.png" srcset="/img/loading.gif" alt="1554128184632"> </p>
+<p><img src="/images/mysql/1554128184632.png" srcset="/img/loading.gif" alt="1554128184632"> </p>
 <p>配置完毕之后，在数据库执行以下操作 ：</p>
 <pre><code class="hljs sql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book;
 <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book <span class="hljs-keyword">where</span> <span class="hljs-keyword">id</span> = <span class="hljs-number">1</span>;
@@ -466,7 +466,7 @@ mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span clas
 
 
 <p>执行完毕之后， 再次来查询日志文件 ： </p>
-<p><img src="assets/1554128089851.png" srcset="/img/loading.gif" alt="1554128089851"> </p>
+<p><img src="/images/mysql/1554128089851.png" srcset="/img/loading.gif" alt="1554128089851"> </p>
 <h4 id="2-4-慢查询日志"><a href="#2-4-慢查询日志" class="headerlink" title="2.4 慢查询日志"></a>2.4 慢查询日志</h4><p>慢查询日志记录了所有执行时间超过参数 long_query_time 设置值并且扫描记录数不小于 min_examined_row_limit 的所有的SQL语句的日志。long_query_time 默认为 10 秒，最小为 0， 精度可以到微秒。</p>
 <h5 id="2-4-1-文件位置和格式"><a href="#2-4-1-文件位置和格式" class="headerlink" title="2.4.1 文件位置和格式"></a>2.4.1 文件位置和格式</h5><p>慢查询日志默认是关闭的 。可以通过两个参数来控制慢查询日志 ：</p>
 <pre><code class="hljs ini"><span class="hljs-comment"># 该参数用来控制慢查询日志是否开启， 可取值： 1 和 0 ， 1 代表开启， 0 代表关闭</span>
@@ -476,14 +476,11 @@ mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span clas
 <span class="hljs-attr">slow_query_log_file</span>=slow_query.log
 
 <span class="hljs-comment"># 该选项用来配置查询的时间限制， 超过这个时间将认为值慢查询， 将需要进行日志记录， 默认10s</span>
-<span class="hljs-attr">long_query_time</span>=<span class="hljs-number">10</span>
-</code></pre>
-
-
+<span class="hljs-attr">long_query_time</span>=<span class="hljs-number">10</span></code></pre>
 
 <h5 id="2-4-2-日志的读取"><a href="#2-4-2-日志的读取" class="headerlink" title="2.4.2 日志的读取"></a>2.4.2 日志的读取</h5><p>和错误日志、查询日志一样，慢查询日志记录的格式也是纯文本，可以被直接读取。</p>
 <p>1） 查询long_query_time 的值。</p>
-<p><img src="assets/1554130333472.png" srcset="/img/loading.gif" alt="1554130333472"> </p>
+<p><img src="/images/mysql/1554130333472.png" srcset="/img/loading.gif" alt="1554130333472"> </p>
 <p>2） 执行查询操作</p>
 <pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">id</span>, title,price,<span class="hljs-keyword">num</span> ,<span class="hljs-keyword">status</span> <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> <span class="hljs-keyword">id</span> = <span class="hljs-number">1</span>;</code></pre>
 
@@ -567,8 +564,6 @@ mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span clas
 <span class="hljs-attr">Position</span> <span class="hljs-string">： 从哪个位置开始推送日志</span>
 <span class="hljs-attr">Binlog_Ignore_DB</span> : <span class="hljs-string">指定不需要同步的数据库</span></code></pre>
 
-
-
 <h5 id="3-4-2-slave"><a href="#3-4-2-slave" class="headerlink" title="3.4.2 slave"></a>3.4.2 slave</h5><p>1） 在 slave 端配置文件中，配置如下内容：</p>
 <pre><code class="hljs properties"><span class="hljs-comment">#mysql服务端ID,唯一</span>
 <span class="hljs-meta">server-id</span>=<span class="hljs-string">2</span>
@@ -592,8 +587,6 @@ mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span clas
 <p><img src="/images/mysql/1554479387365.png" srcset="/img/loading.gif" alt="1554479387365"> </p>
 <p>5） 停止同步操作</p>
 <pre><code class="hljs sql"><span class="hljs-keyword">stop</span> <span class="hljs-keyword">slave</span>;</code></pre>
-
-
 
 <h5 id="3-4-3-验证同步操作"><a href="#3-4-3-验证同步操作" class="headerlink" title="3.4.3 验证同步操作"></a>3.4.3 验证同步操作</h5><p>1） 在主库中创建数据库，创建表，并插入数据 ：</p>
 <pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> db01;
@@ -672,8 +665,6 @@ user db01;
   PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>)
 ) <span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span>  <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8mb4;
 </code></pre>
-
-
 
 <h5 id="4-2-2-pom-xml"><a href="#4-2-2-pom-xml" class="headerlink" title="4.2.2 pom.xml"></a>4.2.2 pom.xml</h5><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>
@@ -1031,8 +1022,6 @@ user db01;
     &#125;
 &#125;</code></pre>
 
-
-
 <h4 id="4-4-日志查询后端代码实现"><a href="#4-4-日志查询后端代码实现" class="headerlink" title="4.4 日志查询后端代码实现"></a>4.4 日志查询后端代码实现</h4><h5 id="4-4-1-Mapper接口"><a href="#4-4-1-Mapper接口" class="headerlink" title="4.4.1 Mapper接口"></a>4.4.1 Mapper接口</h5><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">OperationLogMapper</span> </span>&#123;
 
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(OperationLog operationLog)</span></span>;
@@ -1163,8 +1152,6 @@ user db01;
 
 &#125;</code></pre>
 
-
-
 <h4 id="4-5-日志查询前端代码实现"><a href="#4-5-日志查询前端代码实现" class="headerlink" title="4.5 日志查询前端代码实现"></a>4.5 日志查询前端代码实现</h4><p>前端代码使用 BootStrap + AdminLTE 进行布局， 使用Vuejs 进行视图层展示。</p>
 <h5 id="4-5-1-js"><a href="#4-5-1-js" class="headerlink" title="4.5.1 js"></a>4.5.1 js</h5><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span>
 <span class="javascript">   <span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> Vue(&#123;</span>
@@ -1269,8 +1256,6 @@ user db01;
     select logcount from log_counter limit 1
 <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></code></pre>
 
-
-
 <h5 id="4-8-2-优化-limit"><a href="#4-8-2-优化-limit" class="headerlink" title="4.8.2 优化 limit"></a>4.8.2 优化 limit</h5><p>在进行分页时，一般通过创建覆盖索引，能够比较好的提高性能。一个非常常见，而又非常头疼的分页场景就是 “limit 1000000,10” ，此时MySQL需要搜索出前1000010 条记录后，仅仅需要返回第 1000001 到 1000010 条记录，前1000000 记录会被抛弃，查询代价非常大。 </p>
 <p><img src="/images/mysql/1555081714638.png" srcset="/img/loading.gif" alt="1555081714638"> </p>
 <p>当点击比较靠后的页码时，就会出现这个问题，查询效率非常慢。</p>
@@ -1300,10 +1285,6 @@ user db01;
   order by id limit #&#123;start&#125;,#&#123;rows&#125;) b  where t.id = b.id  
 <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></code></pre>
 
-
-
-
-
 <h4 id="4-9-性能优化-索引"><a href="#4-9-性能优化-索引" class="headerlink" title="4.9 性能优化 - 索引"></a>4.9 性能优化 - 索引</h4><p><img src="/images/mysql/1555152703824.png" srcset="/img/loading.gif" alt="1555152703824"></p>
 <p>当根据操作人进行查询时， 查询的效率很低，耗时比较长。原因就是因为在创建数据库表结构时，并没有针对于 操作人 字段建立索引。</p>
 <pre><code class="hljs SQL"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">INDEX</span> idx_user_method_return_cost <span class="hljs-keyword">ON</span> operation_log(operate_user,operate_method,return_class,cost_time);</code></pre>
@@ -1315,8 +1296,6 @@ user db01;
 
 <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">INDEX</span> idx_optlog_cost <span class="hljs-keyword">ON</span> operation_log(cost_time);
 </code></pre>
-
-
 
 <h4 id="4-10-性能优化-排序"><a href="#4-10-性能优化-排序" class="headerlink" title="4.10 性能优化 - 排序"></a>4.10 性能优化 - 排序</h4><p>在查询数据时，如果业务需求中需要我们对结果内容进行了排序处理 , 这个时候,我们还需要对排序的字段建立适当的索引, 来提高排序的效率 。</p>
 <h4 id="4-11-性能优化-读写分离"><a href="#4-11-性能优化-读写分离" class="headerlink" title="4.11 性能优化 - 读写分离"></a>4.11 性能优化 - 读写分离</h4><h5 id="4-11-1-概述"><a href="#4-11-1-概述" class="headerlink" title="4.11.1 概述"></a>4.11.1 概述</h5><p>在Mysql主从复制的基础上，可以使用读写分离来降低单台Mysql节点的压力，从而来提高访问效率，读写分离的架构如下：</p>
