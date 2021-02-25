@@ -268,8 +268,8 @@
 <span class="hljs-tag">&lt;/<span class="hljs-name">profile</span>&gt;</span></code></pre>
 
 <h3 id="2、IDEA设置"><a href="#2、IDEA设置" class="headerlink" title="2、IDEA设置"></a>2、IDEA设置</h3><p>整合maven进来；</p>
-<p><img src="images/springboot/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180129151045.png" srcset="/img/loading.gif" alt="idea设置"></p>
-<p><img src="images/springboot/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180129151112.png" srcset="/img/loading.gif" alt="images/"></p>
+<p><img src="/images/springboot/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180129151045.png" srcset="/img/loading.gif" alt="idea设置"></p>
+<p><img src="/images/springboot/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180129151112.png" srcset="/img/loading.gif" alt="images/"></p>
 <h2 id="4、Spring-Boot-HelloWorld"><a href="#4、Spring-Boot-HelloWorld" class="headerlink" title="4、Spring Boot HelloWorld"></a>4、Spring Boot HelloWorld</h2><p>一个功能：</p>
 <p>浏览器发送hello请求，服务器接受请求并处理，响应Hello World字符串；</p>
 <h3 id="1、创建一个maven工程；（jar）"><a href="#1、创建一个maven工程；（jar）" class="headerlink" title="1、创建一个maven工程；（jar）"></a>1、创建一个maven工程；（jar）</h3><h3 id="2、导入spring-boot相关的依赖"><a href="#2、导入spring-boot相关的依赖" class="headerlink" title="2、导入spring boot相关的依赖"></a>2、导入spring boot相关的依赖</h3><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">parent</span>&gt;</span>
@@ -392,7 +392,7 @@
 <p>​        给容器中导入组件？</p>
 <p>​        <strong>EnableAutoConfigurationImportSelector</strong>：导入哪些组件的选择器；</p>
 <p>​        将所有需要导入的组件以全类名的方式返回；这些组件就会被添加到容器中；</p>
-<p>​        会给容器中导入非常多的自动配置类（xxxAutoConfiguration）；就是给容器中导入这个场景需要的所有组件，并配置好这些组件；        <img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180129224104.png" srcset="/img/loading.gif" alt="自动配置类"></p>
+<p>​        会给容器中导入非常多的自动配置类（xxxAutoConfiguration）；就是给容器中导入这个场景需要的所有组件，并配置好这些组件；        <img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180129224104.png" srcset="/img/loading.gif" alt="自动配置类"></p>
 <p>有了自动配置类，免去了我们手动编写配置注入功能组件等的工作；</p>
 <p>​        SpringFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class,classLoader)；</p>
 <p>==Spring Boot在启动的时候从类路径下的META-INF/spring.factories中获取EnableAutoConfiguration指定的值，将这些值作为自动配置类导入到容器中，自动配置类就生效，帮我们进行自动配置工作；==以前我们需要自己配置的东西，自动配置类都帮我们；</p>
@@ -516,7 +516,7 @@
 		<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <h4 id="1、properties配置文件在idea中默认utf-8可能会乱码"><a href="#1、properties配置文件在idea中默认utf-8可能会乱码" class="headerlink" title="1、properties配置文件在idea中默认utf-8可能会乱码"></a>1、properties配置文件在idea中默认utf-8可能会乱码</h4><p>调整</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180130161620.png" srcset="/img/loading.gif" alt="idea配置乱码"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180130161620.png" srcset="/img/loading.gif" alt="idea配置乱码"></p>
 <h4 id="2、-Value获取值和-ConfigurationProperties获取值比较"><a href="#2、-Value获取值和-ConfigurationProperties获取值比较" class="headerlink" title="2、@Value获取值和@ConfigurationProperties获取值比较"></a>2、@Value获取值和@ConfigurationProperties获取值比较</h4><table>
 <thead>
 <tr>
@@ -712,7 +712,7 @@ $&#123;random.<span class="hljs-keyword">int</span>(<span class="hljs-number">10
 <p>–classpath:/</p>
 <p>优先级由高到底，高优先级的配置会覆盖低优先级的配置；</p>
 <p>SpringBoot会从这四个位置全部加载主配置文件；<strong>互补配置</strong>；</p>
-<p><img src="images/springboot/928953-20190613113659461-117207878.png" srcset="/img/loading.gif" alt="928953-20190613113659461-117207878"></p>
+<p><img src="/images/springboot/928953-20190613113659461-117207878.png" srcset="/img/loading.gif" alt="928953-20190613113659461-117207878"></p>
 <p>==我们还可以通过spring.config.location来改变默认的配置文件位置==</p>
 <p><strong>项目打包好以后，我们可以使用命令行参数的形式，启动项目的时候来指定配置文件的新位置；指定配置文件和默认加载的这些配置文件共同起作用形成互补配置；</strong></p>
 <p>java -jar spring-boot-02-config-02-0.0.1-SNAPSHOT.jar –spring.config.location=G:/application.properties</p>
@@ -1045,11 +1045,11 @@ Positive matches:（自动配置类启用的）
 &#125;</code></pre>
 
 <p>图示；</p>
-<p><img src="images/springboot/concrete-bindings.png" srcset="/img/loading.gif" alt="images/concrete-bindings.png"></p>
+<p><img src="/images/springboot/concrete-bindings.png" srcset="/img/loading.gif" alt="images/concrete-bindings.png"></p>
 <p>每一个日志的实现框架都有自己的配置文件。使用slf4j以后，<strong>配置文件还是做成日志实现框架自己本身的配置文件；</strong></p>
 <h3 id="2、遗留问题"><a href="#2、遗留问题" class="headerlink" title="2、遗留问题"></a>2、遗留问题</h3><p>a（slf4j+logback）: Spring（commons-logging）、Hibernate（jboss-logging）、MyBatis、xxxx</p>
 <p>统一日志记录，即使是别的框架和我一起统一使用slf4j进行输出？</p>
-<p><img src="images/springboot/legacy.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/legacy.png" srcset="/img/loading.gif"></p>
 <p><strong>如何让系统中所有的日志都统一到slf4j；</strong></p>
 <p>==1、将系统中其他日志框架先排除出去；==</p>
 <p>==2、用中间包来替换原有的日志框架；==</p>
@@ -1068,7 +1068,7 @@ Positive matches:（自动配置类启用的）
 	<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
 <p>底层依赖关系</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180131220946.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180131220946.png" srcset="/img/loading.gif"></p>
 <p>总结：</p>
 <p>​    1）、SpringBoot底层也是使用slf4j+logback的方式进行日志记录</p>
 <p>​    2）、SpringBoot也把其他的日志都替换成了slf4j；</p>
@@ -1080,7 +1080,7 @@ Positive matches:（自动配置类启用的）
 
     <span class="hljs-keyword">static</span> LogFactory logFactory = <span class="hljs-keyword">new</span> SLF4JLogFactory();</code></pre>
 
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180131221411.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180131221411.png" srcset="/img/loading.gif"></p>
 <p>​    4）、如果我们要引入其他框架？一定要把这个框架的默认日志依赖移除掉？</p>
 <p>​            Spring框架用的是commons-logging；</p>
 <pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
@@ -1359,7 +1359,7 @@ Logger logger = LoggerFactory.getLogger(getClass());
 <p>==1）、所有 /webjars/** ，都去 classpath:/META-INF/resources/webjars/ 找资源；==</p>
 <p>​    webjars：以jar包的方式引入静态资源；</p>
 <p><a target="_blank" rel="noopener" href="http://www.webjars.org/">http://www.webjars.org/</a></p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180203181751.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180203181751.png" srcset="/img/loading.gif"></p>
 <p>localhost:8080/webjars/jquery/3.3.1/jquery.js</p>
 <pre><code class="hljs xml"><span class="hljs-comment">&lt;!--引入jquery-webjar--&gt;</span>在访问的时候只需要写webjars下面资源的名称即可
 		<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
@@ -1382,7 +1382,7 @@ Logger logger = LoggerFactory.getLogger(getClass());
 <p>​    localhost:8080/   找index页面</p>
 <p>==4）、所有的 **/favicon.ico  都是在静态资源文件下找；==</p>
 <h2 id="3、模板引擎"><a href="#3、模板引擎" class="headerlink" title="3、模板引擎"></a>3、模板引擎</h2><p>JSP、Velocity、Freemarker、Thymeleaf</p>
-<p><img src="images/springboot/template-engine.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/template-engine.png" srcset="/img/loading.gif"></p>
 <p>SpringBoot推荐的Thymeleaf；</p>
 <p>语法更简单，功能更强大；</p>
 <h3 id="1、引入thymeleaf；"><a href="#1、引入thymeleaf；" class="headerlink" title="1、引入thymeleaf；"></a>1、引入thymeleaf；</h3><pre><code class="hljs xml">		<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
@@ -1433,7 +1433,7 @@ Logger logger = LoggerFactory.getLogger(getClass());
 
 <h3 id="3、语法规则"><a href="#3、语法规则" class="headerlink" title="3、语法规则"></a>3、语法规则</h3><p>1）、th:text；改变当前元素里面的文本内容；</p>
 <p>​    th：任意html属性；来替换原生属性的值</p>
-<p><img src="images/springboot/2018-02-04_123955.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/2018-02-04_123955.png" srcset="/img/loading.gif"></p>
 <p>2）、表达式？</p>
 <pre><code class="hljs properties"><span class="hljs-attr">Simple</span> <span class="hljs-string">expressions:（表达式语法）</span>
     <span class="hljs-attr">Variable</span> <span class="hljs-string">Expressions: $&#123;...&#125;：获取变量值；OGNL；</span>
@@ -1694,7 +1694,7 @@ Logger logger = LoggerFactory.getLogger(getClass());
 <p>3）、在页面使用fmt:message取出国际化内容</p>
 <p>步骤：</p>
 <p>1）、编写国际化配置文件，抽取页面需要显示的国际化消息</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180211130721.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180211130721.png" srcset="/img/loading.gif"></p>
 <p>2）、SpringBoot自动配置好了管理国际化资源文件的组件；</p>
 <pre><code class="hljs java"><span class="hljs-meta">@ConfigurationProperties(prefix = &quot;spring.messages&quot;)</span>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MessageSourceAutoConfiguration</span> </span>&#123;
@@ -1728,7 +1728,7 @@ Logger logger = LoggerFactory.getLogger(getClass());
 
 
 <p>3）、去页面获取国际化的值；</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180211134506.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180211134506.png" srcset="/img/loading.gif"></p>
 <pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>  <span class="hljs-attr">xmlns:th</span>=<span class="hljs-string">&quot;http://www.thymeleaf.org&quot;</span>&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
@@ -2149,12 +2149,12 @@ insert的公共片段在div标签中
 
 <h2 id="7、错误处理机制"><a href="#7、错误处理机制" class="headerlink" title="7、错误处理机制"></a>7、错误处理机制</h2><h3 id="1）、SpringBoot默认的错误处理机制"><a href="#1）、SpringBoot默认的错误处理机制" class="headerlink" title="1）、SpringBoot默认的错误处理机制"></a>1）、SpringBoot默认的错误处理机制</h3><p>默认效果：</p>
 <p>​        1）、浏览器，返回一个默认的错误页面</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226173408.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226173408.png" srcset="/img/loading.gif"></p>
 <p>  浏览器发送请求的请求头：</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226180347.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226180347.png" srcset="/img/loading.gif"></p>
 <p>​        2）、如果是其他客户端，默认响应一个json数据</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226173527.png" srcset="/img/loading.gif"></p>
-<p>​        <img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226180504.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226173527.png" srcset="/img/loading.gif"></p>
+<p>​        <img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180226180504.png" srcset="/img/loading.gif"></p>
 <p>原理：</p>
 <p>​    可以参照ErrorMvcAutoConfiguration；错误处理的自动配置；</p>
 <pre><code>  给容器中添加了以下组件</code></pre>
@@ -2313,9 +2313,9 @@ insert的公共片段在div标签中
 &#125;</code></pre>
 
 <p>最终的效果：响应是自适应的，可以通过定制ErrorAttributes改变需要返回的内容，</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180228135513.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180228135513.png" srcset="/img/loading.gif"></p>
 <h2 id="8、配置嵌入式Servlet容器"><a href="#8、配置嵌入式Servlet容器" class="headerlink" title="8、配置嵌入式Servlet容器"></a>8、配置嵌入式Servlet容器</h2><p>SpringBoot默认使用Tomcat作为嵌入式的Servlet容器；</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180301142915.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180301142915.png" srcset="/img/loading.gif"></p>
 <p>问题？</p>
 <h5 id="注意：springboot新版本已经舍弃了EmbeddedServletContainerCustomizer，推荐使用"><a href="#注意：springboot新版本已经舍弃了EmbeddedServletContainerCustomizer，推荐使用" class="headerlink" title="注意：springboot新版本已经舍弃了EmbeddedServletContainerCustomizer，推荐使用"></a><strong>注意：</strong>springboot新版本已经舍弃了EmbeddedServletContainerCustomizer，推荐使用</h5><h3 id="1）、如何定制和修改Servlet容器的相关配置；"><a href="#1）、如何定制和修改Servlet容器的相关配置；" class="headerlink" title="1）、如何定制和修改Servlet容器的相关配置；"></a>1）、如何定制和修改Servlet容器的相关配置；</h3><p>1、修改和server有关的配置（ServerProperties【也是EmbeddedServletContainerCustomizer】）；</p>
 <pre><code class="hljs properties"><span class="hljs-meta">server.port</span>=<span class="hljs-string">8081</span>
@@ -2392,7 +2392,7 @@ insert的公共片段在div标签中
 </code></pre>
 
 <p>2）、SpringBoot能不能支持其他的Servlet容器；</p>
-<h3 id="3）、替换为其他嵌入式Servlet容器"><a href="#3）、替换为其他嵌入式Servlet容器" class="headerlink" title="3）、替换为其他嵌入式Servlet容器"></a>3）、替换为其他嵌入式Servlet容器</h3><p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302114401.png" srcset="/img/loading.gif"></p>
+<h3 id="3）、替换为其他嵌入式Servlet容器"><a href="#3）、替换为其他嵌入式Servlet容器" class="headerlink" title="3）、替换为其他嵌入式Servlet容器"></a>3）、替换为其他嵌入式Servlet容器</h3><p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302114401.png" srcset="/img/loading.gif"></p>
 <p>默认支持：</p>
 <p>Tomcat（默认使用）</p>
 <pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
@@ -2501,9 +2501,9 @@ insert的公共片段在div标签中
 
 &#125;</code></pre>
 
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302144835.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302144835.png" srcset="/img/loading.gif"></p>
 <p>2）、EmbeddedServletContainer：（嵌入式的Servlet容器）</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302144910.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302144910.png" srcset="/img/loading.gif"></p>
 <p>3）、以<strong>TomcatEmbeddedServletContainerFactory</strong>为例</p>
 <pre><code class="hljs java"><span class="hljs-meta">@Override</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> EmbeddedServletContainer <span class="hljs-title">getEmbeddedServletContainer</span><span class="hljs-params">(</span></span>
@@ -2698,7 +2698,7 @@ ServerProperties也是定制器</code></pre>
 <p>Spring的web模块里面有这个文件：<strong>org.springframework.web.SpringServletContainerInitializer</strong></p>
 <p>3）、SpringServletContainerInitializer将@HandlesTypes(WebApplicationInitializer.class)标注的所有这个类型的类都传入到onStartup方法的Set&lt;Class&lt;?&gt;&gt;；为这些WebApplicationInitializer类型的类创建实例；</p>
 <p>4）、每一个WebApplicationInitializer都调用自己的onStartup；</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302221835.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180302221835.png" srcset="/img/loading.gif"></p>
 <p>5）、相当于我们的SpringBootServletInitializer的类会被创建对象，并执行onStartup方法</p>
 <p>6）、SpringBootServletInitializer实例执行onStartup的时候会createRootApplicationContext；创建容器</p>
 <pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> WebApplicationContext <span class="hljs-title">createRootApplicationContext</span><span class="hljs-params">(</span></span>
@@ -2781,14 +2781,14 @@ ServerProperties也是定制器</code></pre>
 <h1 id="五、Docker"><a href="#五、Docker" class="headerlink" title="五、Docker"></a>五、Docker</h1><h2 id="1、简介-1"><a href="#1、简介-1" class="headerlink" title="1、简介"></a>1、简介</h2><p><strong>Docker</strong>是一个开源的应用容器引擎；是一个轻量级容器技术；</p>
 <p>Docker支持将软件编译成一个镜像；然后在镜像中各种软件做好配置，将镜像发布出去，其他使用者可以直接使用这个镜像；</p>
 <p>运行中的这个镜像称为容器，容器启动是非常快速的。</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180303145450.png" srcset="/img/loading.gif"></p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180303145531.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180303145450.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180303145531.png" srcset="/img/loading.gif"></p>
 <h2 id="2、核心概念"><a href="#2、核心概念" class="headerlink" title="2、核心概念"></a>2、核心概念</h2><p>docker主机(Host)：安装了Docker程序的机器（Docker直接安装在操作系统之上）；</p>
 <p>docker客户端(Client)：连接docker主机进行操作；</p>
 <p>docker仓库(Registry)：用来保存各种打包好的软件镜像；</p>
-<p>docker镜像(images/springboot)：软件打包好的镜像；放在docker仓库中；</p>
+<p>docker镜像(/images/springboot)：软件打包好的镜像；放在docker仓库中；</p>
 <p>docker容器(Container)：镜像启动后的实例称为一个容器；容器是独立运行的一个或一组应用</p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180303165113.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180303165113.png" srcset="/img/loading.gif"></p>
 <p>使用Docker的步骤：</p>
 <p>1）、安装Docker</p>
 <p>2）、去Docker仓库找到这个软件对应的镜像；</p>
@@ -3046,7 +3046,7 @@ docker <span class="hljs-builtin-name">run</span> --name some-mysql -e <span cla
 	<span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.3.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
 
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180305194443.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180305194443.png" srcset="/img/loading.gif"></p>
 <p>步骤：</p>
 <p>​    1）、配置数据源相关属性（见上一节Druid）</p>
 <p>​    2）、给数据库建表</p>
@@ -3104,7 +3104,7 @@ docker <span class="hljs-builtin-name">run</span> --name some-mysql -e <span cla
 
 <p>更多使用参照</p>
 <p><a target="_blank" rel="noopener" href="http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/">http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/</a></p>
-<h2 id="4、整合SpringData-JPA"><a href="#4、整合SpringData-JPA" class="headerlink" title="4、整合SpringData JPA"></a>4、整合SpringData JPA</h2><h3 id="1）、SpringData简介"><a href="#1）、SpringData简介" class="headerlink" title="1）、SpringData简介"></a>1）、SpringData简介</h3><p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180306105412.png" srcset="/img/loading.gif"></p>
+<h2 id="4、整合SpringData-JPA"><a href="#4、整合SpringData-JPA" class="headerlink" title="4、整合SpringData JPA"></a>4、整合SpringData JPA</h2><h3 id="1）、SpringData简介"><a href="#1）、SpringData简介" class="headerlink" title="1）、SpringData简介"></a>1）、SpringData简介</h3><p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180306105412.png" srcset="/img/loading.gif"></p>
 <h3 id="2）、整合SpringData-JPA"><a href="#2）、整合SpringData-JPA" class="headerlink" title="2）、整合SpringData JPA"></a>2）、整合SpringData JPA</h3><p>JPA:ORM（Object Relational Mapping）；</p>
 <p>1）、编写一个实体类（bean）和数据表进行映射，并且配置好映射关系；</p>
 <pre><code class="hljs java"><span class="hljs-comment">//使用JPA注解配置映射关系</span>
@@ -3163,8 +3163,8 @@ docker <span class="hljs-builtin-name">run</span> --name some-mysql -e <span cla
     <span class="hljs-keyword">this</span>.mainApplicationClass = deduceMainApplicationClass();
 &#125;</code></pre>
 
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180306145727.png" srcset="/img/loading.gif"></p>
-<p><img src="images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180306145855.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180306145727.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/springboot/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20180306145855.png" srcset="/img/loading.gif"></p>
 <h2 id="2、运行run方法"><a href="#2、运行run方法" class="headerlink" title="2、运行run方法"></a>2、运行run方法</h2><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> ConfigurableApplicationContext <span class="hljs-title">run</span><span class="hljs-params">(String... args)</span> </span>&#123;
    StopWatch stopWatch = <span class="hljs-keyword">new</span> StopWatch();
    stopWatch.start();
