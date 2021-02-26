@@ -1234,7 +1234,7 @@ TRACE: &#123;
 <h6 id="9、如果MySQL评估使用索引比全表更慢，则不使用索引。"><a href="#9、如果MySQL评估使用索引比全表更慢，则不使用索引。" class="headerlink" title="9、如果MySQL评估使用索引比全表更慢，则不使用索引。"></a>9、如果MySQL评估使用索引比全表更慢，则不使用索引。</h6><p><img src="/images/mysql/1556175445210.png" srcset="/img/loading.gif" alt="1556175445210"> </p>
 <p>如果not in检索的数据量大，不走索引，但是如果not in检索的数据量小，走索引。同理，in也一样。跟null   not null 是一样的</p>
 <h6 id="10、is-NULL-，-is-NOT-NULL-有时索引失效。"><a href="#10、is-NULL-，-is-NOT-NULL-有时索引失效。" class="headerlink" title="10、is  NULL ， is NOT NULL  有时索引失效。"></a>10、is  NULL ， is NOT NULL  <font color='red'>有时</font>索引失效。</h6><p><img src="/images/mysql/1556180634889.png" srcset="/img/loading.gif" alt="1556180634889">  </p>
-<h6 id="11、走索引，-not-in-索引失效。"><a href="#11、走索引，-not-in-索引失效。" class="headerlink" title="11、走索引， not in 索引失效。"></a>11、走索引， not in 索引失效。</h6><p><img src="/images/mysql/1556249602732.png" srcset="/img/loading.gif" alt="1556249602732">  </p>
+<h6 id="11、in走索引，-not-in-索引失效。"><a href="#11、in走索引，-not-in-索引失效。" class="headerlink" title="11、in走索引， not in 索引失效。"></a>11、in走索引， not in 索引失效。</h6><p><img src="/images/mysql/1556249602732.png" srcset="/img/loading.gif" alt="1556249602732">  </p>
 <h6 id="12、单列索引和复合索引。"><a href="#12、单列索引和复合索引。" class="headerlink" title="12、单列索引和复合索引。"></a>12、单列索引和复合索引。</h6><p>尽量使用复合索引，而少使用单列索引 。</p>
 <p>创建复合索引 </p>
 <pre><code class="hljs routeros">create index idx_name_sta_address on tb_seller(name, status, address);
