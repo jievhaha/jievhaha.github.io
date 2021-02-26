@@ -228,7 +228,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年2月25日 下午
+                  本文最后更新于：2021年2月26日 下午
                 
               </p>
             
@@ -540,7 +540,7 @@ SQL3 : <span class="hljs-keyword">select</span> <span class="hljs-keyword">datab
 <p>当在客户端一中释放锁指令 unlock tables  后 ， 客户端二中的 select 语句 ， 立即执行 ；</p>
 <p><img src="/images/mysql/1553908131373.png" srcset="/img/loading.gif" alt="1553908131373"> </p>
 <h5 id="5-2-4-结论"><a href="#5-2-4-结论" class="headerlink" title="5.2.4 结论"></a>5.2.4 结论</h5><p>锁模式的相互兼容性如表中所示：</p>
-<p><img src="../../../../../../%E6%95%99%E5%AD%A6%E8%B5%84%E6%96%99/%E8%AF%BE%E7%A8%8B%E8%90%A5%E9%94%80/Mysql%E9%AB%98%E7%BA%A7/%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99/day-03/%E6%96%87%E6%A1%A3/assets/1553905621992.png" srcset="/img/loading.gif" alt="1553905621992"> </p>
+<p><img src="/images/mysql/1553905621992.png" srcset="/img/loading.gif" alt="1553905621992"> </p>
 <p>由上表可见： </p>
 <p>​    1） 对MyISAM 表的读操作，不会阻塞其他用户对同一表的读请求，但会阻塞对同一表的写请求；</p>
 <p>​    2） 对MyISAM 表的写操作，则会阻塞其他用户对同一表的读和写操作；</p>
@@ -548,12 +548,12 @@ SQL3 : <span class="hljs-keyword">select</span> <span class="hljs-keyword">datab
 <p>此外，MyISAM 的读写锁调度是写优先，这也是MyISAM不适合做写为主的表的存储引擎的原因。因为写锁后，其他线程不能做任何操作，大量的更新会使查询很难得到锁，从而造成永远阻塞。</p>
 <h5 id="5-2-5-查看锁的争用情况"><a href="#5-2-5-查看锁的争用情况" class="headerlink" title="5.2.5 查看锁的争用情况"></a>5.2.5 查看锁的争用情况</h5><pre><code class="hljs pgsql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">open</span> <span class="hljs-keyword">tables</span>；</code></pre>
 
-<p><img src="../../../../../../%E6%95%99%E5%AD%A6%E8%B5%84%E6%96%99/%E8%AF%BE%E7%A8%8B%E8%90%A5%E9%94%80/Mysql%E9%AB%98%E7%BA%A7/%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99/day-03/%E6%96%87%E6%A1%A3/assets/1556443073322.png" srcset="/img/loading.gif" alt="1556443073322"> </p>
+<p><img src="/images/mysql/1556443073322.png" srcset="/img/loading.gif" alt="1556443073322"> </p>
 <p>In_user : 表当前被查询使用的次数。如果该数为零，则表是打开的，但是当前没有被使用。</p>
 <p>Name_locked：表名称是否被锁定。名称锁定用于取消表或对表进行重命名等操作。</p>
 <pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">status</span> <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Table_locks%&#x27;</span>;</code></pre>
 
-<p><img src="../../../../../../%E6%95%99%E5%AD%A6%E8%B5%84%E6%96%99/%E8%AF%BE%E7%A8%8B%E8%90%A5%E9%94%80/Mysql%E9%AB%98%E7%BA%A7/%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%96%99/day-03/%E6%96%87%E6%A1%A3/assets/1556443170082.png" srcset="/img/loading.gif" alt="1556443170082"> </p>
+<p><img src="/images/mysql/1556443170082.png" srcset="/img/loading.gif" alt="1556443170082"> </p>
 <p>Table_locks_immediate ： 指的是能够立即获得表级锁的次数，每立即获取锁，值加1。</p>
 <p>Table_locks_waited ： 指的是不能立即获取表级锁而需要等待的次数，每等待一次，该值加1，此值高说明存在着较为严重的表级锁争用情况。</p>
 <h4 id="5-3-InnoDB-行锁"><a href="#5-3-InnoDB-行锁" class="headerlink" title="5.3 InnoDB 行锁"></a>5.3 InnoDB 行锁</h4><h5 id="5-3-1-行锁介绍"><a href="#5-3-1-行锁介绍" class="headerlink" title="5.3.1 行锁介绍"></a>5.3.1 行锁介绍</h5><p>行锁特点 ：偏向InnoDB 存储引擎，开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低,并发度也最高。</p>
