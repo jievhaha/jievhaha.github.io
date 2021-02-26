@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.9k 字
+      8k 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      90
+      91
        分钟
     </span>
   
@@ -228,7 +228,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年2月26日 下午
+                  本文最后更新于：2021年2月26日 晚上
                 
               </p>
             
@@ -664,8 +664,8 @@ SQL3 : <span class="hljs-keyword">select</span> <span class="hljs-keyword">datab
 <p><img src="/images/mysql/1554331600009.png" srcset="/img/loading.gif" alt="1554331600009">  </p>
 <h5 id="5-3-3-InnoDB-的行锁模式"><a href="#5-3-3-InnoDB-的行锁模式" class="headerlink" title="5.3.3 InnoDB 的行锁模式"></a>5.3.3 InnoDB 的行锁模式</h5><p>InnoDB  实现了以下两种类型的行锁。</p>
 <ul>
-<li>共享锁（S）：又称为读锁，简称S锁，共享锁就是多个事务对于同一数据可以共享一把锁，都能访问到数据，但是只能读不能修改。</li>
-<li>排他锁（X）：又称为写锁，简称X锁，排他锁就是不能与其他锁并存，如一个事务获取了一个数据行的排他锁，其他事务就不能再获取该行的其他锁，包括共享锁和排他锁，但是获取排他锁的事务是可以对数据就行读取和修改。</li>
+<li>共享锁（S）：又称为读锁，简称S锁，共享锁就是多个事务对于同一数据可以共享一把锁，都能访问到数据，但是只能读不能修改，我们可以用<code>select ...... lock in share mode;</code>的方式手工加上一把<code>S锁</code>。</li>
+<li>排他锁（X）：又称为写锁，简称X锁，排他锁就是不能与其他锁并存，如一个事务获取了一个数据行的排他锁，其他事务就不能再获取该行的其他锁，包括共享锁和排他锁，但是获取排他锁的事务是可以对数据就行读取和修改，我们用一个<code>FOR UPDATE</code>给一行数据加上一个<code>X锁</code>。</li>
 </ul>
 <p>对于UPDATE、DELETE和INSERT语句，InnoDB会自动给涉及数据集加排他锁（X)；</p>
 <p>对于普通SELECT语句，InnoDB不会加任何锁；</p>
