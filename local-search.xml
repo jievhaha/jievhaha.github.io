@@ -4,6 +4,87 @@
   
   
   <entry>
+    <title>zookeeper单机</title>
+    <link href="/2021/02/28/%E5%AE%89%E8%A3%85%E5%8D%95%E6%9C%BAZookeeper/"/>
+    <url>/2021/02/28/%E5%AE%89%E8%A3%85%E5%8D%95%E6%9C%BAZookeeper/</url>
+    
+    <content type="html"><![CDATA[<div align="center"><font color="#000" size="5rem">zookeeper单机</font></div><p>下载路径（没用官网，用的镜像）</p><pre><code class="hljs shell">https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.6.2/</code></pre><p>3.5及以上注意下载好正确的tar.gz包。</p><p>假如是官网的话，好像就是<code>.bin.tar.gz</code>包。</p><p><img src="/images/zookeeper/%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84.png" alt="安装路径"></p><p>从<code>3.5.5</code>开始，带有bin名称的包才是我们想要的下载可以直接使用的里面有编译后的二进制的包，而之前的<strong>普通的tar.gz</strong>的包里面是<strong>只是源码</strong>的包无法直接使用。</p><p>不然安装的是tar.gz的话，启动的时候提示：</p><pre><code class="hljs shell">Starting zookeeper ... FAILED TO START</code></pre><p>日志里提示：</p><pre><code class="hljs shell">错误: 找不到或无法加载主类 org.apache.zookeeper.server.quorum.QuorumPeerMain</code></pre><p>下载好<code>-bin.tar.gz</code>包，解压到自己喜欢的目录。</p><ol><li><p>修改配置文件，运行的时候，默认运行的是<code>zoo.cfg</code>，而<code>conf</code>包下是<code>zoo_sample.cfg</code>。</p><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">当然先进入解压的安装包里的conf文件夹</span>cp zoo_sample.cfg zoo.cfg</code></pre></li><li><p>自己喜欢的目录创建<code>data</code>目录，修改配置文件内容（当然不改也可以）。</p><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> the directory <span class="hljs-built_in">where</span> the snapshot is stored.</span><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-keyword">do</span> not use /tmp <span class="hljs-keyword">for</span> storage, /tmp here is just </span><span class="hljs-meta">#</span><span class="bash"> example sakes.</span><span class="hljs-meta">#</span><span class="bash"> 大概12行的位置</span>dataDir=/home/muzili/文档/apps/apache-zookeeper-3.6.2-bin/data</code></pre></li><li><p>启动，切到<code>bin</code>目录，然后启动</p><pre><code class="hljs shell">./zkServer.sh start</code></pre><p>启动成功后</p><pre><code class="hljs shell">ZooKeeper JMX enabled by defaultUsing config: /home/muzili/文档/apps/apache-zookeeper-3.6.2-bin/bin/../conf/zoo.cfgStarting zookeeper ... STARTED</code></pre><p>也可使用如下命令查看zookeeper状态</p><pre><code class="hljs shell">./zkServer.sh status</code></pre><p>启动成功结果</p><pre><code class="hljs shell">ZooKeeper JMX enabled by defaultUsing config: /home/muzili/文档/apps/apache-zookeeper-3.6.2-bin/bin/../conf/zoo.cfgClient port found: 2181. Client address: localhost. Client SSL: false.Mode: standalone</code></pre></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+      <category>zookeeper</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>zookeeper</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>zookeeper集群</title>
+    <link href="/2021/02/28/%E4%BC%AA%E9%9B%86%E7%BE%A4%E7%89%88Zookeeper%E6%90%AD%E5%BB%BA/"/>
+    <url>/2021/02/28/%E4%BC%AA%E9%9B%86%E7%BE%A4%E7%89%88Zookeeper%E6%90%AD%E5%BB%BA/</url>
+    
+    <content type="html"><![CDATA[<div align="center"><font color="#000" size="5rem">zookeeper集群</font></div><p>懒得配置更多虚拟机，直接一台机子开启多个zookeeper实现<code>伪集群</code>，和<code>redis</code>伪集群一样，修改个端口号即可，就可以一台服务器跑多个zookeeper。</p><h4 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h4><p>下载解压配置和单机的一样，只不过多了一些额外配置。</p><h5 id="新建一个文件夹，专门放多台zookeeper。"><a href="#新建一个文件夹，专门放多台zookeeper。" class="headerlink" title="新建一个文件夹，专门放多台zookeeper。"></a>新建一个文件夹，专门放多台zookeeper。</h5><p>喜欢的路径创建一个<code>zookeepercluster</code>目录，解压三份zookeeper的<code>-bin.tar.gz</code>包到该目录。</p><p><img src="/images/zookeeper/%E4%BC%AA%E9%9B%86%E7%BE%A4%E7%9B%AE%E5%BD%95.png" alt="伪集群目录"></p><h5 id="按个配置每个zookeeper"><a href="#按个配置每个zookeeper" class="headerlink" title="按个配置每个zookeeper"></a>按个配置每个zookeeper</h5><p>创建<code>data</code>目录，并在<code>data</code>目录下创建<code>myid</code>文件</p><p><img src="/images/zookeeper/%E4%BC%AA%E9%9B%86%E7%BE%A4%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE1.png" alt="伪集群修改配置1"></p><p>里边分别添加内容1、2、3。这个文件就是记录每个服务器的ID。</p><h5 id="按个修改配置文件。"><a href="#按个修改配置文件。" class="headerlink" title="按个修改配置文件。"></a>按个修改配置文件。</h5><p>主要修改两个：数据存放路径和端口号</p><p><strong>切记切记</strong>：**<em>路径别有中文**</em>，不然一直提示找不到<code>myid</code>文件（虽然确实data目录创建并配置了）</p><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> the directory <span class="hljs-built_in">where</span> the snapshot is stored.</span><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-keyword">do</span> not use /tmp <span class="hljs-keyword">for</span> storage, /tmp here is just </span><span class="hljs-meta">#</span><span class="bash"> example sakes.</span><span class="hljs-meta">#</span><span class="bash">切记切记不能有中文，大坑</span>dataDir=/home/muzili/文档/apps/zookeepercluster/zookeeper3/apache-zookeeper-3.6.2-bin/data<span class="hljs-meta">#</span><span class="bash"> the port at <span class="hljs-built_in">which</span> the clients will connect</span>clientPort=2183</code></pre><h5 id="每个配置文件配置客户端访问端口（clientPort）和集群服务器IP列表。"><a href="#每个配置文件配置客户端访问端口（clientPort）和集群服务器IP列表。" class="headerlink" title="每个配置文件配置客户端访问端口（clientPort）和集群服务器IP列表。"></a>每个配置文件配置客户端访问端口（clientPort）和集群服务器IP列表。</h5><p>末尾都添加如下：</p><pre><code class="hljs shell">server.1=192.168.13.128:2881:3881server.2=192.168.13.128:2882:3882server.3=192.168.13.128:2883:3883<span class="hljs-meta">#</span><span class="bash">server.服务器ID=服务器IP地址：服务器之间通信端口：服务器之间投票选举端口</span></code></pre><p>配置以上即可。启动验证</p><p>启动成功，状态会如下：</p><p><img src="/images/zookeeper/2181%E7%8A%B6%E6%80%81.png" alt="2181状态"></p><p><img src="/images/zookeeper/2182%E7%8A%B6%E6%80%81.png" alt="2182状态"></p><p><img src="/images/zookeeper/2383%E7%8A%B6%E6%80%81.png" alt="2383状态"></p><p>没问题的话，唯一的不美观就是，三个服务器，其第一或者第二个，由于其他的服务还没启动，日志里会报***拒绝连接，第三个服务没毛病。</p><h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><h5 id="切记路径不能有中文，单机zookeeper可能没什么，集群的就有问题了。"><a href="#切记路径不能有中文，单机zookeeper可能没什么，集群的就有问题了。" class="headerlink" title="切记路径不能有中文，单机zookeeper可能没什么，集群的就有问题了。"></a>切记路径不能有中文，单机zookeeper可能没什么，集群的就有问题了。</h5><p>即便正确配置了路径，也配置了<code>myid</code>，里边<code>id</code>也唯一。但会一直提示：</p><p><img src="/images/zookeeper/myid-miss.png" alt="myid-miss"></p><h5 id="可以正常启动，但是查看状态时，提示如下："><a href="#可以正常启动，但是查看状态时，提示如下：" class="headerlink" title="可以正常启动，但是查看状态时，提示如下："></a>可以正常启动，但是查看状态时，提示如下：</h5><p><img src="/images/zookeeper/status%E6%8A%A5%E9%94%99.png" alt="status报错"></p><p>权限问题，启动后，查看之前创建的<code>data</code>目录，除了自己创建的<code>myid</code>，还会有一个<code>version-2</code>的目录，里边有三个文件，省事直接修改所有权限即可。</p><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">此处图了方便自己，所以自己直接设置了777，看自己需要</span>chmod -R 777 version-2</code></pre><h5 id="8080端口已经被占用："><a href="#8080端口已经被占用：" class="headerlink" title="8080端口已经被占用："></a>8080端口已经被占用：</h5><p><img src="/images/zookeeper/AdminServer%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A88080%E7%AB%AF%E5%8F%A3.png" alt="AdminServer默认使用8080端口"></p><p>原因，zookeeper3.5之后，Zookeeper AdminServer，默认使用8080端口。</p><p>配置文件添加如下内容修改为其他未被使用的端口即可：</p><pre><code class="hljs shell">admin.serverPort=8888</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+      <category>zookeeper</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>zookeeper</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>zookeeper常用命令</title>
+    <link href="/2021/02/28/zookeeper%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8/"/>
+    <url>/2021/02/28/zookeeper%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BD%BF%E7%94%A8/</url>
+    
+    <content type="html"><![CDATA[<div align="center"><font color="#000" size="5rem">zookeeper常用命令</font></div><p>进入<code>bin</code>目录，执行如下启动命令客户端。</p><pre><code class="hljs shell">./zkCli.sh</code></pre><h4 id="ls命令"><a href="#ls命令" class="headerlink" title="ls命令"></a>ls命令</h4><p>ls 命令用于查看某个路径下目录列表。后边必须跟路径</p><pre><code class="hljs shell">ls /</code></pre><p>ls2（3.6版本已经不支持了，需要ls -s）命令用于查看某个路径下目录列表，它比 ls 命令列出更多的详细信息。</p><pre><code class="hljs shell">ls -s /</code></pre><p><img src="/images/zookeeper/ls.png" alt="ls"></p><p>ls path [watch]可以对节点进行监听，但是不推荐使用了，推荐<code>ls -w path</code>替代。</p><p><img src="/images/zookeeper/%E7%9B%91%E5%90%AC.png" alt="监听"></p><p><strong>注意</strong>：监听效果就一次，比如我接着<code>delete /test</code>，那会直接删除，不会再有下边<code>WATCHER::</code>之类的话了，还想监听，那就重新设置一次。</p><h4 id="get命令"><a href="#get命令" class="headerlink" title="get命令"></a>get命令</h4><p>get 命令用于获取节点数据和状态信息。</p><p>可选参数[watch]对节点进行事件监听。已经过期，可以使用get [-w] path代替，和ls一样。</p><pre><code class="hljs shell">get /get -s /</code></pre><h4 id="stat命令"><a href="#stat命令" class="headerlink" title="stat命令"></a>stat命令</h4><p>stat 命令用于查看节点状态信息。</p><pre><code class="hljs shell">stat /</code></pre><h4 id="create命令"><a href="#create命令" class="headerlink" title="create命令"></a>create命令</h4><p>create 命令用于创建节点并赋值。</p><pre><code class="hljs shell">create [-s] [-e] path data acl[-s] [-e]：-s 和 -e 都是可选的，-s 代表顺序节点， -e 代表临时节点，注意其中 -s 和 -e 可以同时使用的，并且临时节点不能再创建子节点。path：指定要创建节点的路径，比如 /runoob。data：要在此节点存储的数据。act：访问权限相关，默认是 world，相当于全世界都能访问。</code></pre><h4 id="set命令"><a href="#set命令" class="headerlink" title="set命令"></a>set命令</h4><p>set 命令用于修改节点存储的数据。</p><pre><code class="hljs shell">set path value [version]</code></pre><h4 id="delete命令"><a href="#delete命令" class="headerlink" title="delete命令"></a>delete命令</h4><p>delete 命令用于删除某节点。</p><pre><code class="hljs shell">delete path [version]</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>java</category>
+      
+      <category>zookeeper</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>zookeeper</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>锁种类以及具体实现</title>
     <link href="/2021/02/28/%E9%94%81%E7%A7%8D%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0/"/>
     <url>/2021/02/28/%E9%94%81%E7%A7%8D%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0/</url>
