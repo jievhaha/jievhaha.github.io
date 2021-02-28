@@ -111,7 +111,7 @@
     
     <tags>
       
-      <tag>Volatile</tag>
+      <tag>JUC基础原理</tag>
       
     </tags>
     
@@ -140,7 +140,7 @@
     
     <tags>
       
-      <tag>Unsafe</tag>
+      <tag>JUC基础原理</tag>
       
     </tags>
     
@@ -196,7 +196,7 @@
     
     <tags>
       
-      <tag>ReentrantReadWriteLock</tag>
+      <tag>Lock</tag>
       
     </tags>
     
@@ -223,7 +223,7 @@
     
     <tags>
       
-      <tag>ReentrantLock</tag>
+      <tag>Lock</tag>
       
     </tags>
     
@@ -250,7 +250,7 @@
     
     <tags>
       
-      <tag>ReentrantLock</tag>
+      <tag>Lock</tag>
       
     </tags>
     
@@ -279,7 +279,7 @@
     
     <tags>
       
-      <tag>CAS</tag>
+      <tag>JUC基础理论</tag>
       
     </tags>
     
@@ -337,7 +337,7 @@
     
     <tags>
       
-      <tag>AQS</tag>
+      <tag>JUC基础理论</tag>
       
     </tags>
     
