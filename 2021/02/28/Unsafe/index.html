@@ -1,0 +1,591 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>Unsafe简介 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Unsafe简介">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-28 18:42" pubdate>
+        2021年2月28日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Unsafe简介</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月28日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">Unsafe简介</font></div>
+
+<h4 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h4><p>Unsafe类为<strong>单例</strong>实现，提供静态方法getUnsafe获取Unsafe实例，当且仅当调用getUnsafe方法的类为<strong>引导类加载器</strong>所加载时才合法，否则抛出SecurityException异常。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Unsafe theUnsafe;
+<span class="hljs-meta">@CallerSensitive</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Unsafe <span class="hljs-title">getUnsafe</span><span class="hljs-params">()</span> </span>&#123;
+    Class var0 = Reflection.getCallerClass();
+    <span class="hljs-keyword">if</span> (!VM.isSystemDomainLoader(var0.getClassLoader())) &#123;
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> SecurityException(<span class="hljs-string">&quot;Unsafe&quot;</span>);
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">return</span> theUnsafe;
+    &#125;
+&#125;</code></pre>
+
+<p>那如若想使用这个类，该如何获取其实例？有如下两个可行方案。</p>
+<p>其一，从<code>getUnsafe</code>方法的使用限制条件出发，通过Java命令行命令<code>-Xbootclasspath/a</code>把调用Unsafe相关方法的类A所在jar包路径追加到默认的bootstrap路径中，使得A被引导类加载器加载，从而通过<code>Unsafe.getUnsafe</code>方法安全的获取Unsafe实例。</p>
+<pre><code class="hljs java">java -Xbootclasspath/a: $&#123;path&#125;   <span class="hljs-comment">// 其中path为调用Unsafe相关方法的类所在jar包路径 </span></code></pre>
+
+<p>其二，通过反射获取单例对象theUnsafe。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Unsafe <span class="hljs-title">reflectGetUnsafe</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">try</span> &#123;
+      Field field = Unsafe.class.getDeclaredField(<span class="hljs-string">&quot;theUnsafe&quot;</span>);
+      field.setAccessible(<span class="hljs-keyword">true</span>);
+      <span class="hljs-keyword">return</span> (Unsafe) field.get(<span class="hljs-keyword">null</span>);
+    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;
+      log.error(e.getMessage(), e);
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    &#125;
+&#125;</code></pre>
+
+<h4 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h4><p><img src="%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD.png" srcset="/img/loading.gif" alt="主要功能"></p>
+<h4 id="内存操作"><a href="#内存操作" class="headerlink" title="内存操作"></a>内存操作</h4><p>这部分主要包含<strong>堆外内存</strong>的分配、拷贝、释放、给定地址值操作等方法。</p>
+<p>通常，我们在Java中创建的对象都处于堆内内存（heap）中，堆内内存是由JVM所管控的Java进程内存，并且它们遵循JVM的内存管理机制，JVM会采用垃圾回收机制统一管理堆内存。与之相对的是堆外内存，存在于JVM管控之外的内存区域，Java中对堆外内存的操作，依赖于Unsafe提供的操作堆外内存的native方法。</p>
+<h5 id="使用堆外内存的原因"><a href="#使用堆外内存的原因" class="headerlink" title="使用堆外内存的原因"></a>使用堆外内存的原因</h5><ul>
+<li>对垃圾回收停顿的改善。由于堆外内存是直接受操作系统管理而不是JVM，所以当我们使用堆外内存时，即可保持较小的堆内内存规模。从而在GC时减少回收停顿对于应用的影响。</li>
+<li>提升程序I/O操作的性能。通常在I/O通信过程中，会存在堆内内存到堆外内存的数据拷贝操作，对于需要频繁进行内存间数据拷贝且生命周期较短的暂存数据，都建议存储到堆外内存。</li>
+</ul>
+<h5 id="典型应用"><a href="#典型应用" class="headerlink" title="典型应用"></a>典型应用</h5><p><code>DirectByteBuffer</code>是Java用于实现堆外内存的一个重要类，通常用在通信过程中做缓冲池，如在Netty、MINA等NIO框架中应用广泛。DirectByteBuffer对于堆外内存的创建、使用、销毁等逻辑均由Unsafe提供的堆外内存API来实现。</p>
+<h4 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a>线程调度</h4><p>这部分，包括线程挂起、恢复、锁机制等方法。</p>
+<pre><code class="hljs java">
+<span class="hljs-comment">//取消阻塞线程</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unpark</span><span class="hljs-params">(Object thread)</span></span>;
+<span class="hljs-comment">//阻塞线程</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">park</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> isAbsolute, <span class="hljs-keyword">long</span> time)</span></span>;
+<span class="hljs-comment">//获得对象锁（可重入锁）</span>
+<span class="hljs-meta">@Deprecated</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">monitorEnter</span><span class="hljs-params">(Object o)</span></span>;
+<span class="hljs-comment">//释放对象锁</span>
+<span class="hljs-meta">@Deprecated</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">monitorExit</span><span class="hljs-params">(Object o)</span></span>;
+<span class="hljs-comment">//尝试获取对象锁</span>
+<span class="hljs-meta">@Deprecated</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryMonitorEnter</span><span class="hljs-params">(Object o)</span></span>;</code></pre>
+
+<h5 id="典型应用-1"><a href="#典型应用-1" class="headerlink" title="典型应用"></a>典型应用</h5><p>Java锁和同步器框架的核心类AbstractQueuedSynchronizer，就是通过调用<code>LockSupport.park()</code>和<code>LockSupport.unpark()</code>实现线程的阻塞和唤醒的，而LockSupport的park、unpark方法实际是调用Unsafe的park、unpark方式来实现。</p>
+<h4 id="Class相关"><a href="#Class相关" class="headerlink" title="Class相关"></a>Class相关</h4><p>此部分主要提供Class和它的静态字段的操作相关方法，包含静态字段内存定位、定义类、定义匿名类、检验&amp;确保初始化等。</p>
+<h4 id="对象操作"><a href="#对象操作" class="headerlink" title="对象操作"></a>对象操作</h4><p>此部分主要包含对象成员属性相关操作及非常规的对象实例化方式等相关方法。</p>
+<pre><code class="hljs java"><span class="hljs-comment">//返回对象成员属性在内存地址相对于此对象的内存地址的偏移量</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">long</span> <span class="hljs-title">objectFieldOffset</span><span class="hljs-params">(Field f)</span></span>;
+<span class="hljs-comment">//获得给定对象的指定地址偏移量的值，与此类似操作还有：getInt，getDouble，getLong，getChar等</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> Object <span class="hljs-title">getObject</span><span class="hljs-params">(Object o, <span class="hljs-keyword">long</span> offset)</span></span>;
+<span class="hljs-comment">//给定对象的指定地址偏移量设值，与此类似操作还有：putInt，putDouble，putLong，putChar等</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">putObject</span><span class="hljs-params">(Object o, <span class="hljs-keyword">long</span> offset, Object x)</span></span>;
+<span class="hljs-comment">//从对象的指定偏移量处获取变量的引用，使用volatile的加载语义</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> Object <span class="hljs-title">getObjectVolatile</span><span class="hljs-params">(Object o, <span class="hljs-keyword">long</span> offset)</span></span>;
+<span class="hljs-comment">//存储变量的引用到对象的指定的偏移量处，使用volatile的存储语义</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">putObjectVolatile</span><span class="hljs-params">(Object o, <span class="hljs-keyword">long</span> offset, Object x)</span></span>;
+<span class="hljs-comment">//有序、延迟版本的putObjectVolatile方法，不保证值的改变被其他线程立即看到。只有在field被volatile修饰符修饰时有效</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">putOrderedObject</span><span class="hljs-params">(Object o, <span class="hljs-keyword">long</span> offset, Object x)</span></span>;
+<span class="hljs-comment">//绕过构造方法、初始化代码来创建对象</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> Object <span class="hljs-title">allocateInstance</span><span class="hljs-params">(Class&lt;?&gt; cls)</span> <span class="hljs-keyword">throws</span> InstantiationException</span>;</code></pre>
+
+<h5 id="典型应用-2"><a href="#典型应用-2" class="headerlink" title="典型应用"></a>典型应用</h5><ul>
+<li><strong>非常规的实例化方式</strong>：而Unsafe中提供allocateInstance方法，仅通过Class对���就可以创建此类的实例对象，而且不需要调用其构造函数、初始化代码、JVM安全检查等。它抑制修饰符检测，也就是即使构造器是private修饰的也能通过此方法实例化，只需提类对象即可创建相应的对象。由于这种特性，allocateInstance在java.lang.invoke、Objenesis（提供绕过类构造器的对象生成方式）、Gson（反序列化时用到）中都有相应的应用。</li>
+</ul>
+<h4 id="数组相关"><a href="#数组相关" class="headerlink" title="数组相关"></a>数组相关</h4><p>这部分主要介绍与数据操作相关的arrayBaseOffset与arrayIndexScale这两个方法，两者配合起来使用，即可定位数组中每个元素在内存中的位置。</p>
+<pre><code class="hljs java"><span class="hljs-comment">//返回数组中第一个元素的偏移地址</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">int</span> <span class="hljs-title">arrayBaseOffset</span><span class="hljs-params">(Class&lt;?&gt; arrayClass)</span></span>;
+<span class="hljs-comment">//返回数组中一个元素占用的大小</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">int</span> <span class="hljs-title">arrayIndexScale</span><span class="hljs-params">(Class&lt;?&gt; arrayClass)</span></span>;</code></pre>
+
+<h5 id="典型应用-3"><a href="#典型应用-3" class="headerlink" title="典型应用"></a>典型应用</h5><p>这两个与数据操作相关的方法，在java.util.concurrent.atomic 包下的AtomicIntegerArray（可以实现对Integer数组中每个元素的原子性操作）中有典型的应用。</p>
+<h4 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h4><p>在Java 8中引入，用于定义内存屏障（也称内存栅栏，内存栅障，屏障指令等，是一类同步屏障指令，是CPU或编译器在对内存随机访问的操作中的一个同步点，使得此点之前的所有读写操作都执行后才可以开始执行此点之后的操作），避免代码重排序。</p>
+<pre><code class="hljs java"><span class="hljs-comment">//内存屏障，禁止load操作重排序。屏障前的load操作不能被重排序到屏障后，屏障后的load操作不能被重排序到屏障前</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">loadFence</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">//内存屏障，禁止store操作重排序。屏障前的store操作不能被重排序到屏障后，屏障后的store操作不能被重排序到屏障前</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">storeFence</span><span class="hljs-params">()</span></span>;
+<span class="hljs-comment">//内存屏障，禁止load、store操作重排序</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title">fullFence</span><span class="hljs-params">()</span></span>;</code></pre>
+
+<h4 id="系统相关"><a href="#系统相关" class="headerlink" title="系统相关"></a>系统相关</h4><p>这部分包含两个获取系统相关信息的方法。</p>
+<pre><code class="hljs java"><span class="hljs-comment">//返回系统指针的大小。返回值为4（32位系统）或 8（64位系统）。</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">int</span> <span class="hljs-title">addressSize</span><span class="hljs-params">()</span></span>;  
+<span class="hljs-comment">//内存页的大小，此值为2的幂次方。</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">int</span> <span class="hljs-title">pageSize</span><span class="hljs-params">()</span></span>;</code></pre>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/JUC/">JUC</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/JUC/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">基础原理</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Unsafe/">Unsafe</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/28/Volatile/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Volatile简介</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/28/ThreadPoolExecutor/">
+                        <span class="hidden-mobile">线程池原理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

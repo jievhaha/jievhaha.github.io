@@ -1,0 +1,641 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>AQS - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="AQS">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-28 18:08" pubdate>
+        2021年2月28日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      14
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">AQS</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月28日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">AQS简介</font></div>
+
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>AQS，AbstractQueudSynchronizer，即队列同步器。</p>
+<hr>
+<blockquote>
+<table><tr><td bgcolor="#6495ED"><font color="#FFF">可一并参考<strong>ReentrantLock</strong>，其内部底层是：定义一个内部类<strong>Sync</strong>（<u>继承了AQS</u>），公平锁<strong>FairSync</strong>和非公平锁<strong>NonfairSync</strong>又继承了<strong>Sync</strong>。</font></td></tr></table>
+</blockquote>
+<hr>
+<p><img src="/images/JUC/AQS/AQS%E6%9E%B6%E6%9E%84.png" srcset="/img/loading.gif" alt="AQS架构"></p>
+<ul>
+<li>上图中有颜色的为Method，无颜色的为Attribution。</li>
+<li>总的来说，AQS框架共分为五层，自上而下由浅入深，从AQS对外暴露的API到底层基础数据。</li>
+<li>当有自定义同步器接入时，只需重写第一层所需要的部分方法即可，不需要关注底层具体的实现流程。当自定义同步器进行加锁或者解锁操作时，先经过第一层的API进入AQS内部方法，然后经过第二层进行锁的获取，接着对于获取锁失败的流程，进入第三层和第四层的等待队列处理，而这些处理方式均依赖于第五层的基础数据提供层。</li>
+</ul>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>AQS使用一个<kbd>int</kbd>类型的成员变量<code>state</code>来表示同步状态，当<kbd>state>0</kbd>时表示已经获取了锁，当<kbd>state = 0</kbd>时表示释放了锁。它提供了三个方法（getState()、setState(int newState)、compareAndSetState(int expect,int update)）来对同步状态state进行操作，当然AQS可以确保对state的*<strong>操作是安全**<em>的。 AQS通过</em></strong>内置的FIFO同步队列*<strong>来完成资源获取线程的排队工作，如果当前线程获取同步状态失败（锁）时，AQS则会将**<em>当前线程以及等待状态等信息构造成一个节点（Node）</em></strong>并将其加入同步队列，同时会阻塞当前线程，当同步状态释放时，则会把节点中的线程唤醒，使其再次尝试获取同步状态。</p>
+<p>AQS内部变量都被<code>volatile</code>修饰了</p>
+<pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> Node head;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> Node tail;
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> state;</code></pre>
+
+<p>同时变量的操作都会经过<code>CAS</code>来保证操作安全。（CAS原理查看CAS.md篇）</p>
+<pre><code class="hljs java"><span class="hljs-comment">//其中一个方法</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSetState</span><span class="hljs-params">(<span class="hljs-keyword">int</span> expect, <span class="hljs-keyword">int</span> update)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> unsafe.compareAndSwapInt(<span class="hljs-keyword">this</span>, stateOffset, expect, update);
+&#125;</code></pre>
+
+<p>同时内部节点<code>node</code>内部变量也被<code>volatile</code>修饰了</p>
+<pre><code class="hljs java"><span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> waitStatus;
+<span class="hljs-keyword">volatile</span> Node prev;
+<span class="hljs-keyword">volatile</span> Node next;
+<span class="hljs-keyword">volatile</span> Thread thread;</code></pre>
+
+<h5 id="内置的FIFO队列就是CLH-Craig-Landin-and-Hagersten-同步队列"><a href="#内置的FIFO队列就是CLH-Craig-Landin-and-Hagersten-同步队列" class="headerlink" title="内置的FIFO队列就是CLH(Craig, Landin, and Hagersten) 同步队列"></a>内置的FIFO队列就是CLH(Craig, Landin, and Hagersten) 同步队列</h5><p>该队列是一个FIFO双向队列</p>
+<p><strong><em>入队</em></strong>，调用的是<kbd>addWaiter(Node node)</kbd>，尝试快速(相当于执行了一次)将该节点设置尾成尾节点，设置失败内部调用<kbd>enq(final Node node)</kbd>方法。<kbd>enq(final Node node)</kbd>通过*<strong>“自旋”**<em>也就是死循环的方式来保证该节点能顺利的加入到队列尾部，只有加入成功才会退出循环，否则会一直循序直到成功。上述两方法都是通过</em></strong>CAS***保证节点的添加的原子性。</p>
+<p><strong><em>出队</em></strong>，首节点的线程释放同步状态后，将会唤醒它的后继节点（next），而后继节点将会在获取同步状态成功时将自己设置为首节点，这个过程是不需要使用CAS来保证的，因为只有一个线程能够成功获取到同步状态。</p>
+<h5 id="AQS数据结构："><a href="#AQS数据结构：" class="headerlink" title="AQS数据结构："></a>AQS数据结构：</h5><p>如果当前线程获取同步状态失败（锁）时，当前线程以及等待状态等信息构造成一个节点（Node）</p>
+<p>解释一下几个方法和属性值的含义：</p>
+<table>
+<thead>
+<tr>
+<th align="left">方法和属性值</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">waitStatus</td>
+<td align="left">当前节点在队列中的状态</td>
+</tr>
+<tr>
+<td align="left">thread</td>
+<td align="left">表示处于该节点的线程</td>
+</tr>
+<tr>
+<td align="left">prev</td>
+<td align="left">前驱指针</td>
+</tr>
+<tr>
+<td align="left">predecessor</td>
+<td align="left">返回前驱节点，没有的话抛出npe</td>
+</tr>
+<tr>
+<td align="left">nextWaiter</td>
+<td align="left">指向下一个处于CONDITION状态的节点（由于本篇文章不讲述Condition Queue队列，这个指针不多介绍）</td>
+</tr>
+<tr>
+<td align="left">next</td>
+<td align="left">后继指针</td>
+</tr>
+</tbody></table>
+<p>线程两种锁的模式：</p>
+<table>
+<thead>
+<tr>
+<th align="left">模式</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SHARED</td>
+<td align="left">表示线程以共享的模式等待锁</td>
+</tr>
+<tr>
+<td align="left">EXCLUSIVE</td>
+<td align="left">表示线程正在以独占的方式等待锁</td>
+</tr>
+</tbody></table>
+<p>waitStatus有下面几个枚举值：</p>
+<table>
+<thead>
+<tr>
+<th align="left">枚举</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">当一个Node被初始化的时候的默认值</td>
+</tr>
+<tr>
+<td align="left">CANCELLED</td>
+<td align="left">为1，表示线程获取锁的请求已经取���了</td>
+</tr>
+<tr>
+<td align="left">CONDITION</td>
+<td align="left">为-2，表示节点在等待队列中，节点线程等待唤醒</td>
+</tr>
+<tr>
+<td align="left">PROPAGATE</td>
+<td align="left">为-3，当前线程处在SHARED情况下，���字段才会使用</td>
+</tr>
+<tr>
+<td align="left">SIGNAL</td>
+<td align="left">为-1，表示线程已经准备好了，就等资源释放了</td>
+</tr>
+</tbody></table>
+<h5 id="同步状态"><a href="#同步状态" class="headerlink" title="同步状态"></a>同步状态</h5><p>通过修改State字段表示的同步状态来实现多线程的独占模式和共享模式（加锁过程）。</p>
+<p><img src="/images/JUC/AQS/%E7%8B%AC%E5%8D%A0%E9%94%81.png" srcset="/img/loading.gif" alt="独占锁"></p>
+<p><img src="/images/JUC/AQS/%E5%85%B1%E4%BA%AB%E9%94%81.png" srcset="/img/loading.gif" alt="共享锁"></p>
+<h4 id="AQS的应用场景："><a href="#AQS的应用场景：" class="headerlink" title="AQS的应用场景："></a>AQS的应用场景：</h4><table>
+<thead>
+<tr>
+<th align="left">同步工具</th>
+<th align="left">同步工具与AQS的关联</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ReentrantLock</td>
+<td align="left">使用AQS保存锁重复持有的次数。当一个线程获取锁时，ReentrantLock记录当前获得锁的线程标识，用于检测是否重复获取，以及错误线程试图解锁操作时异常情况的处理。</td>
+</tr>
+<tr>
+<td align="left">Semaphore</td>
+<td align="left">使用AQS同步状态来保存信号量的当前计数。tryRelease会增加计数，acquireShared会减少计数。</td>
+</tr>
+<tr>
+<td align="left">CountDownLatch</td>
+<td align="left">使用AQS同步状态来表示计数。计数为0时，所有的Acquire操作（CountDownLatch的await方法）才可以通过。</td>
+</tr>
+<tr>
+<td align="left">ReentrantReadWriteLock</td>
+<td align="left">使用AQS同步状态中的16位保存写锁持有的次数，剩下的16位用于保存读锁的持有次数。</td>
+</tr>
+<tr>
+<td align="left">ThreadPoolExecutor</td>
+<td align="left">Worker利用AQS同步状态实现对独占线程变量的设置（tryAcquire和tryRelease）。</td>
+</tr>
+</tbody></table>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/JUC/">JUC</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/JUC/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">基础原理</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/AQS/">AQS</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/28/PriorityBlockingQueue/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PriorityBlockingQueue</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/25/Spring%20Boot%E7%AC%94%E8%AE%B0/">
+                        <span class="hidden-mobile">Springboot核心基础</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

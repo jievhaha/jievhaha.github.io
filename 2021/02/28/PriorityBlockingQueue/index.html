@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  <title>PriorityBlockingQueue - 沐子</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>muzili</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="PriorityBlockingQueue">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-28 18:11" pubdate>
+        2021年2月28日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      24
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">PriorityBlockingQueue</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年2月28日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <div align="center"><font color="#000" size="5rem">PriorityBlockingQueue</font></div>
+
+<blockquote>
+<table><tr><td bgcolor="#6495ED"><font color="#FFF"> PriorityBlockingQueue是一个支持优先级的无界阻塞队列，底层采用二叉堆实现的。默认情况下元素采用自然顺序升序排序，当然我们也可以通过构造函数来指定Comparator来对元素进行排序。需要注意的是PriorityBlockingQueue不能保证同优先级元素的顺序。ArrayBlockingQueue、LinkedBlockingQueue都是采用FIFO原则来确定线程执行的先后顺序</font></td></tr></table>
+</blockquote>
+<h4 id="二叉堆"><a href="#二叉堆" class="headerlink" title="二叉堆"></a>二叉堆</h4><h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><p>父节点的键值总是保持固定的序关系于任何一个子节点的键值，且每个节点的左子树和右子树都是一个二叉堆。它有两种表现形式：最大堆、最小堆。 最大堆：父节点的键值总是大于或等于任何一个子节点的键值， 最小堆：父节点的键值总是小于或等于任何一个子节点的键值。</p>
+<p>二叉堆一般用数组表示，如果父节点的节点位置在n处，那么其左孩子节点为：2 * n + 1 ，其右孩子节点为2 * (n + 1)，其父节点为（n - 1） / 2 处。</p>
+<p><img src="/images/JUC/BlockingQueue/erchadui.png" srcset="/img/loading.gif" alt="二叉堆举例"></p>
+<h5 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h5><p>最小堆为例：首先将要添加的元素N插添加到堆的末尾位置（在二叉堆中我们称之为空穴）。如果元素N放入空穴中而不破坏堆的序（其值大于跟父节点值（最大堆是小于父节点）），那么插入完成。否则，我们则将该元素N的节点与其父节点进行交换，然后与其新父节点进行比较直到它的父节点不在比它小（最大堆是大）或者到达根节点。</p>
+<h5 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h5><p>删除元素与增加元素一样，需要维护整个二叉堆的序。删除位置1的元素（数组下标0），则把最后一个元素空出来移到最前边，然后和它的两个子节点比较，如果两个子节点中较小的节点小于该节点，就将他们交换，直到两个子节点都比该元素大为止。</p>
+<h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><p>内部也是用可重入锁<code>ReentrantLock</code>实现同步机制，但只有一个<code>notEmpty</code>的Condition，<code>ArrayBlockingQueue</code>定义了两个Condition，之所以这样，因为<code>PriorityBlockingQueue</code>是一个**<em>无界队列，插入总是会成功**</em>，除非消耗尽了资源导致服务器挂。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PriorityBlockingQueue</span>&lt;<span class="hljs-title">E</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractQueue</span>&lt;<span class="hljs-title">E</span>&gt;</span>
+<span class="hljs-class">    <span class="hljs-keyword">implements</span> <span class="hljs-title">BlockingQueue</span>&lt;<span class="hljs-title">E</span>&gt;, <span class="hljs-title">java</span>.<span class="hljs-title">io</span>.<span class="hljs-title">Serializable</span> </span>&#123;
+    <span class="hljs-comment">// 默认容量</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="hljs-number">11</span>;
+    <span class="hljs-comment">// 最大容量</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> MAX_ARRAY_SIZE = Integer.MAX_VALUE - <span class="hljs-number">8</span>;
+    <span class="hljs-comment">// 二叉堆数组</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> Object[] queue;
+    <span class="hljs-comment">// 队列元素的个数</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">int</span> size;
+    <span class="hljs-comment">// 比较器，如果为空，则为自然顺序</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> Comparator&lt;? <span class="hljs-keyword">super</span> E&gt; comparator;
+    <span class="hljs-comment">// 内部锁</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ReentrantLock lock;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Condition notEmpty;<span class="hljs-comment">//非空</span>
+    <span class="hljs-comment">//</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> allocationSpinLock;
+    <span class="hljs-comment">// 优先队列：主要用于序列化，这是为了兼容之前的版本。只有在序列化和反序列化才非空</span>
+    <span class="hljs-keyword">private</span> PriorityQueue&lt;E&gt; q;
+&#125;</code></pre>
+
+<h4 id="三个基本添加方法"><a href="#三个基本添加方法" class="headerlink" title="三个基本添加方法"></a>三个基本添加方法</h4><p><code>add</code>、<code>put</code>、<code>offer</code>，<code>add</code>和<code>put</code>内部直接调用<code>offer</code></p>
+<pre><code class="hljs java"><span class="hljs-comment">//add</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">add</span><span class="hljs-params">(E e)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> offer(e);
+&#125;
+<span class="hljs-comment">//put</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">put</span><span class="hljs-params">(E e)</span> </span>&#123;
+    offer(e); <span class="hljs-comment">// never need to block</span>
+&#125;
+<span class="hljs-comment">//offer</span>
+<span class="hljs-comment">//正如该方法注释所说，插入一个元素到该优先级队列，该队列是无界的，所以这个方法永远都是插入成功的。</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">offer</span><span class="hljs-params">(E e)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (e == <span class="hljs-keyword">null</span>)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointerException();
+    <span class="hljs-keyword">final</span> ReentrantLock lock = <span class="hljs-keyword">this</span>.lock;
+    lock.lock();
+    <span class="hljs-keyword">int</span> n, cap;
+    Object[] array;
+    <span class="hljs-keyword">while</span> ((n = size) &gt;= (cap = (array = queue).length))
+        tryGrow(array, cap);<span class="hljs-comment">//进行扩容</span>
+    <span class="hljs-keyword">try</span> &#123;
+        Comparator&lt;? <span class="hljs-keyword">super</span> E&gt; cmp = comparator;<span class="hljs-comment">//创建队列对象没传入Comparator实现类默认为null</span>
+        <span class="hljs-keyword">if</span> (cmp == <span class="hljs-keyword">null</span>)
+            siftUpComparable(n, e, array);<span class="hljs-comment">//自然排序</span>
+        <span class="hljs-keyword">else</span>
+            siftUpUsingComparator(n, e, array, cmp);<span class="hljs-comment">//自定义排序</span>
+        size = n + <span class="hljs-number">1</span>;
+        notEmpty.signal();
+    &#125; <span class="hljs-keyword">finally</span> &#123;
+        lock.unlock();
+    &#125;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+&#125;
+
+<span class="hljs-comment">//扩容  通过自旋</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">tryGrow</span><span class="hljs-params">(Object[] array, <span class="hljs-keyword">int</span> oldCap)</span> </span>&#123;
+    lock.unlock(); <span class="hljs-comment">// 不需要锁主锁</span>
+    Object[] newArray = <span class="hljs-keyword">null</span>;
+    <span class="hljs-comment">//CAS</span>
+    <span class="hljs-comment">// allocationSpinLock = 0;代表释放了自旋锁</span>
+    <span class="hljs-comment">// allocationSpinLock = 1;代表释放了自旋锁</span>
+    <span class="hljs-keyword">if</span> (allocationSpinLock == <span class="hljs-number">0</span> &amp;&amp;
+        UNSAFE.compareAndSwapInt(<span class="hljs-keyword">this</span>, allocationSpinLockOffset,
+                                 <span class="hljs-number">0</span>, <span class="hljs-number">1</span>)) &#123;<span class="hljs-comment">//获取自旋锁，即设置为1</span>
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-keyword">int</span> newCap = oldCap + ((oldCap &lt; <span class="hljs-number">64</span>) ?
+                                   (oldCap + <span class="hljs-number">2</span>) : <span class="hljs-comment">// grow faster if small</span>
+                                   (oldCap &gt;&gt; <span class="hljs-number">1</span>));
+            <span class="hljs-keyword">if</span> (newCap - MAX_ARRAY_SIZE &gt; <span class="hljs-number">0</span>) &#123;    <span class="hljs-comment">// possible overflow</span>
+                <span class="hljs-keyword">int</span> minCap = oldCap + <span class="hljs-number">1</span>;
+                <span class="hljs-keyword">if</span> (minCap &lt; <span class="hljs-number">0</span> || minCap &gt; MAX_ARRAY_SIZE)
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> OutOfMemoryError();
+                newCap = MAX_ARRAY_SIZE;
+            &#125;
+            <span class="hljs-keyword">if</span> (newCap &gt; oldCap &amp;&amp; queue == array)
+                newArray = <span class="hljs-keyword">new</span> Object[newCapmowei];
+        &#125; <span class="hljs-keyword">finally</span> &#123;
+            allocationSpinLock = <span class="hljs-number">0</span>;<span class="hljs-comment">// 代表释放了自旋锁</span>
+        &#125;
+    &#125;
+    <span class="hljs-keyword">if</span> (newArray == <span class="hljs-keyword">null</span>) <span class="hljs-comment">// back off if another thread is allocating</span>
+        Thread.yield();
+    lock.lock();
+    <span class="hljs-keyword">if</span> (newArray != <span class="hljs-keyword">null</span> &amp;&amp; queue == array) &#123;
+        queue = newArray;
+        System.arraycopy(array, <span class="hljs-number">0</span>, newArray, <span class="hljs-number">0</span>, oldCap);
+    &#125;
+&#125;
+<span class="hljs-comment">//因为底层是二叉堆，所以需要维持二叉堆顺序，插入的时候和父节点比较</span>
+<span class="hljs-comment">//父节点的位置（k - 1) / 2 即：（k - 1) &gt;&gt;&gt; 1 右移一位相当于除以2的1次方</span>
+<span class="hljs-comment">//按顺序插入，自然排序</span>
+<span class="hljs-comment">//k 二叉堆的末尾即元素数量size</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">siftUpComparable</span><span class="hljs-params">(<span class="hljs-keyword">int</span> k, T x, Object[] array)</span> </span>&#123;
+    Comparable&lt;? <span class="hljs-keyword">super</span> T&gt; key = (Comparable&lt;? <span class="hljs-keyword">super</span> T&gt;) x;
+    <span class="hljs-keyword">while</span> (k &gt; <span class="hljs-number">0</span>) &#123;
+        <span class="hljs-keyword">int</span> parent = (k - <span class="hljs-number">1</span>) &gt;&gt;&gt; <span class="hljs-number">1</span>;
+        Object e = array[parent];
+        <span class="hljs-keyword">if</span> (key.compareTo((T) e) &gt;= <span class="hljs-number">0</span>)<span class="hljs-comment">//二者唯一区别</span>
+            <span class="hljs-keyword">break</span>;
+        array[k] = e;
+        k = parent;
+    &#125;
+    array[k] = key;
+&#125;
+<span class="hljs-comment">//按顺序插入，自定义排序</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">siftUpUsingComparator</span><span class="hljs-params">(<span class="hljs-keyword">int</span> k, T x, Object[] array,</span></span>
+<span class="hljs-function"><span class="hljs-params">                                              Comparator&lt;? <span class="hljs-keyword">super</span> T&gt; cmp)</span> </span>&#123;
+    <span class="hljs-keyword">while</span> (k &gt; <span class="hljs-number">0</span>) &#123;
+        <span class="hljs-keyword">int</span> parent = (k - <span class="hljs-number">1</span>) &gt;&gt;&gt; <span class="hljs-number">1</span>;
+        Object e = array[parent];
+        <span class="hljs-keyword">if</span> (cmp.compare(x, (T) e) &gt;= <span class="hljs-number">0</span>)<span class="hljs-comment">//二者唯一区别</span>
+            <span class="hljs-keyword">break</span>;
+        array[k] = e;
+        k = parent;
+    &#125;
+    array[k] = x;
+&#125;</code></pre>
+
+<h4 id="常用出队操作"><a href="#常用出队操作" class="headerlink" title="常用出队操作"></a>常用出队操作</h4><p><code>poll</code>、<code>remove</code>方法来执行出队操作。**<em>出队的永远都是第一个元素：array[0]**</em>。<code>remove</code>底层最后还是调用了<code>poll</code>。</p>
+<pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">poll</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">final</span> ReentrantLock lock = <span class="hljs-keyword">this</span>.lock;
+    lock.lock();
+    <span class="hljs-keyword">try</span> &#123;
+        <span class="hljs-keyword">return</span> dequeue();
+    &#125; <span class="hljs-keyword">finally</span> &#123;
+        lock.unlock();
+    &#125;
+&#125;
+<span class="hljs-comment">//按照二叉堆删除元素规则出队，删除第一个，末位的和其他元素比较</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> E <span class="hljs-title">dequeue</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// 没有元素 返回null</span>
+    <span class="hljs-keyword">int</span> n = size - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">else</span> &#123;
+        Object[] array = queue;
+        <span class="hljs-comment">// 出队元素</span>
+        E result = (E) array[<span class="hljs-number">0</span>];
+        <span class="hljs-comment">// 最后一个元素（也就是插入到空穴中的元素）</span>
+        E x = (E) array[n];
+        array[n] = <span class="hljs-keyword">null</span>;
+        <span class="hljs-comment">// 根据比较器释放为null，来执行不同的处理</span>
+        Comparator&lt;? <span class="hljs-keyword">super</span> E&gt; cmp = comparator;
+        <span class="hljs-keyword">if</span> (cmp == <span class="hljs-keyword">null</span>)
+            siftDownComparable(<span class="hljs-number">0</span>, x, array, n);
+        <span class="hljs-keyword">else</span>
+            siftDownUsingComparator(<span class="hljs-number">0</span>, x, array, n, cmp);
+        size = n;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+&#125;
+<span class="hljs-comment">//自然排序</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">siftDownComparable</span><span class="hljs-params">(<span class="hljs-keyword">int</span> k, T x, Object[] array,</span></span>
+<span class="hljs-function"><span class="hljs-params">                                               <span class="hljs-keyword">int</span> n)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">0</span>) &#123;
+        Comparable&lt;? <span class="hljs-keyword">super</span> T&gt; key = (Comparable&lt;? <span class="hljs-keyword">super</span> T&gt;)x;
+        <span class="hljs-keyword">int</span> half = n &gt;&gt;&gt; <span class="hljs-number">1</span>;           <span class="hljs-comment">// loop while a non-leaf</span>
+        <span class="hljs-keyword">while</span> (k &lt; half) &#123;
+            <span class="hljs-keyword">int</span> child = (k &lt;&lt; <span class="hljs-number">1</span>) + <span class="hljs-number">1</span>; <span class="hljs-comment">// assume left child is least</span>
+            Object c = array[child];
+            <span class="hljs-keyword">int</span> right = child + <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">if</span> (right &lt; n &amp;&amp;
+                ((Comparable&lt;? <span class="hljs-keyword">super</span> T&gt;) c).compareTo((T) array[right]) &gt; <span class="hljs-number">0</span>)<span class="hljs-comment">//左右节点比较</span>
+                c = array[child = right];
+            <span class="hljs-keyword">if</span> (key.compareTo((T) c) &lt;= <span class="hljs-number">0</span>)<span class="hljs-comment">//该节点和左右节点最小节点比较</span>
+                <span class="hljs-keyword">break</span>;
+            array[k] = c;
+            k = child;
+        &#125;
+        array[k] = key;
+    &#125;
+&#125;
+<span class="hljs-comment">//自定义排序</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">siftDownUsingComparator</span><span class="hljs-params">(<span class="hljs-keyword">int</span> k, T x, Object[] array,</span></span>
+<span class="hljs-function"><span class="hljs-params">                                                <span class="hljs-keyword">int</span> n,</span></span>
+<span class="hljs-function"><span class="hljs-params">                                                Comparator&lt;? <span class="hljs-keyword">super</span> T&gt; cmp)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">0</span>) &#123;
+        <span class="hljs-keyword">int</span> half = n &gt;&gt;&gt; <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">while</span> (k &lt; half) &#123;
+            <span class="hljs-keyword">int</span> child = (k &lt;&lt; <span class="hljs-number">1</span>) + <span class="hljs-number">1</span>;
+            Object c = array[child];
+            <span class="hljs-keyword">int</span> right = child + <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">if</span> (right &lt; n &amp;&amp; cmp.compare((T) c, (T) array[right]) &gt; <span class="hljs-number">0</span>)
+                c = array[child = right];
+            <span class="hljs-keyword">if</span> (cmp.compare(x, (T) c) &lt;= <span class="hljs-number">0</span>)
+                <span class="hljs-keyword">break</span>;
+            array[k] = c;
+            k = child;
+        &#125;
+        array[k] = x;
+    &#125;
+&#125;</code></pre>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/JUC/">JUC</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/JUC/BlockingQueue/">BlockingQueue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/BlockingQueue/">BlockingQueue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/02/28/CAS/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CAS</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/02/28/JUC%E4%B9%8BAQS%E7%AE%80%E4%BB%8B/">
+                        <span class="hidden-mobile">AQS</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener"><span>宅男空间</span></a> <br> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
