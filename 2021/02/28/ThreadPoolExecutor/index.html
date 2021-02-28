@@ -253,7 +253,7 @@
 <p>另外还有一个Hook可以用来在任务被执行完的时候让用户插入逻辑:</p>
 <pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">terminated</span><span class="hljs-params">()</span> </span>&#123; &#125;</code></pre>
 
-<h4 id="线程池核心设计与实现"><a href="#线程池核心设计与实现" class="headerlink" title="线程池核心设计与实现"></a>线程池核心设计与实现</h4><h5 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h5><p>Java中的线程池核心实现类是ThreadPoolExecutor<br>![ThreadPoolExecutor UML类图](ThreadPoolExecutor UML类图.png)<br>ThreadPoolExecutor将会一方面维护自身的生命周期，另一方面同时管理线程和任务，使两者良好的结合从而执行并行任务。其运行机制如下图所示：<br><img src="ThreadPoolExecutor%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" alt="ThreadPoolExecutor运行流程"><br>线程池在内部实际上构建了一个<strong>生产者消费者模型</strong>，将线程和任务两者解耦，并不直接关联，从而良好的缓冲任务，复用线程。线程池的运行主要分成两部分：任务管理、线程管理。任务管理部分充当生产者的角色，当任务提交后，线程池会判断该任务后续的流转：（1）直接申请线程执行该任务；（2）缓冲到队列中等待线程执行；（3）拒绝该任务。线程管理部分是消费者，它们被统一维护在线程池内，根据任务请求进行线程的分配，当线程执行完任务后则会继续获取新的任务去执行，最终当线程获取不到任务的时候，线程就会被回收。</p>
+<h4 id="线程池核心设计与实现"><a href="#线程池核心设计与实现" class="headerlink" title="线程池核心设计与实现"></a>线程池核心设计与实现</h4><h5 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h5><p>Java中的线程池核心实现类是ThreadPoolExecutor<br>![ThreadPoolExecutor UML类图](/images/JUC/ThreadPoolExecutor/ThreadPoolExecutor UML类图.png)<br>ThreadPoolExecutor将会一方面维护自身的生命周期，另一方面同时管理线程和任务，使两者良好的结合从而执行并行任务。其运行机制如下图所示：<br><img src="/images/JUC/ThreadPoolExecutor/ThreadPoolExecutor%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" alt="ThreadPoolExecutor运行流程"><br>线程池在内部实际上构建了一个<strong>生产者消费者模型</strong>，将线程和任务两者解耦，并不直接关联，从而良好的缓冲任务，复用线程。线程池的运行主要分成两部分：任务管理、线程管理。任务管理部分充当生产者的角色，当任务提交后，线程池会判断该任务后续的流转：（1）直接申请线程执行该任务；（2）缓冲到队列中等待线程执行；（3）拒绝该任务。线程管理部分是消费者，它们被统一维护在线程池内，根据任务请求进行线程的分配，当线程执行完任务后则会继续获取新的任务去执行，最终当线程获取不到任务的时候，线程就会被回收。</p>
 <h5 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h5><h6 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h6><p>线程池内部使用一个变量维护两个值：运行状态(runState)和线程数量 (workerCount)。类似于读写锁<kbd>ReentrantReadWriteLock</kbd>维护读、写锁数量分别使用高16位（读）和低16位（写）。</p>
 <pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> AtomicInteger ctl = <span class="hljs-keyword">new</span> AtomicInteger(ctlOf(RUNNING, <span class="hljs-number">0</span>));</code></pre>
 <p><code>ctl</code>是对线程池的运行状态和线程池中有效线程的数量进行控制的一个字段，高3位保存runState，低29位保存workerCount，两个变量之间互不干扰。用一个变量去存储两个值，可避免在做相关决策时，出现不一致的情况，不必为了维护两者的一致，而占用锁资源。<br>关于内部封装的获取生命周期状态、获取线程池线程数量的计算方法如以下代码所示：</p>
@@ -267,13 +267,13 @@
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> STOP       =  <span class="hljs-number">1</span> &lt;&lt; COUNT_BITS;<span class="hljs-comment">//不再接受新任务，也不处理队列中的任务，会中断正在处理任务的线程</span>
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> TIDYING    =  <span class="hljs-number">2</span> &lt;&lt; COUNT_BITS;<span class="hljs-comment">//所有线程都已终止，workerCount（有效线程数）为0</span>
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> TERMINATED =  <span class="hljs-number">3</span> &lt;&lt; COUNT_BITS;<span class="hljs-comment">//在terminated()方法执行完后进入该状态</span></code></pre>
-<p><img src="%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" srcset="/img/loading.gif" alt="线程池生命周期"></p>
+<p><img src="/images/JUC/ThreadPoolExecutor/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" srcset="/img/loading.gif" alt="线程池生命周期"></p>
 <h6 id="任务执行机制"><a href="#任务执行机制" class="headerlink" title="任务执行机制"></a>任务执行机制</h6><ol>
-<li>任务调度<br>任务调度是线程池的主要入口，当用户提交了一个任务，接下来这个任务将如何执行都是由这个阶段决定的。<br>首先，所有任务的调度都是由execute方法完成的，这部分完成的工作是：检查现在线程池的运行状态、运行线程数、运行策略，决定接下来执行的流程，是直接申请线程执行，或是缓冲到队列中执行，亦或是直接拒绝该任务。其执行过程如下：<br>a. 首先检测线程池运行状态，如果不是<kbd>RUNNING</kbd>，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。&gt;RUNNING，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。<br>b. 如果<code>workerCount &lt; corePoolSize</code>，则创建并启动一个线程来执行新提交的任务。<br>c. 如果<code>workerCount &gt;= corePoolSize</code>，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。<br>d. 如果<code>workerCount &gt;= corePoolSize &amp;&amp; workerCount &lt; maximumPoolSize</code>，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。<br>e. 如果<code>workerCount &gt;= maximumPoolSize</code>，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。<br><img src="%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" alt="任务调度流程"></li>
-<li>任务缓冲<br>线程池的本质是对任务和线程的管理，在线程池中是以生产者消费者模式实现的，通过一个阻塞队列来实现的。阻塞队列缓存任务，工作线程从阻塞队列中获取任务。<br>使用不同的队列可以实现不一样的任务存取策略：<br><img src="%E5%90%84%E7%A7%8D%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E7%AD%96%E7%95%A5.png" srcset="/img/loading.gif" alt="各种队列实现的任务策略"></li>
+<li>任务调度<br>任务调度是线程池的主要入口，当用户提交了一个任务，接下来这个任务将如何执行都是由这个阶段决定的。<br>首先，所有任务的调度都是由execute方法完成的，这部分完成的工作是：检查现在线程池的运行状态、运行线程数、运行策略，决定接下来执行的流程，是直接申请线程执行，或是缓冲到队列中执行，亦或是直接拒绝该任务。其执行过程如下：<br>a. 首先检测线程池运行状态，如果不是<kbd>RUNNING</kbd>，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。&gt;RUNNING，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。<br>b. 如果<code>workerCount &lt; corePoolSize</code>，则创建并启动一个线程来执行新提交的任务。<br>c. 如果<code>workerCount &gt;= corePoolSize</code>，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。<br>d. 如果<code>workerCount &gt;= corePoolSize &amp;&amp; workerCount &lt; maximumPoolSize</code>，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。<br>e. 如果<code>workerCount &gt;= maximumPoolSize</code>，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。<br><img src="/images/JUC/ThreadPoolExecutor/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" alt="任务调度流程"></li>
+<li>任务缓冲<br>线程池的本质是对任务和线程的管理，在线程池中是以生产者消费者模式实现的，通过一个阻塞队列来实现的。阻塞队列缓存任务，工作线程从阻塞队列中获取任务。<br>使用不同的队列可以实现不一样的任务存取策略：<br><img src="/images/JUC/ThreadPoolExecutor/%E5%90%84%E7%A7%8D%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E7%AD%96%E7%95%A5.png" srcset="/img/loading.gif" alt="各种队列实现的任务策略"></li>
 <li>任务申请<br>根据线程调度可知，任务的执行有两种可能：一种是任务直接由新创建的线程执行。另一种是线程从任务队列中获取任务然后执行，执行完任务的空闲线程会再次去从队列中申请任务再去执行。第一种情况仅出现在线程初始创建的时候，第二种是线程获取任务绝大多数的情况。<br>线程需要从任务缓存模块中不断地取任务执行，帮助线程从阻塞队列中获取任务，实现线程管理模块和任务管理模块之间的通信。这部分策略由<code>getTask</code>方法实现。</li>
 </ol>
-<p><img src="%E8%8E%B7%E5%8F%96%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" alt="获取任务流程图"></p>
+<p><img src="/images/JUC/ThreadPoolExecutor/%E8%8E%B7%E5%8F%96%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" alt="获取任务流程图"></p>
 <p>在不考虑异常的场景下，返回null，就表示退出循环，结束线程：</p>
 <p>1、线程池的状态已经是STOP（1），TIDYING（2）, TERMINATED（3），或者是SHUTDOWN（0）且工作队列为空，<code>allowCoreThreadTimeOut</code>默认值是<code>false</code>，即核心线程不会超时不会被回收（可自行设置），所以线程池一直是<code>RUNNING</code>状态。</p>
 <p>2、工作线程数已经大于最大线程数或者当前工作线程已超时，并且还有其他工作线程或任务队列为空.</p>
@@ -312,20 +312,20 @@
       &#125;
   &#125;</code></pre>
 <ol start="4">
-<li><p>任务拒绝（拒绝策略）<br>任务拒绝模块是线程池的保护部分，线程池有一个最大的容量，当线程池的任务缓存队列已满，并且线程池中的线程数目达到<code>maximumPoolSize</code>时，就需要拒绝掉该任务，采取任务拒绝策略，保护线程池。<br>拒绝策略是一个接口：</p>
-<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">RejectedExecutionHandler</span> </span>&#123;
+<li>任务拒绝（拒绝策略）<br>任务拒绝模块是线程池的保护部分，线程池有一个最大的容量，当线程池的任务缓存队列已满，并且线程池中的线程数目达到<code>maximumPoolSize</code>时，就需要拒绝掉该任务，采取任务拒绝策略，保护线程池。<br>拒绝策略是一个接口：<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">RejectedExecutionHandler</span> </span>&#123;
 <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">rejectedExecution</span><span class="hljs-params">(Runnable r, ThreadPoolExecutor executor)</span></span>;
 &#125;</code></pre>
-<p>用户可以通过实现这个接口去定制拒绝策略，线程池本身提供了四种拒绝策略：<br><img src="%E5%9B%9B%E7%A7%8D%E6%8B%92%E7%BB%9D%E7%AD%96%E7%95%A5.png" srcset="/img/loading.gif" alt="四种拒绝策略"></p>
-<h6 id="Worker线程管理"><a href="#Worker线程管理" class="headerlink" title="Worker线程管理"></a>Worker线程管理</h6></li>
+用户可以通过实现这个接口去定制拒绝策略，线程池本身提供了四种拒绝策略：<br><img src="/images/JUC/ThreadPoolExecutor/%E5%9B%9B%E7%A7%8D%E6%8B%92%E7%BB%9D%E7%AD%96%E7%95%A5.png" srcset="/img/loading.gif" alt="四种拒绝策略"></li>
+</ol>
+<h6 id="Worker线程管理"><a href="#Worker线程管理" class="headerlink" title="Worker线程管理"></a>Worker线程管理</h6><ol>
 <li><p>Worker线程<br>线程池为了掌握线程的状态并维护线程的生命周期，设计了线程池内的工作线程Worker。</p>
 <pre><code class="hljs java"> <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Worker</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractQueuedSynchronizer</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Runnable</span></span>&#123;
     <span class="hljs-keyword">final</span> Thread thread;<span class="hljs-comment">//Worker持有的线程</span>
     Runnable firstTask;<span class="hljs-comment">//初始化的任务，可以为null</span>
 &#125;</code></pre>
-<p>Worker这个工作线程，实现了Runnable接口，并持有一个线程thread，一个初始化的任务firstTask。thread是在调用构造方法时通过ThreadFactory来创建的线程，可以用来执行任务；firstTask用它来保存传入的第一个任务，这个任务可以有也可以为null。<strong>如果这个值是非空的，那么线程就会在启动初期立即执行这个任务，也就对应核心线程创建时的情况；如果这个值是null，那么就需要创建一个线程去执行任务列表（workQueue）中的任务，也就是非核心线程的创建。</strong><br><img src="Worker%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1.png" srcset="/img/loading.gif" alt="Worker执行任务"><br>线程池需要管理线程的生命周期，需要在线程长时间不运行的时候进行回收。线程池使用一张<code>Hash表</code>去持有线程的引用，这样可以通过添加引用、移除引用这样的操作来控制线程的生命周期。这个时候重要的就是如何判断线程是否在运行。<br>Worker是通过继承<code>AQS</code>实现独占锁这个功能，没有使用可重入锁ReentrantLock。使用AQS，为的就是实现不可重入的特性去反应线程现在的执行状态。<br>a. lock方法一旦获取了独占锁，表示当前线程正在执行任务中。<br>b. 如果正在执行任务，则不应该中断线程。<br>c. 如果该线程现在不是独占锁的状态，也就是空闲的状态，说明它没有在处理任务，这时可以对该线程进行中断。<br>d. 线程池在执行shutdown方法或tryTerminate方法时会调用interruptIdleWorkers方法来中断空闲的线程，interruptIdleWorkers方法会使用tryLock方法来判断线程池中的线程是否是空闲状态；如果线程是空闲状态则可以安全回收。</p>
+<p>Worker这个工作线程，实现了Runnable接口，并持有一个线程thread，一个初始化的任务firstTask。thread是在调用构造方法时通过ThreadFactory来创建的线程，可以用来执行任务；firstTask用它来保存传入的第一个任务，这个任务可以有也可以为null。<strong>如果这个值是非空的，那么线程就会在启动初期立即执行这个任务，也就对应核心线程创建时的情况；如果这个值是null，那么就需要创建一个线程去执行任务列表（workQueue）中的任务，也就是非核心线程的创建。</strong><br><img src="/images/JUC/ThreadPoolExecutor/Worker%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1.png" srcset="/img/loading.gif" alt="Worker执行任务"><br>线程池需要管理线程的生命周期，需要在线程长时间不运行的时候进行回收。线程池使用一张<code>Hash表</code>去持有线程的引用，这样可以通过添加引用、移除引用这样的操作来控制线程的生命周期。这个时候重要的就是如何判断线程是否在运行。<br>Worker是通过继承<code>AQS</code>实现独占锁这个功能，没有使用可重入锁ReentrantLock。使用AQS，为的就是实现不可重入的特性去反应线程现在的执行状态。<br>a. lock方法一旦获取了独占锁，表示当前线程正在执行任务中。<br>b. 如果正在执行任务，则不应该中断线程。<br>c. 如果该线程现在不是独占锁的状态，也就是空闲的状态，说明它没有在处理任务，这时可以对该线程进行中断。<br>d. 线程池在执行shutdown方法或tryTerminate方法时会调用interruptIdleWorkers方法来中断空闲的线程，interruptIdleWorkers方法会使用tryLock方法来判断线程池中的线程是否是空闲状态；如果线程是空闲状态则可以安全回收。</p>
 </li>
-<li><p>Worker线程增加<br>增加线程是通过线程池中的addWorker方法，该方法的功能就是增加一个线程，该方法不考虑线程池是在哪个阶段增加的该线程，这个分配线程的策略是在上个步骤完成的（任务管理），该步骤仅仅完成增加线程，并使它运行，最后返回是否成功这个结果。<br>addWorker方法有两个参数：firstTask、core。firstTask参数用于指定新增的线程执行的第一个任务，该参数可以为空；core参数为true表示在新增线程时会判断当前活动线程数是否少于corePoolSize，false表示新增线程前需要判断当前活动线程数是否少于maximumPoolSize。<br><img src="%E7%94%B3%E8%AF%B7%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1.png" srcset="/img/loading.gif" alt="申请线程执行任务"></p>
+<li><p>Worker线程增加<br>增加线程是通过线程池中的addWorker方法，该方法的功能就是增加一个线程，该方法不考虑线程池是在哪个阶段增加的该线程，这个分配线程的策略是在上个步骤完成的（任务管理），该步骤仅仅完成增加线程，并使它运行，最后返回是否成功这个结果。<br>addWorker方法有两个参数：firstTask、core。firstTask参数用于指定新增的线程执行的第一个任务，该参数可以为空；core参数为true表示在新增线程时会判断当前活动线程数是否少于corePoolSize，false表示新增线程前需要判断当前活动线程数是否少于maximumPoolSize。<br><img src="/images/JUC/ThreadPoolExecutor/%E7%94%B3%E8%AF%B7%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1.png" srcset="/img/loading.gif" alt="申请线程执行任务"></p>
 </li>
 <li><p>Worker线程回收<br>线程池中线程的销毁依赖JVM自动的回收，线程池做的工作是根据当前线程池的状态维护一定数量的线程引用，防止这部分线程被JVM回收，当线程池决定哪些线程需要回收时，只需要将其引用消除即可。Worker被创建出来后，就会不断地进行<strong>轮询</strong>，然后获取任务去执行，核心线程可以无限等待获取任务，非核心线程要限时获取任务。当Worker无法获取到任务，也就是获取的任务为空时，循环会结束，Worker会主动消除自身在线程池内的引用。</p>
 <pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;
@@ -339,7 +339,9 @@
 </li>
 <li><p>Worker线程执行任务<br>在<code>Worker</code>类中的<code>run</code>方法调用了<code>runWorker</code>方法来执行任务，runWorker方法的执行过程如下：<br>a. while循环不断地通过getTask()方法获取任务。<br>b. getTask()方法从阻塞队列中取任务。<br>c. 如果线程池正在停止，那么要保证当前线程是中断状态，否则要保证当前线程不是中断状态。</p>
 <p>d. 执行任务。</p>
-<p>e. 如果getTask结果为null则跳出循环，执行processWorkerExit()方法，销毁线程。<br><img src="%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" alt="执行任务流程"></p>
+<p>e. 如果getTask结果为null则跳出循环，执行processWorkerExit()方法，销毁线程。<br><img src="/images/JUC/ThreadPoolExecutor/%E6%89%A7%E8%A1%8C%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" alt="执行任务流程"></p>
+</li>
+</ol>
 <pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">runWorker</span><span class="hljs-params">(Worker w)</span> </span>&#123;
         Thread wt = Thread.currentThread();
         Runnable task = w.firstTask;
@@ -380,8 +382,6 @@
         &#125;
     &#125;</code></pre>
 <h4 id="业务应用"><a href="#业务应用" class="headerlink" title="业务应用"></a>业务应用</h4><p>线程池构造参数有7个，但是最核心的是3个：corePoolSize、maximumPoolSize，workQueue，它们最大程度地决定了线程池的任务分配和线程分配策略。考虑到在实际应用中我们获取并发性的场景主要是两种：（1）并行执行子任务，提高响应速度。这种情况下，应该使用<strong>同步</strong>队列，没有什么任务应该被缓存下来，而是应该立即执行。（2）并行执行大批次任务，提升吞吐量。这种情况下，应该使用<strong>有界</strong>队列，使用队列去缓冲大批量的任务，队列容量必须声明，防止任务无限制堆积。</p>
-</li>
-</ol>
 <h4 id="动态设置"><a href="#动态设置" class="headerlink" title="动态设置"></a>动态设置</h4><h5 id="设置核心线程数"><a href="#设置核心线程数" class="headerlink" title="设置核心线程数"></a>设置核心线程数</h5><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setCorePoolSize</span><span class="hljs-params">(<span class="hljs-keyword">int</span> corePoolSize)</span> </span>&#123;
     <span class="hljs-keyword">if</span> (corePoolSize &lt; <span class="hljs-number">0</span>)
         <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException();
@@ -401,7 +401,7 @@
 <p>在运行期线程池使用方调用此方法设置corePoolSize之后，线程池会直接覆盖原来的corePoolSize值，并且基于当前值和原始值的比较结果采取不同的处理策略。</p>
 <p>对于当前值小于当前工作线程数的情况，说明有多余的worker线程，此时会向当前idle的worker线程发起中断请求以实现回收，多余的worker在下次idel（闲置的，空闲的）的时候也会被回收；</p>
 <p>对于当前值大于原始值且当前队列中有待执行任务，则线程池会创建新的worker线程来执行队列任务。</p>
-<p><img src="%E8%AE%BE%E7%BD%AE%E6%A0%B8%E5%BF%83%E7%BA%BF%E7%A8%8B%E6%95%B0.png" srcset="/img/loading.gif" alt="设置核心线程数"></p>
+<p><img src="/images/JUC/ThreadPoolExecutor/%E8%AE%BE%E7%BD%AE%E6%A0%B8%E5%BF%83%E7%BA%BF%E7%A8%8B%E6%95%B0.png" srcset="/img/loading.gif" alt="设置核心线程数"></p>
 <h5 id="设置最大线程数"><a href="#设置最大线程数" class="headerlink" title="设置最大线程数"></a>设置最大线程数</h5><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setMaximumPoolSize</span><span class="hljs-params">(<span class="hljs-keyword">int</span> maximumPoolSize)</span> </span>&#123;
     <span class="hljs-keyword">if</span> (maximumPoolSize &lt;= <span class="hljs-number">0</span> || maximumPoolSize &lt; corePoolSize)
         <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException();
