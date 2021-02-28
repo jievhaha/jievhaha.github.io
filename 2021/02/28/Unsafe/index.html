@@ -263,7 +263,7 @@
     &#125;
 &#125;</code></pre>
 
-<h4 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h4><p><img src="/images/JUC/Usafe/%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD.png" srcset="/img/loading.gif" alt="主要功能"></p>
+<h4 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h4><p><img src="/images/JUC/Unsafe/%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD.png" srcset="/img/loading.gif" alt="主要功能"></p>
 <h4 id="内存操作"><a href="#内存操作" class="headerlink" title="内存操作"></a>内存操作</h4><p>这部分主要包含<strong>堆外内存</strong>的分配、拷贝、释放、给定地址值操作等方法。</p>
 <p>通常，我们在Java中创建的对象都处于堆内内存（heap）中，堆内内存是由JVM所管控的Java进程内存，并且它们遵循JVM的内存管理机制，JVM会采用垃圾回收机制统一管理堆内存。与之相对的是堆外内存，存在于JVM管控之外的内存区域，Java中对堆外内存的操作，依赖于Unsafe提供的操作堆外内存的native方法。</p>
 <h5 id="使用堆外内存的原因"><a href="#使用堆外内存的原因" class="headerlink" title="使用堆外内存的原因"></a>使用堆外内存的原因</h5><ul>

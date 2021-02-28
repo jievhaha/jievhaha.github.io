@@ -245,7 +245,7 @@
 </ol>
 <h4 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a>内部实现</h4><hr>
 <p>CountDownLatch依赖内部类Sync实现，而Sync继承AQS。</p>
-<p><img src="CountDownLatchStruct.png" srcset="/img/loading.gif" alt="CountDownLatch类UML图"></p>
+<p><img src="/images/JUC/JiShuQi/CountDownLatchStruct.png" srcset="/img/loading.gif" alt="CountDownLatch类UML图"></p>
 <p>提供了一个构造函数：</p>
 <pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CountDownLatch</span><span class="hljs-params">(<span class="hljs-keyword">int</span> count)</span> </span>&#123;
     <span class="hljs-keyword">if</span> (count &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;count &lt; 0&quot;</span>);
