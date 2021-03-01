@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="jievhaha">
   <meta name="keywords" content="">
-  <title>zookeeper单机 - 沐子</title>
+  <title>interrupt、interrupted和isInterrupted的区别 - 沐子</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -162,7 +162,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="zookeeper单机">
+            <span class="h2" id="subtitle" title="interrupt、interrupted和isInterrupted的区别">
               
             </span>
 
@@ -172,8 +172,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-02-28 23:15" pubdate>
-        2021年2月28日 晚上
+      <time datetime="2021-03-01 17:28" pubdate>
+        2021年3月1日 下午
       </time>
     </span>
   
@@ -184,7 +184,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      399 字
+      346 字
     </span>
   
 
@@ -194,7 +194,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      4
        分钟
     </span>
   
@@ -224,62 +224,85 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">zookeeper单机</h1>
+            <h1 style="display: none">interrupt、interrupted和isInterrupted的区别</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年2月28日 晚上
+                  本文最后更新于：2021年3月1日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <div align="center"><font color="#000" size="5rem">zookeeper单机</font></div>
+              <div align="center"><font color="#000" size="5rem">interrupt()、interrupted()和isInterrupted()的直观区别</font></div>
 
-<p>下载路径（没用官网，用的镜像）</p>
-<pre><code class="hljs shell">https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.6.2/</code></pre>
-
-<p>3.5及以上注意下载好正确的tar.gz包。</p>
-<p>假如是官网的话，好像就是<code>.bin.tar.gz</code>包。</p>
-<p><img src="/images/zookeeper/%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84.png" srcset="/img/loading.gif" alt="安装路径"></p>
-<p>从<code>3.5.5</code>开始，带有bin名称的包才是我们想要的下载可以直接使用的里面有编译后的二进制的包，而之前的<strong>普通的tar.gz</strong>的包里面是<strong>只是源码</strong>的包无法直接使用。</p>
-<p>不然安装的是tar.gz的话，启动的时候提示：</p>
-<pre><code class="hljs shell">Starting zookeeper ... FAILED TO START</code></pre>
-
-<p>日志里提示：</p>
-<pre><code class="hljs shell">错误: 找不到或无法加载主类 org.apache.zookeeper.server.quorum.QuorumPeerMain</code></pre>
-
-<p>下载好<code>-bin.tar.gz</code>包，解压到自己喜欢的目录。</p>
 <ol>
-<li><p>修改配置文件，运行的时候，默认运行的是<code>zoo.cfg</code>，而<code>conf</code>包下是<code>zoo_sample.cfg</code>。</p>
-<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">当然先进入解压的安装包里的conf文件夹</span>
-cp zoo_sample.cfg zoo.cfg</code></pre>
-</li>
-<li><p>自己喜欢的目录创建<code>data</code>目录，修改配置文件内容（当然不改也可以）。</p>
-<pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> the directory <span class="hljs-built_in">where</span> the snapshot is stored.</span>
-<span class="hljs-meta">#</span><span class="bash"> <span class="hljs-keyword">do</span> not use /tmp <span class="hljs-keyword">for</span> storage, /tmp here is just </span>
-<span class="hljs-meta">#</span><span class="bash"> example sakes.</span>
-<span class="hljs-meta">#</span><span class="bash"> 大概12行的位置</span>
-dataDir=/home/muzili/文档/apps/apache-zookeeper-3.6.2-bin/data</code></pre>
-</li>
-<li><p>启动，切到<code>bin</code>目录，然后启动</p>
-<pre><code class="hljs shell">./zkServer.sh start</code></pre>
-
-<p>启动成功后</p>
-<pre><code class="hljs shell">ZooKeeper JMX enabled by default
-Using config: /home/muzili/文档/apps/apache-zookeeper-3.6.2-bin/bin/../conf/zoo.cfg
-Starting zookeeper ... STARTED</code></pre>
-
-<p>也可使用如下命令查看zookeeper状态</p>
-<pre><code class="hljs shell">./zkServer.sh status</code></pre>
-
-<p>启动成功结果</p>
-<pre><code class="hljs shell">ZooKeeper JMX enabled by default
-Using config: /home/muzili/文档/apps/apache-zookeeper-3.6.2-bin/bin/../conf/zoo.cfg
-Client port found: 2181. Client address: localhost. Client SSL: false.
-Mode: standalone</code></pre>
-
-</li>
+<li><h4 id="interrupt"><a href="#interrupt" class="headerlink" title="interrupt()"></a><font style="color:rgb(69, 182, 247)">interrupt()</font></h4></li>
 </ol>
+<p>形式上中断一个线程，不会去真正意义上的打断一个正在运行的线程，而是**<em>修改当前线程的中断状态码**</em>。同时，对于处于sleep()、wait()和join()阻塞下的线程，该方法会使当前线程抛出一个线程。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> </span>
+<span class="hljs-class"></span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">( String[] args )</span></span>
+<span class="hljs-function">    </span>&#123;
+        Thread thread = <span class="hljs-keyword">new</span> Thread(()-&gt;&#123;
+            <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;
+                System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 依旧在运行&quot;</span>);
+            &#125;
+
+        &#125;);
+        thread.start();
+        thread.interrupt();jieguo
+    &#125;
+&#125;</code></pre>
+
+<p>运行结果如下：</p>
+<p><img src="/images/JUC/jichu/interrupt.png" srcset="/img/loading.gif" alt="interrupt测试结果"></p>
+<ol start="2">
+<li><h4 id="isInterrupted"><a href="#isInterrupted" class="headerlink" title="isInterrupted()"></a><font style="color:rgb(69, 182, 247)">isInterrupted()</font></h4></li>
+</ol>
+<p>该方法会返回线程的中断标志位。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> </span>
+<span class="hljs-class"></span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">( String[] args )</span></span>
+<span class="hljs-function">    </span>&#123;
+        Thread thread = <span class="hljs-keyword">new</span> Thread(()-&gt;&#123;
+            <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;
+            &#125;
+
+        &#125;);
+        thread.start();
+        System.out.println(<span class="hljs-string">&quot;中断前：&quot;</span> + thread.isInterrupted());
+        thread.interrupt();
+        System.out.println(<span class="hljs-string">&quot;中断后：&quot;</span> + thread.isInterrupted());
+    &#125;
+&#125;</code></pre>
+
+<p>运行结果如下：调用某一个线程对象的<code>isInterrupted()</code>方法会返回该线程的中断状态码。调用<code>interrupt()</code>方法以后，会改变这个线程的中断状态码。</p>
+<p><img src="/images/JUC/jichu/isInterrupted.png" srcset="/img/loading.gif" alt="isInterrupted测试结果"></p>
+<ol start="3">
+<li><h4 id="interrupted"><a href="#interrupted" class="headerlink" title="interrupted()"></a><font style="color:rgb(69, 182, 247)">interrupted()</font></h4></li>
+</ol>
+<p>该方法会返回<strong>当前</strong>线程的中断标志位，**<em>同时会重置中断标志位**</em>。</p>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> </span>
+<span class="hljs-class"></span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">( String[] args )</span></span>
+<span class="hljs-function">    </span>&#123;
+        Thread thread = <span class="hljs-keyword">new</span> Thread(()-&gt;&#123;
+            <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;
+                <span class="hljs-keyword">if</span>(Thread.interrupted())&#123;
+                    System.out.println(<span class="hljs-string">&quot;线程中断标志位为true&quot;</span>);
+                &#125;
+            &#125;
+
+        &#125;);
+        thread.start();
+        System.out.println(<span class="hljs-string">&quot;中断前：&quot;</span> + thread.isInterrupted());
+        thread.interrupt();
+        System.out.println(<span class="hljs-string">&quot;中断后：&quot;</span> + thread.isInterrupted());
+    &#125;
+&#125;</code></pre>
+
+<p>运行结果如下：</p>
+<p><img src="/images/JUC/jichu/interrupted.png" srcset="/img/loading.gif" alt="interrupt测试结果"></p>
 
             </div>
             <hr>
@@ -289,9 +312,9 @@ Mode: standalone</code></pre>
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                      <a class="hover-with-bg" href="/categories/Java/">Java</a>
                     
-                      <a class="hover-with-bg" href="/categories/java/zookeeper/">zookeeper</a>
+                      <a class="hover-with-bg" href="/categories/Java/%E5%9F%BA%E7%A1%80/">基础</a>
                     
                   </div>
                 
@@ -299,7 +322,7 @@ Mode: standalone</code></pre>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/zookeeper/">zookeeper</a>
+                      <a class="hover-with-bg" href="/tags/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
                     
                   </div>
                 
@@ -312,18 +335,12 @@ Mode: standalone</code></pre>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/03/01/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%E5%92%8C%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">对象创建过程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/02/28/%E4%BC%AA%E9%9B%86%E7%BE%A4%E7%89%88Zookeeper%E6%90%AD%E5%BB%BA/">
-                        <span class="hidden-mobile">zookeeper集群</span>
+                      <a href="/2021/03/01/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B%E5%92%8C%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/">
+                        <span class="hidden-mobile">对象创建过程</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
