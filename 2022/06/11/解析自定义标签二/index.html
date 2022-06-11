@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="解析bean标签子元素二">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十三、解析bean标签子元素二">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/%E8%A7%A3%E6%9E%90%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E4%BA%8C/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="解析bean标签子元素二">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/spring_IOC/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="http://www.muzili.ren/images/spring_IOC/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png">
+<meta property="og:image" content="http://www.muzili.ren/images/spring_IOC/%E8%A7%A3%E6%9E%90%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.989Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.989Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/spring_IOC/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+  
+  
+  
+  <title>十三、解析bean标签子元素二 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="十三、解析bean标签子元素二"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          136 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">十三、解析bean标签子元素二</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">解析bean标签子元素二</font></div>
+
+<h4 id="自定义标签的使用"><a href="#自定义标签的使用" class="headerlink" title="自定义标签的使用"></a>自定义标签的使用</h4><p>自定义标签的使用大致分为以下步骤：</p>
+<ol>
+<li>定义一个自定义标签组件，就是一个普通的<code>Java Bean</code>。</li>
+<li>定义一个<code>xsd</code>文件，用来描述自定义标签的属性内容。</li>
+<li>创建一个实现了 <code>org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser</code> 接口的<code>Parser</code>，用来解析<code>xsd</code>文件中的自定义标签内容。</li>
+<li>创建一个继承了 <code>org.springframework.beans.factory.xml.NamespaceHandlerSupport</code> 抽象类的<code>NameSpaceHandler</code>，用于将自定义标签组件注册到 Spring 容器。</li>
+<li>编写 <code>spring.handlers</code> 和 <code>spring.schemas</code> 文件，放在<code>resource/META-INF</code>目录下。</li>
+</ol>
+<p>文件结构图：</p>
+<p><img src="/images/spring_IOC/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="自定义标签目录结构图"></p>
+<h5 id="自定义标签组件"><a href="#自定义标签组件" class="headerlink" title="自定义标签组件"></a>自定义标签组件</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Hello</span> &#123;<br>	<span class="hljs-keyword">private</span> String id;<br>	<span class="hljs-keyword">private</span> Integer age;<br>	<span class="hljs-keyword">private</span> String name;<br>	<span class="hljs-keyword">private</span> String address;<br><br>	<span class="hljs-keyword">public</span> String <span class="hljs-title function_">getId</span><span class="hljs-params">()</span> &#123;<br>		<span class="hljs-keyword">return</span> id;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setId</span><span class="hljs-params">(String id)</span> &#123;<br>		<span class="hljs-built_in">this</span>.id = id;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> Integer <span class="hljs-title function_">getAge</span><span class="hljs-params">()</span> &#123;<br>		<span class="hljs-keyword">return</span> age;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setAge</span><span class="hljs-params">(Integer age)</span> &#123;<br>		<span class="hljs-built_in">this</span>.age = age;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> String <span class="hljs-title function_">getName</span><span class="hljs-params">()</span> &#123;<br>		<span class="hljs-keyword">return</span> name;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setName</span><span class="hljs-params">(String name)</span> &#123;<br>		<span class="hljs-built_in">this</span>.name = name;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> String <span class="hljs-title function_">getAddress</span><span class="hljs-params">()</span> &#123;<br>		<span class="hljs-keyword">return</span> address;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setAddress</span><span class="hljs-params">(String address)</span> &#123;<br>		<span class="hljs-built_in">this</span>.address = address;<br>	&#125;<br>	<br>	<span class="hljs-keyword">public</span> <span class="hljs-title function_">Hello</span><span class="hljs-params">()</span> &#123;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sayHello</span><span class="hljs-params">()</span> &#123;<br>		System.out.println(<span class="hljs-built_in">this</span>.name + <span class="hljs-string">&quot;今年&quot;</span> + <span class="hljs-built_in">this</span>.age + <span class="hljs-string">&quot;岁，&quot;</span> + <span class="hljs-string">&quot;住在&quot;</span> + <span class="hljs-built_in">this</span>.address);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="定义xsd文件"><a href="#定义xsd文件" class="headerlink" title="定义xsd文件"></a>定义<code>xsd</code>文件</h5><p>该文件用来对自定义标签组件进行描述，还定义了<code>xmlns=&quot;http://www.jievhaha.com/schema/hello&quot; </code>和<code>targetNamespace=&quot;http://www.jievhaha.com/schema/hello&quot;</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">xsd:schema</span> <span class="hljs-attr">xmlns:xsd</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.jievhaha.com/schema/hello&quot;</span> <span class="hljs-attr">targetNamespace</span>=<span class="hljs-string">&quot;http://www.jievhaha.com/schema/hello&quot;</span> <span class="hljs-attr">elementFormDefault</span>=<span class="hljs-string">&quot;qualified&quot;</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">xsd:element</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hello&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">xsd:complexType</span>&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">xsd:attribute</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;id&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;xsd:string&quot;</span>/&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">xsd:attribute</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;age&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;xsd:string&quot;</span> /&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">xsd:attribute</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;xsd:string&quot;</span> /&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">xsd:attribute</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;address&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;xsd:string&quot;</span> /&gt;</span><br>		<span class="hljs-tag">&lt;/<span class="hljs-name">xsd:complexType</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">xsd:element</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">xsd:schema</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="定义Parser类"><a href="#定义Parser类" class="headerlink" title="定义Parser类"></a>定义<code>Parser</code>类</h5><p>该类继承了<code>AbstractSingleBeanDefinitionParser</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloDefinitionParser</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractSingleBeanDefinitionParser</span> &#123;<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">protected</span> Class&lt;?&gt; getBeanClass(Element element) &#123;<br>		<span class="hljs-keyword">return</span> Hello.class;<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doParse</span><span class="hljs-params">(Element element, BeanDefinitionBuilder builder)</span> &#123;<br>		<span class="hljs-type">String</span> <span class="hljs-variable">id</span> <span class="hljs-operator">=</span> element.getAttribute(<span class="hljs-string">&quot;id&quot;</span>);<br>		<span class="hljs-type">String</span> <span class="hljs-variable">age</span> <span class="hljs-operator">=</span> element.getAttribute(<span class="hljs-string">&quot;age&quot;</span>);<br>		<span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> element.getAttribute(<span class="hljs-string">&quot;name&quot;</span>);<br>		<span class="hljs-type">String</span> <span class="hljs-variable">address</span> <span class="hljs-operator">=</span> element.getAttribute(<span class="hljs-string">&quot;address&quot;</span>);<br>		<span class="hljs-keyword">if</span>(StringUtils.hasLength(<span class="hljs-string">&quot;id&quot;</span>))&#123;<br>			builder.addPropertyValue(<span class="hljs-string">&quot;id&quot;</span>, id);<br>		&#125;<br>		<span class="hljs-keyword">if</span>(StringUtils.hasLength(age))&#123;<br>			builder.addPropertyValue(<span class="hljs-string">&quot;age&quot;</span>, age);<br>		&#125;<br>		<span class="hljs-keyword">if</span>(StringUtils.hasText(name))&#123;<br>			builder.addPropertyValue(<span class="hljs-string">&quot;name&quot;</span>, name);<br>		&#125;<br>		<span class="hljs-keyword">if</span>(StringUtils.hasLength(address))&#123;<br>			builder.addPropertyValue(<span class="hljs-string">&quot;address&quot;</span>, address);<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="定义NameSpaceHandler类"><a href="#定义NameSpaceHandler类" class="headerlink" title="定义NameSpaceHandler类"></a>定义<code>NameSpaceHandler</code>类</h5><p>该类继承了<code>NamespaceHandlerSupport</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloNameSpaceHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">NamespaceHandlerSupport</span> &#123;<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">()</span> &#123;<br>		registerBeanDefinitionParser(<span class="hljs-string">&quot;hello&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">HelloDefinitionParser</span>());<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="定义spring-handlers和spring-schemas文件"><a href="#定义spring-handlers和spring-schemas文件" class="headerlink" title="定义spring.handlers和spring.schemas文件"></a>定义<code>spring.handlers</code>和<code>spring.schemas</code>文件</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml">#spring.handlers<br>http\://www.jievhaha.com/schema/hello=com.jievhaha.HelloNameSpaceHandler<br><br>#spring.schemas<br>http\://www.jievhaha.com/schema/hello.xsd=hello.xsd<br></code></pre></td></tr></table></figure>
+
+<h5 id="配置spring配置文件并测试"><a href="#配置spring配置文件并测试" class="headerlink" title="配置spring配置文件并测试"></a>配置spring配置文件并测试</h5><p>spring.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span></span><br><span class="hljs-tag">	   <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">	   <span class="hljs-attr">xmlns:mytag</span>=<span class="hljs-string">&quot;http://www.jievhaha.com/schema/hello&quot;</span></span><br><span class="hljs-tag">	   <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">       http://www.jievhaha.com/schema/hello http://www.jievhaha.com/schema/hello.xsd&quot;</span>&gt;</span><br><br>	<span class="hljs-tag">&lt;<span class="hljs-name">mytag:hello</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;hello&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;jievhaha&quot;</span> <span class="hljs-attr">age</span>=<span class="hljs-string">&quot;27&quot;</span> <span class="hljs-attr">address</span>=<span class="hljs-string">&quot;山西&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>MyApplication.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyApplication</span> &#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br><br>		<span class="hljs-type">ApplicationContext</span> <span class="hljs-variable">applicationContext</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathXmlApplicationContext</span>(<span class="hljs-string">&quot;hello.xml&quot;</span>);<br>		<span class="hljs-type">Hello</span> <span class="hljs-variable">hello</span> <span class="hljs-operator">=</span> (Hello) applicationContext.getBean(<span class="hljs-string">&quot;hello&quot;</span>);<br>		hello.sayHello();<span class="hljs-comment">//jievhaha今年27岁，住在山西</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/spring_IOC/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png" srcset="/img/loading.gif" lazyload alt="自定义标签运行结果"></p>
+<h4 id="解析自定义标签"><a href="#解析自定义标签" class="headerlink" title="解析自定义标签"></a>解析自定义标签</h4><h5 id="parseCustomElement-方法"><a href="#parseCustomElement-方法" class="headerlink" title="parseCustomElement()方法"></a><code>parseCustomElement()</code>方法</h5><p>applicationContext.xml文件开始读取的入口方法：<code>DefaultBeanDefinitionDocumentReader.parseBeanDefinitions()</code>方法，该方法负责标签的解析工作，根据命名空间的不同进行不同标签的解析。其中，<strong>自定义标签</strong>由<code>BeanDefinitionParserDelegate</code>的 <code>parseCustomElement(Element ele, BeanDefinition containingBd)</code> 方法来实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> BeanDefinition <span class="hljs-title function_">parseCustomElement</span><span class="hljs-params">(Element ele)</span> &#123;<br>    <span class="hljs-keyword">return</span> parseCustomElement(ele, <span class="hljs-literal">null</span>);<br>&#125;<br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> BeanDefinition <span class="hljs-title function_">parseCustomElement</span><span class="hljs-params">(Element ele, <span class="hljs-meta">@Nullable</span> BeanDefinition containingBd)</span> &#123;<br>    <span class="hljs-comment">// &lt;1&gt; 获取 namespaceUri</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">namespaceUri</span> <span class="hljs-operator">=</span> getNamespaceURI(ele);<br>    <span class="hljs-keyword">if</span> (namespaceUri == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 根据 namespaceUri 获取相应的 Handler</span><br>    <span class="hljs-type">NamespaceHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);<br>    <span class="hljs-keyword">if</span> (handler == <span class="hljs-literal">null</span>) &#123;<br>        error(<span class="hljs-string">&quot;Unable to locate Spring NamespaceHandler for XML schema namespace [&quot;</span> + namespaceUri + <span class="hljs-string">&quot;]&quot;</span>, ele);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">// 调用自定义的 Handler 处理</span><br>    <span class="hljs-keyword">return</span> handler.parse(ele, <span class="hljs-keyword">new</span> <span class="hljs-title class_">ParserContext</span>(<span class="hljs-built_in">this</span>.readerContext, <span class="hljs-built_in">this</span>, containingBd));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="getNamespaceURI-方法"><a href="#getNamespaceURI-方法" class="headerlink" title="getNamespaceURI()方法"></a><code>getNamespaceURI()</code>方法</h6><p>先获取了NamespaceURI：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> String <span class="hljs-title function_">getNamespaceURI</span><span class="hljs-params">(Node node)</span> &#123;<br>    <span class="hljs-keyword">return</span> node.getNamespaceURI();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="getNamespaceHandlerResolver-方法"><a href="#getNamespaceHandlerResolver-方法" class="headerlink" title="getNamespaceHandlerResolver()方法"></a><code>getNamespaceHandlerResolver()</code>方法</h6><p>调用 <code>XmlReaderContext.getNamespaceHandlerResolver()</code> 方法，获得命名空间的解析器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> NamespaceHandlerResolver namespaceHandlerResolver;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> NamespaceHandlerResolver <span class="hljs-title function_">getNamespaceHandlerResolver</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.namespaceHandlerResolver;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>NamespaceHandlerResolver</code>的初始化：</p>
+<p>在《注册BeanDefinitions》中提到注册BeanDefinitions时：</p>
+<ul>
+<li>首先，是通过<code>XmlBeanDefinitionReader</code>的<code>createBeanDefinitionDocumentReader()</code>方法，获取 Document解析器<code>BeanDefinitionDocumentReader</code>实例。</li>
+<li>然后，调用<code>BeanDefinitionDocumentReader</code>实例的<code>registerBeanDefinitions(Document doc, XmlReaderContext readerContext)</code>方法，进行注册。而该方法需要提供两个参数，一个是<code>Document</code>实例 <code>doc</code>，一个是<code>XmlReaderContext</code>实例 <code>readerContext</code> 。</li>
+</ul>
+<p><code>readerContext</code> 实例对象由<code>XmlBeanDefinitionReader</code>的<code>createReaderContext(Resource resource)</code>方法创建。<code>namespaceHandlerResolver</code> 实例对象就是在这个时候初始化的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// XmlBeanDefinitionReader.java</span><br><span class="hljs-comment">//该方法最后一个参数为`NamespaceHandlerResolver`对象，通过`getNamespaceHandlerResolver()`方法获取</span><br><span class="hljs-keyword">public</span> XmlReaderContext <span class="hljs-title function_">createReaderContext</span><span class="hljs-params">(Resource resource)</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">XmlReaderContext</span>(resource, <span class="hljs-built_in">this</span>.problemReporter, <span class="hljs-built_in">this</span>.eventListener,<br>			<span class="hljs-built_in">this</span>.sourceExtractor, <span class="hljs-built_in">this</span>, getNamespaceHandlerResolver());<br>&#125;<br><br><span class="hljs-comment">//获取`NamespaceHandlerResolver`对象</span><br><span class="hljs-keyword">public</span> NamespaceHandlerResolver <span class="hljs-title function_">getNamespaceHandlerResolver</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.namespaceHandlerResolver == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-built_in">this</span>.namespaceHandlerResolver = createDefaultNamespaceHandlerResolver();<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.namespaceHandlerResolver;<br>&#125;<br><br><span class="hljs-comment">//可以看出`NamespaceHandlerResolver`对象类型默认为DefaultNamespaceHandlerResolver</span><br><span class="hljs-keyword">protected</span> NamespaceHandlerResolver <span class="hljs-title function_">createDefaultNamespaceHandlerResolver</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">ClassLoader</span> <span class="hljs-variable">cl</span> <span class="hljs-operator">=</span> (getResourceLoader() != <span class="hljs-literal">null</span> ? getResourceLoader().getClassLoader() : getBeanClassLoader());<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultNamespaceHandlerResolver</span>(cl);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="resolve-方法"><a href="#resolve-方法" class="headerlink" title="resolve()方法"></a><code>resolve()</code>方法</h5><p>由上可以看出<code>this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri)</code>最终调用的就是<code>DefaultNamespaceHandlerResolver</code>类的<code>resolve()</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> NamespaceHandler <span class="hljs-title function_">resolve</span><span class="hljs-params">(String namespaceUri)</span> &#123;<br>    <span class="hljs-comment">// &lt;1&gt; 获取所有已经配置的 Handler 映射</span><br>    Map&lt;String, Object&gt; handlerMappings = getHandlerMappings();<br>    <span class="hljs-comment">// &lt;2&gt; 根据 namespaceUri 获取 handler 的信息</span><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">handlerOrClassName</span> <span class="hljs-operator">=</span> handlerMappings.get(namespaceUri);<br>    <span class="hljs-keyword">if</span> (handlerOrClassName == <span class="hljs-literal">null</span>) &#123;<span class="hljs-comment">//不存在返回null</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">//已经初始化过了直接强制类型转换</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (handlerOrClassName <span class="hljs-keyword">instanceof</span> NamespaceHandler) &#123;<br>        <span class="hljs-keyword">return</span> (NamespaceHandler) handlerOrClassName;<br>    &#125;<br>    <span class="hljs-comment">//未初始化</span><br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">className</span> <span class="hljs-operator">=</span> (String) handlerOrClassName;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// &lt;2&gt; 根据 namespaceUri 获取 handler 的信息</span><br>            Class&lt;?&gt; handlerClass = ClassUtils.forName(className, <span class="hljs-built_in">this</span>.classLoader);<br>            <span class="hljs-keyword">if</span> (!NamespaceHandler.class.isAssignableFrom(handlerClass)) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FatalBeanException</span>(<span class="hljs-string">&quot;Class [&quot;</span> + className + <span class="hljs-string">&quot;] for namespace [&quot;</span> + namespaceUri +<br>                                             <span class="hljs-string">&quot;] does not implement the [&quot;</span> + NamespaceHandler.class.getName() + <span class="hljs-string">&quot;] interface&quot;</span>);<br>            &#125;<br>            <span class="hljs-type">NamespaceHandler</span> <span class="hljs-variable">namespaceHandler</span> <span class="hljs-operator">=</span> (NamespaceHandler) BeanUtils.instantiateClass(handlerClass);<br>            <span class="hljs-comment">// 初始化 NamespaceHandler 对象</span><br>            namespaceHandler.init();<br>            <span class="hljs-comment">// 添加到缓存</span><br>            handlerMappings.put(namespaceUri, namespaceHandler);<br>            <span class="hljs-keyword">return</span> namespaceHandler;<br>        &#125;<br>        <span class="hljs-keyword">catch</span> (ClassNotFoundException ex) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FatalBeanException</span>(<span class="hljs-string">&quot;Could not find NamespaceHandler class [&quot;</span> + className +<br>                                         <span class="hljs-string">&quot;] for namespace [&quot;</span> + namespaceUri + <span class="hljs-string">&quot;]&quot;</span>, ex);<br>        &#125;<br>        <span class="hljs-keyword">catch</span> (LinkageError err) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FatalBeanException</span>(<span class="hljs-string">&quot;Unresolvable class definition for NamespaceHandler class [&quot;</span> +<br>                                         className + <span class="hljs-string">&quot;] for namespace [&quot;</span> + namespaceUri + <span class="hljs-string">&quot;]&quot;</span>, err);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>获取所有已经配置的 Handler 映射，通过<code>getHandlerMappings()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* Resource location to search for.</span><br><span class="hljs-comment">* NamespaceHandler 映射配置文件地址</span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String handlerMappingsLocation;<br><span class="hljs-comment">/**</span><br><span class="hljs-comment">* Stores the mappings from namespace URI to NamespaceHandler class name / instance.</span><br><span class="hljs-comment">* NamespaceHandler 映射。</span><br><span class="hljs-comment">*</span><br><span class="hljs-comment">* key：命名空间</span><br><span class="hljs-comment">* value：分成两种情况：</span><br><span class="hljs-comment">* 1）未初始化时，对应的 NamespaceHandler 的类路径；</span><br><span class="hljs-comment">* 2）已初始化，对应的 NamespaceHandler 对象</span><br><span class="hljs-comment">*/</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> Map&lt;String, Object&gt; handlerMappings;<br><br><span class="hljs-keyword">private</span> Map&lt;String, Object&gt; <span class="hljs-title function_">getHandlerMappings</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">//使用了延迟加载，双重检查锁</span><br>    Map&lt;String, Object&gt; handlerMappings = <span class="hljs-built_in">this</span>.handlerMappings;<br>    <span class="hljs-keyword">if</span> (handlerMappings == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">synchronized</span> (<span class="hljs-built_in">this</span>) &#123;<br>            handlerMappings = <span class="hljs-built_in">this</span>.handlerMappings;<br>            <span class="hljs-keyword">if</span> (handlerMappings == <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;<br>                    logger.trace(<span class="hljs-string">&quot;Loading NamespaceHandler mappings from [&quot;</span> + <span class="hljs-built_in">this</span>.handlerMappingsLocation + <span class="hljs-string">&quot;]&quot;</span>);<br>                &#125;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 读取 handlerMappingsLocation</span><br>                    <span class="hljs-type">Properties</span> <span class="hljs-variable">mappings</span> <span class="hljs-operator">=</span><br>                        PropertiesLoaderUtils.loadAllProperties(<span class="hljs-built_in">this</span>.handlerMappingsLocation, <span class="hljs-built_in">this</span>.classLoader);<br>                    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;<br>                        logger.trace(<span class="hljs-string">&quot;Loaded NamespaceHandler mappings: &quot;</span> + mappings);<br>                    &#125;<br>                    <span class="hljs-comment">// 初始化到 handlerMappings 中</span><br>                    handlerMappings = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentHashMap</span>&lt;&gt;(mappings.size());<br>                    CollectionUtils.mergePropertiesIntoMap(mappings, handlerMappings);<br>                    <span class="hljs-built_in">this</span>.handlerMappings = handlerMappings;<br>                &#125;<br>                <span class="hljs-keyword">catch</span> (IOException ex) &#123;<br>                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<br>                        <span class="hljs-string">&quot;Unable to load NamespaceHandler mappings from location [&quot;</span> + <span class="hljs-built_in">this</span>.handlerMappingsLocation + <span class="hljs-string">&quot;]&quot;</span>, ex);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> handlerMappings;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行完<code>getHandlerMappings()</code>获取了<code>Handler</code>映射后，之后还会执行<code>NamespaceHandler.init()</code>方法，该方法主要是将自定义标签解析器进行注册，调用的就是我们上边实例中的<code>HelloNameSpaceHandler.init()</code>方法，内部其实还是调用了父类<code>NamespaceHandlerSupport</code>的<code>registerBeanDefinitionParser()</code>来注册指定元素的<code>BeanDefinitionParser</code>解析器，其实就是将映射关系放在一个 Map 结构的 parsers 对象中。。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloNameSpaceHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">NamespaceHandlerSupport</span> &#123;<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">()</span> &#123;<br>		registerBeanDefinitionParser(<span class="hljs-string">&quot;hello&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">HelloDefinitionParser</span>());<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>NamespaceHandlerSupport</code>的<code>registerBeanDefinitionParser()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Map&lt;String, BeanDefinitionDecorator&gt; decorators = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br><span class="hljs-comment">/**</span><br><span class="hljs-comment">* key：元素名，不是命名空间名称</span><br><span class="hljs-comment">* value：对应 BeanDefinitionParser 的解析器</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">registerBeanDefinitionDecorator</span><span class="hljs-params">(String elementName, BeanDefinitionDecorator dec)</span> &#123;<br>    <span class="hljs-built_in">this</span>.decorators.put(elementName, dec);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="parse-方法"><a href="#parse-方法" class="headerlink" title="parse()方法"></a><code>parse()</code>方法</h5><p>执行完<code>this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);</code>获取了相应的<code>Handler</code>后，然后调用<code>parse()</code>方法执行自定义标签的解析。返回的<code>NamespaceHandlerHandler</code>是我们自己定义的<code>HelloNameSpaceHandler</code>，我们定义的继承了<code>NamespaceHandlerSupport</code>，故其实调用的是<code>NamespaceHandlerSupport.parse()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> BeanDefinition <span class="hljs-title function_">parse</span><span class="hljs-params">(Element element, ParserContext parserContext)</span> &#123;<br>    <span class="hljs-type">BeanDefinitionParser</span> <span class="hljs-variable">parser</span> <span class="hljs-operator">=</span> findParserForElement(element, parserContext);<br>    <span class="hljs-keyword">return</span> (parser != <span class="hljs-literal">null</span> ? parser.parse(element, parserContext) : <span class="hljs-literal">null</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>调用 <code>findParserForElement(Element element, ParserContext parserContext)</code>方法，获取对应的 <code>BeanDefinitionParser</code>实例。实际上，其实就是获取在<code>NamespaceHandlerSupport</code>的 <code>registerBeanDefinitionParser()</code> 方法里面注册的实例对象，注册是在我们执行<code>init()</code>的时候。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//NamespaceHandlerSupport.java</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">private</span> BeanDefinitionParser <span class="hljs-title function_">findParserForElement</span><span class="hljs-params">(Element element, ParserContext parserContext)</span> &#123;<br>    <span class="hljs-comment">// 获得元素名</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">localName</span> <span class="hljs-operator">=</span> parserContext.getDelegate().getLocalName(element);<br>    <span class="hljs-comment">// 获得 BeanDefinitionParser 对象</span><br>    <span class="hljs-type">BeanDefinitionParser</span> <span class="hljs-variable">parser</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.parsers.get(localName);<br>    <span class="hljs-keyword">if</span> (parser == <span class="hljs-literal">null</span>) &#123;<br>        parserContext.getReaderContext().fatal(<br>            <span class="hljs-string">&quot;Cannot locate BeanDefinitionParser for element [&quot;</span> + localName + <span class="hljs-string">&quot;]&quot;</span>, element);<br>    &#125;<br>    <span class="hljs-keyword">return</span> parser;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>最后执行<code>parse()</code>，得到的<code>BeanDefinitionParser</code>其实就是我们自己定义的<code>HelloDefinitionParser</code>继承了<code>AbstractSingleBeanDefinitionParser</code>，而<code>AbstractSingleBeanDefinitionParser</code>又继承了<code>AbstractBeanDefinitionParser</code>，所以最终执行的是该类的<code>parse()</code>方法。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//`AbstractBeanDefinitionParser.java`</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> BeanDefinition <span class="hljs-title function_">parse</span><span class="hljs-params">(Element element, ParserContext parserContext)</span> &#123;<br>    <span class="hljs-comment">// &lt;1&gt; 内部解析，返回 AbstractBeanDefinition 对象</span><br>    <span class="hljs-type">AbstractBeanDefinition</span> <span class="hljs-variable">definition</span> <span class="hljs-operator">=</span> parseInternal(element, parserContext);<br>    <span class="hljs-keyword">if</span> (definition != <span class="hljs-literal">null</span> &amp;&amp; !parserContext.isNested()) &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// 解析 id 属性</span><br>            <span class="hljs-type">String</span> <span class="hljs-variable">id</span> <span class="hljs-operator">=</span> resolveId(element, definition, parserContext);<br>            <span class="hljs-keyword">if</span> (!StringUtils.hasText(id)) &#123;<br>                parserContext.getReaderContext().error(<br>                    <span class="hljs-string">&quot;Id is required for element &#x27;&quot;</span> + parserContext.getDelegate().getLocalName(element)<br>                    + <span class="hljs-string">&quot;&#x27; when used as a top-level tag&quot;</span>, element);<br>            &#125;<br>            <span class="hljs-comment">// 解析 aliases 属性</span><br>            String[] aliases = <span class="hljs-literal">null</span>;<br>            <span class="hljs-keyword">if</span> (shouldParseNameAsAliases()) &#123;<br>                <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> element.getAttribute(NAME_ATTRIBUTE);<br>                <span class="hljs-keyword">if</span> (StringUtils.hasLength(name)) &#123;<br>                    aliases = StringUtils.trimArrayElements(StringUtils.commaDelimitedListToStringArray(name));<br>                &#125;<br>            &#125;<br>            <span class="hljs-comment">// 创建 BeanDefinitionHolder 对象</span><br>            <span class="hljs-type">BeanDefinitionHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanDefinitionHolder</span>(definition, id, aliases);<br>            <span class="hljs-comment">// 注册 BeanDefinition</span><br>            registerBeanDefinition(holder, parserContext.getRegistry());<br>            <span class="hljs-comment">// 触发事件</span><br>            <span class="hljs-keyword">if</span> (shouldFireEvents()) &#123;<br>                <span class="hljs-type">BeanComponentDefinition</span> <span class="hljs-variable">componentDefinition</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanComponentDefinition</span>(holder);<br>                postProcessComponentDefinition(componentDefinition);<br>                parserContext.registerComponent(componentDefinition);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">catch</span> (BeanDefinitionStoreException ex) &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">msg</span> <span class="hljs-operator">=</span> ex.getMessage();<br>            parserContext.getReaderContext().error((msg != <span class="hljs-literal">null</span> ? msg : ex.toString()), element);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> definition;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>核心在 <code>parseInternal(Element element, ParserContext parserContext)</code>方法。为什么这么说？因为该方法返回的是<code>AbstractBeanDefinition</code>对象。从前面默认标签的解析过程来看，我们就可以判断该方法就是将标签解析为<code>AbstractBeanDefinition</code>，且后续代码都是将 <code>AbstractBeanDefinition</code>转换为 <code>BeanDefinitionHolder</code>对象。所以真正的解析工作都交由<code>parseInternal(Element element, ParserContext parserContext)</code>方法来实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractSingleBeanDefinitionParser.java</span><br><span class="hljs-comment">//解析元素为AbstractBeanDefinition对象</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">final</span> AbstractBeanDefinition <span class="hljs-title function_">parseInternal</span><span class="hljs-params">(Element element, ParserContext parserContext)</span> &#123;<br>    <span class="hljs-comment">// 创建 BeanDefinitionBuilder 对象</span><br>    <span class="hljs-type">BeanDefinitionBuilder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> BeanDefinitionBuilder.genericBeanDefinition();<br>    <span class="hljs-comment">// 获取父类元素</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">parentName</span> <span class="hljs-operator">=</span> getParentName(element);<br>    <span class="hljs-keyword">if</span> (parentName != <span class="hljs-literal">null</span>) &#123;<br>        builder.getRawBeanDefinition().setParentName(parentName);<br>    &#125;<br>    <span class="hljs-comment">// 获取自定义标签中的 class，这个时候会去调用自定义解析中的 getBeanClass()</span><br>    Class&lt;?&gt; beanClass = getBeanClass(element);<br>    <span class="hljs-keyword">if</span> (beanClass != <span class="hljs-literal">null</span>) &#123;<br>        builder.getRawBeanDefinition().setBeanClass(beanClass);<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// beanClass 为 null，意味着子类并没有重写 getBeanClass() 方法，则尝试去判断是否重写了 getBeanClassName()</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">beanClassName</span> <span class="hljs-operator">=</span> getBeanClassName(element);<br>        <span class="hljs-keyword">if</span> (beanClassName != <span class="hljs-literal">null</span>) &#123;<br>            builder.getRawBeanDefinition().setBeanClassName(beanClassName);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 设置 source 属性</span><br>    builder.getRawBeanDefinition().setSource(parserContext.extractSource(element));<br>    <span class="hljs-comment">// 设置 scope 属性</span><br>    <span class="hljs-type">BeanDefinition</span> <span class="hljs-variable">containingBd</span> <span class="hljs-operator">=</span> parserContext.getContainingBeanDefinition();<br>    <span class="hljs-keyword">if</span> (containingBd != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// Inner bean definition must receive same scope as containing bean.</span><br>        builder.setScope(containingBd.getScope());<br>    &#125;<br>    <span class="hljs-comment">// 设置 lazy-init 属性</span><br>    <span class="hljs-keyword">if</span> (parserContext.isDefaultLazyInit()) &#123;<br>        <span class="hljs-comment">// Default-lazy-init applies to custom bean definitions as well.</span><br>        builder.setLazyInit(<span class="hljs-literal">true</span>);<br>    &#125;<br>    <span class="hljs-comment">// 调用子类的 doParse() 进行解析</span><br>    doParse(element, parserContext, builder);<br>    <span class="hljs-keyword">return</span> builder.getBeanDefinition();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>自定义标签解析的大致流程：</p>
+<ul>
+<li>首先，会加载 <code>spring.handlers</code> 文件，将其中内容进行一个解析，形成 <code>&lt;namespaceUri, 类路径&gt;</code> 这样的一个映射。</li>
+<li>然后，根据获取的 <code>namespaceUri</code> 就可以得到相应的类路径，对其进行初始化等到相应的 NamespaceHandler 对象。</li>
+<li>之后，调用该 NamespaceHandler 的 <code>parse(...)</code> 方法，在该方法中根据标签的 <code>localName</code> 得到相应的 BeanDefinitionParser 实例对象。</li>
+<li>最后，调用该 BeanDefinitionParser 的 <code>parse(...)</code> 方法。该方法定义在 AbstractBeanDefinitionParser 抽象类中，核心逻辑封装在其 <code>parseInternal(...)</code> 方法中，该方法返回一个 AbstractBeanDefinition 实例对象，其主要是在 AbstractSingleBeanDefinitionParser 中实现。对于自定义的 Parser 类，其需要实现 <code>getBeanClass()</code> 或者 <code>getBeanClassName()</code> 任一方法，和 <code>doParse(...)</code> 方法。</li>
+</ul>
+<p>流程图：</p>
+<p><img src="/images/spring_IOC/%E8%A7%A3%E6%9E%90%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="解析自定义标签流程图"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/IOC/" class="category-chain-item">IOC</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>十三、解析bean标签子元素二</div>
+      <div>http://www.muzili.ren/2022/06/11/解析自定义标签二/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E8%AF%8D%E5%BD%A2/" title="词形变化">
+                        <span class="hidden-mobile">词形变化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

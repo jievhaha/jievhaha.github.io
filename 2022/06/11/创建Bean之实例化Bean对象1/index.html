@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="创建Bean之实例化Bean对象一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二十一、创建Bean之实例化Bean对象一">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/%E5%88%9B%E5%BB%BABean%E4%B9%8B%E5%AE%9E%E4%BE%8B%E5%8C%96Bean%E5%AF%B9%E8%B1%A11/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="创建Bean之实例化Bean对象一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-11T09:48:09.977Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.977Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>二十一、创建Bean之实例化Bean对象一 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="二十一、创建Bean之实例化Bean对象一"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          24k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          201 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">二十一、创建Bean之实例化Bean对象一</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">创建Bean之实例化Bean对象一</font></div>
+
+<h4 id="createBeanInstance-方法"><a href="#createBeanInstance-方法" class="headerlink" title="createBeanInstance()方法"></a><code>createBeanInstance()</code>方法</h4><p>创建Bean实例过程的第一步：实例化Bean，方法为<code>createBeanInstance()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractAutowireCapableBeanFactory.java</span><br><span class="hljs-keyword">protected</span> BeanWrapper <span class="hljs-title function_">createBeanInstance</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd, <span class="hljs-meta">@Nullable</span> Object[] args)</span> &#123;<br>    <span class="hljs-comment">// 解析 bean ，将 bean 类名解析为 class 引用。</span><br>    Class&lt;?&gt; beanClass = resolveBeanClass(mbd, beanName);<br><br>    <span class="hljs-keyword">if</span> (beanClass != <span class="hljs-literal">null</span> &amp;&amp; !Modifier.isPublic(beanClass.getModifiers()) &amp;&amp; !mbd.isNonPublicAccessAllowed()) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                        <span class="hljs-string">&quot;Bean class isn&#x27;t public, and non-public access not allowed: &quot;</span> + beanClass.getName());<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;1&gt; 如果存在 Supplier 回调，则使用给定的回调方法初始化策略</span><br>    Supplier&lt;?&gt; instanceSupplier = mbd.getInstanceSupplier();<br>    <span class="hljs-keyword">if</span> (instanceSupplier != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> obtainFromSupplier(instanceSupplier, beanName);<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;2&gt; 使用 FactoryBean 的 factory-method 来创建，支持静态工厂和实例工厂</span><br>    <span class="hljs-keyword">if</span> (mbd.getFactoryMethodName() != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> instantiateUsingFactoryMethod(beanName, mbd, args);<br>    &#125;<br><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">resolved</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">autowireNecessary</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">if</span> (args == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// constructorArgumentLock 构造函数的常用锁</span><br>        <span class="hljs-keyword">synchronized</span> (mbd.constructorArgumentLock) &#123;<br>            <span class="hljs-comment">// 如果已缓存的解析的构造函数或者工厂方法不为空，则可以利用构造函数解析</span><br>            <span class="hljs-comment">// 因为需要根据参数确认到底使用哪个构造函数，该过程比较消耗性能，所有采用缓存机制</span><br>            <span class="hljs-keyword">if</span> (mbd.resolvedConstructorOrFactoryMethod != <span class="hljs-literal">null</span>) &#123;<br>                resolved = <span class="hljs-literal">true</span>;<br>                autowireNecessary = mbd.constructorArgumentsResolved;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 已经解析好了，直接注入即可</span><br>    <span class="hljs-keyword">if</span> (resolved) &#123;<br>        <span class="hljs-keyword">if</span> (autowireNecessary) &#123;<br>            <span class="hljs-comment">// &lt;3.1&gt; autowire 自动注入，调用构造函数自动注入</span><br>            <span class="hljs-keyword">return</span> autowireConstructor(beanName, mbd, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>);<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// &lt;3.2&gt; 使用默认构造函数构造</span><br>            <span class="hljs-keyword">return</span> instantiateBean(beanName, mbd);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;4&gt; 确定解析的构造函数</span><br>    <span class="hljs-comment">// 主要是检查已经注册的 SmartInstantiationAwareBeanPostProcessor</span><br>    Constructor&lt;?&gt;[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);<br>    <span class="hljs-comment">// &lt;4.1&gt; 有参数情况时，创建 Bean 。先利用参数个数，类型等，确定最精确匹配的构造方法。</span><br>    <span class="hljs-keyword">if</span> (ctors != <span class="hljs-literal">null</span> || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||<br>        mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) &#123;<br>        <span class="hljs-keyword">return</span> autowireConstructor(beanName, mbd, ctors, args);<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;4.1&gt; 选择构造方法，创建 Bean 。</span><br>    ctors = mbd.getPreferredConstructors();<br>    <span class="hljs-keyword">if</span> (ctors != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> autowireConstructor(beanName, mbd, ctors, <span class="hljs-literal">null</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;4.2&gt; 有参数时，又没获取到构造方法，则只能调用无参构造方法来创建实例了(兜底方法)</span><br>    <span class="hljs-keyword">return</span> instantiateBean(beanName, mbd);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>实例化 Bean 对象，主要的逻辑为：</p>
+<ul>
+<li><p><code>&lt;1&gt;</code> 处，如果存在 Supplier 回调，则调用 <code>obtainFromSupplier(Supplier instanceSupplier, String beanName)</code> 方法，进行初始化。</p>
+</li>
+<li><p><code>&lt;2&gt;</code> 处，如果存在工厂方法，则使用工厂方法进行初始化。</p>
+</li>
+<li><p><code>&lt;3&gt;</code> 处，首先判断缓存，如果<strong>缓存中存在</strong>，即已经解析过了，则直接使用已经解析了的。根据 <code>constructorArgumentsResolved</code> 参数来判断：</p>
+<p><code>&lt;3.1&gt;</code> 处，是使用构造函数自动注入，即调用 <code>autowireConstructor(String beanName, RootBeanDefinition mbd, Constructor[] ctors, Object[] explicitArgs)</code> 方法。</p>
+<p><code>&lt;3.2&gt;</code> 处，还是默认构造函数，即调用 <code>instantiateBean(final String beanName, final RootBeanDefinition mbd)</code> 方法。</p>
+</li>
+<li><p><code>&lt;4&gt;</code> 处，如果<strong>缓存中没有</strong>，则需要先确定到底使用哪个构造函数来完成解析工作，因为一个类有多个构造函数，每个构造函数都有不同的构造参数，所以需要根据参数来锁定构造函数并完成初始化。</p>
+<p><code>&lt;4.1&gt;</code> 处，如果存在参数，则使用相应的带有参数的构造函数，即调用 <code>autowireConstructor(String beanName, RootBeanDefinition mbd, Constructor[] ctors, Object[] explicitArgs)</code> 方法。</p>
+<p><code>&lt;4.2&gt;</code> 处，否则，使用默认构造函数，即调用 <code>instantiateBean(final String beanName, final RootBeanDefinition mbd)</code> 方法。</p>
+</li>
+</ul>
+<h5 id="obtainFromSupplier-方法"><a href="#obtainFromSupplier-方法" class="headerlink" title="obtainFromSupplier()方法"></a><code>obtainFromSupplier()</code>方法</h5><p>如果存在 Supplier 回调，则使用给定的回调方法初始化策略。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractAutowireCapableBeanFactory.java</span><br>Supplier&lt;?&gt; instanceSupplier = mbd.getInstanceSupplier();<br><span class="hljs-keyword">if</span> (instanceSupplier != <span class="hljs-literal">null</span>) &#123;<br>    <span class="hljs-keyword">return</span> obtainFromSupplier(instanceSupplier, beanName);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>首先,从 BeanDefinition 中获取 Supplier 对象。如果不为空，则调用 <code>obtainFromSupplier(final String beanName, final RootBeanDefinition mbd)</code> 方法。</p>
+<h6 id="Supplier"><a href="#Supplier" class="headerlink" title="Supplier"></a><code>Supplier</code></h6><p><code>Supplier</code>：java1.8的一个函数式接口，提供者。用于指定创建 bean 的回调。如果我们设置了这样的回调，那么其他的构造器或者工厂方法都会没有用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Supplier</span>&lt;T&gt; &#123;<br>    T <span class="hljs-title function_">get</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如何设置<code>Supplier</code>参数，有对应的<code>setter</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractBeanDefinition.java</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 创建 Bean 的 Supplier 对象</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">private</span> Supplier&lt;?&gt; instanceSupplier;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setInstanceSupplier</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Supplier&lt;?&gt; instanceSupplier)</span> &#123;<br>	<span class="hljs-built_in">this</span>.instanceSupplier = instanceSupplier;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在构造 BeanDefinition 对象的时候，设置了 <code>instanceSupplier</code> 该值，（以 RootBeanDefinition 为例）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// RootBeanDefinition.java</span><br><span class="hljs-keyword">public</span> &lt;T&gt; RootBeanDefinition(<span class="hljs-meta">@Nullable</span> Class&lt;T&gt; beanClass, String scope, <span class="hljs-meta">@Nullable</span> Supplier&lt;T&gt; instanceSupplier) &#123;<br>	<span class="hljs-built_in">super</span>();<br>	setBeanClass(beanClass);<br>	setScope(scope);<br>	<span class="hljs-comment">// 设置 instanceSupplier 属性</span><br>	setInstanceSupplier(instanceSupplier);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="obtainFromSupplier-方法-1"><a href="#obtainFromSupplier-方法-1" class="headerlink" title="obtainFromSupplier()方法"></a><code>obtainFromSupplier()</code>方法</h6><p>如果设置了 <code>instanceSupplier</code> 属性，则可以调用 <code>obtainFromSupplier(Supplier instanceSupplier, String beanName)</code> 方法，完成 Bean 的初始化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> BeanWrapper <span class="hljs-title function_">obtainFromSupplier</span><span class="hljs-params">(Supplier&lt;?&gt; instanceSupplier, String beanName)</span> &#123;<br>    Object instance;<br><br>    <span class="hljs-comment">// 获得原创建的 Bean 的对象名</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">outerBean</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.currentlyCreatedBean.get();<br>    <span class="hljs-comment">// 设置新的 Bean 的对象名，到 currentlyCreatedBean 中</span><br>    <span class="hljs-built_in">this</span>.currentlyCreatedBean.set(beanName);<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// &lt;1&gt; 调用 Supplier 的 get()，返回一个 Bean 对象</span><br>        instance = instanceSupplier.get();<br>    &#125;<br>    <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-comment">// 设置原创建的 Bean 的对象名，到 currentlyCreatedBean 中</span><br>        <span class="hljs-keyword">if</span> (outerBean != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-built_in">this</span>.currentlyCreatedBean.set(outerBean);<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-built_in">this</span>.currentlyCreatedBean.remove();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 未创建 Bean 对象，则创建 NullBean 对象</span><br>    <span class="hljs-keyword">if</span> (instance == <span class="hljs-literal">null</span>) &#123;<br>        instance = <span class="hljs-keyword">new</span> <span class="hljs-title class_">NullBean</span>();<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 创建 BeanWrapper 对象</span><br>    <span class="hljs-type">BeanWrapper</span> <span class="hljs-variable">bw</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanWrapperImpl</span>(instance);<br>    <span class="hljs-comment">// &lt;3&gt; 初始化 BeanWrapper 对象</span><br>    initBeanWrapper(bw);<br>    <span class="hljs-keyword">return</span> bw;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>流程如下：</p>
+<ul>
+<li><code>&lt;1&gt;</code> 首先，调用 Supplier 的 <code>get()</code> 方法，获得一个 Bean 实例对象。</li>
+<li><code>&lt;2&gt;</code> 然后，根据该实例对象构造一个 BeanWrapper 对象 <code>bw</code> 。</li>
+<li><code>&lt;3&gt;</code> 最后，初始化该对象。</li>
+</ul>
+<h5 id="instantiateUsingFactoryMethod-方法"><a href="#instantiateUsingFactoryMethod-方法" class="headerlink" title="instantiateUsingFactoryMethod()方法"></a><code>instantiateUsingFactoryMethod()</code>方法</h5><p>如果存在工厂方法，使用 FactoryBean 的 factory-method 来创建，支持静态工厂和实例工厂：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractAutowireCapableBeanFactory.java</span><br><span class="hljs-comment">// &lt;2&gt; 使用 FactoryBean 的 factory-method 来创建，支持静态工厂和实例工厂</span><br><span class="hljs-keyword">if</span> (mbd.getFactoryMethodName() != <span class="hljs-literal">null</span>) &#123;<br>    <span class="hljs-keyword">return</span> instantiateUsingFactoryMethod(beanName, mbd, args);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> *构造一个 ConstructorResolver 对象，然后调用其 instantiateUsingFactoryMethod(EvaluationContext context, String typeName, List&lt;TypeDescriptor&gt; argumentTypes) 方法。</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">protected</span> BeanWrapper <span class="hljs-title function_">instantiateUsingFactoryMethod</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd, <span class="hljs-meta">@Nullable</span> Object[] explicitArgs)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorResolver</span>(<span class="hljs-built_in">this</span>).instantiateUsingFactoryMethod(beanName, mbd, explicitArgs);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="ConstructorResolver"><a href="#ConstructorResolver" class="headerlink" title="ConstructorResolver"></a><code>ConstructorResolver</code></h6><p><code>org.springframework.expression.ConstructorResolver</code> 是构造方法或者工厂类初始化 bean 的委托类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConstructorResolver.java</span><br><br><span class="hljs-keyword">public</span> BeanWrapper <span class="hljs-title function_">instantiateUsingFactoryMethod</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd, <span class="hljs-meta">@Nullable</span> Object[] explicitArgs)</span> &#123;<br>    <span class="hljs-comment">// 构造 BeanWrapperImpl 对象</span><br>    <span class="hljs-type">BeanWrapperImpl</span> <span class="hljs-variable">bw</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanWrapperImpl</span>();<br>    <span class="hljs-comment">// 初始化 BeanWrapperImpl</span><br>    <span class="hljs-comment">// 向BeanWrapper对象中添加 ConversionService 对象和属性编辑器 PropertyEditor 对象</span><br>    <span class="hljs-built_in">this</span>.beanFactory.initBeanWrapper(bw);<br><br>    <span class="hljs-comment">// &lt;1&gt; 获得 factoryBean、factoryClass、isStatic、factoryBeanName 属性</span><br>    Object factoryBean;<br>    Class&lt;?&gt; factoryClass;<br>    <span class="hljs-type">boolean</span> isStatic;<br><br>    <span class="hljs-type">String</span> <span class="hljs-variable">factoryBeanName</span> <span class="hljs-operator">=</span> mbd.getFactoryBeanName();<br>    <span class="hljs-comment">// 工厂名不为空</span><br>    <span class="hljs-keyword">if</span> (factoryBeanName != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">if</span> (factoryBeanName.equals(beanName)) &#123;<span class="hljs-comment">// 抛出 BeanDefinitionStoreException 异常</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanDefinitionStoreException</span>(mbd.getResourceDescription(), beanName,<br>                                                   <span class="hljs-string">&quot;factory-bean reference points back to the same bean definition&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// 获取工厂实例</span><br>        factoryBean = <span class="hljs-built_in">this</span>.beanFactory.getBean(factoryBeanName);<br>        <span class="hljs-keyword">if</span> (mbd.isSingleton() &amp;&amp; <span class="hljs-built_in">this</span>.beanFactory.containsSingleton(beanName)) &#123;<span class="hljs-comment">// 抛出 ImplicitlyAppearedSingletonException 异常</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImplicitlyAppearedSingletonException</span>();<br>        &#125;<br>        <span class="hljs-built_in">this</span>.beanFactory.registerDependentBean(factoryBeanName, beanName);<br>        factoryClass = factoryBean.getClass();<br>        isStatic = <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 工厂名为空，则其可能是一个静态工厂</span><br>        <span class="hljs-comment">// 静态工厂创建bean，必须要提供工厂的全类名</span><br>        <span class="hljs-keyword">if</span> (!mbd.hasBeanClass()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanDefinitionStoreException</span>(mbd.getResourceDescription(), beanName,<br>                                                   <span class="hljs-string">&quot;bean definition declares neither a bean class nor a factory-bean reference&quot;</span>);<br>        &#125;<br>        factoryBean = <span class="hljs-literal">null</span>;<br>        factoryClass = mbd.getBeanClass();<br>        isStatic = <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;2&gt; 获得 factoryMethodToUse、argsHolderToUse、argsToUse 属性</span><br>    <span class="hljs-type">Method</span> <span class="hljs-variable">factoryMethodToUse</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<span class="hljs-comment">// 工厂方法</span><br>    <span class="hljs-type">ArgumentsHolder</span> <span class="hljs-variable">argsHolderToUse</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    Object[] argsToUse = <span class="hljs-literal">null</span>;<span class="hljs-comment">// 参数</span><br><br>    <span class="hljs-comment">// &lt;2.1&gt; 如果指定了构造参数则直接使用</span><br>    <span class="hljs-comment">// 在调用 getBean 方法的时候指定了方法参数</span><br>    <span class="hljs-keyword">if</span> (explicitArgs != <span class="hljs-literal">null</span>) &#123;<br>        argsToUse = explicitArgs;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 没有指定，则尝试从配置文件中解析</span><br>        Object[] argsToResolve = <span class="hljs-literal">null</span>;<br>        <span class="hljs-comment">// &lt;2.2&gt; 首先尝试从缓存中获取</span><br>        <span class="hljs-keyword">synchronized</span> (mbd.constructorArgumentLock) &#123;<br>            <span class="hljs-comment">// 获取缓存中的构造函数或者工厂方法</span><br>            factoryMethodToUse = (Method) mbd.resolvedConstructorOrFactoryMethod;<br>            <span class="hljs-keyword">if</span> (factoryMethodToUse != <span class="hljs-literal">null</span> &amp;&amp; mbd.constructorArgumentsResolved) &#123;<br>                <span class="hljs-comment">// Found a cached factory method...</span><br>                <span class="hljs-comment">// 获取缓存中的构造参数</span><br>                argsToUse = mbd.resolvedConstructorArguments;<br>                <span class="hljs-keyword">if</span> (argsToUse == <span class="hljs-literal">null</span>) &#123;<br>                    <span class="hljs-comment">// 获取缓存中的构造函数参数的包可见字段</span><br>                    argsToResolve = mbd.preparedConstructorArguments;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 缓存中存在,则解析存储在 BeanDefinition 中的参数</span><br>        <span class="hljs-comment">// 如给定方法的构造函数 A(int ,int )，则通过此方法后就会把配置文件中的(&quot;1&quot;,&quot;1&quot;)转换为 (1,1)</span><br>        <span class="hljs-comment">// 缓存中的值可能是原始值也有可能是最终值</span><br>        <span class="hljs-keyword">if</span> (argsToResolve != <span class="hljs-literal">null</span>) &#123;<br>            argsToUse = resolvePreparedArguments(beanName, mbd, bw, factoryMethodToUse, argsToResolve);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;3&gt;</span><br>    <span class="hljs-keyword">if</span> (factoryMethodToUse == <span class="hljs-literal">null</span> || argsToUse == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 获取工厂方法的类全名称</span><br>        factoryClass = ClassUtils.getUserClass(factoryClass);<br><br>        List&lt;Method&gt; candidates = <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">if</span> (mbd.isFactoryMethodUnique) &#123;<br>            <span class="hljs-keyword">if</span> (factoryMethodToUse == <span class="hljs-literal">null</span>) &#123;<br>                factoryMethodToUse = mbd.getResolvedFactoryMethod();<br>            &#125;<br>            <span class="hljs-keyword">if</span> (factoryMethodToUse != <span class="hljs-literal">null</span>) &#123;<br>                candidates = Collections.singletonList(factoryMethodToUse);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (candidates == <span class="hljs-literal">null</span>) &#123;<br>            candidates = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>            <span class="hljs-comment">// 获取所有待定方法</span><br>            Method[] rawCandidates = getCandidateMethods(factoryClass, mbd);<br>            <span class="hljs-keyword">for</span> (Method candidate : rawCandidates) &#123;<br>                <span class="hljs-comment">// 检索所有方法，这里是对方法进行过滤</span><br>                <span class="hljs-keyword">if</span> (Modifier.isStatic(candidate.getModifiers()) == isStatic &amp;&amp; mbd.isFactoryMethod(candidate)) &#123;<br>                    candidates.add(candidate);<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 创建 Bean</span><br>        <span class="hljs-keyword">if</span> (candidates.size() == <span class="hljs-number">1</span> &amp;&amp; explicitArgs == <span class="hljs-literal">null</span> &amp;&amp; !mbd.hasConstructorArgumentValues()) &#123;<br>            <span class="hljs-type">Method</span> <span class="hljs-variable">uniqueCandidate</span> <span class="hljs-operator">=</span> candidates.get(<span class="hljs-number">0</span>);<br>            <span class="hljs-keyword">if</span> (uniqueCandidate.getParameterCount() == <span class="hljs-number">0</span>) &#123;<br>                mbd.factoryMethodToIntrospect = uniqueCandidate;<br>                <span class="hljs-keyword">synchronized</span> (mbd.constructorArgumentLock) &#123;<br>                    mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;<br>                    mbd.constructorArgumentsResolved = <span class="hljs-literal">true</span>;<br>                    mbd.resolvedConstructorArguments = EMPTY_ARGS;<br>                &#125;<br>                bw.setBeanInstance(instantiate(beanName, mbd, factoryBean, uniqueCandidate, EMPTY_ARGS));<br>                <span class="hljs-keyword">return</span> bw;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 排序构造函数</span><br>        <span class="hljs-comment">// public 构造函数优先参数数量降序，非 public 构造函数参数数量降序</span><br>        <span class="hljs-keyword">if</span> (candidates.size() &gt; <span class="hljs-number">1</span>) &#123;  <span class="hljs-comment">// explicitly skip immutable singletonList</span><br>            candidates.sort(AutowireUtils.EXECUTABLE_COMPARATOR);<br>        &#125;<br><br>        <span class="hljs-comment">// 用于承载解析后的构造函数参数的值</span><br>        <span class="hljs-type">ConstructorArgumentValues</span> <span class="hljs-variable">resolvedValues</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">autowiring</span> <span class="hljs-operator">=</span> (mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">minTypeDiffWeight</span> <span class="hljs-operator">=</span> Integer.MAX_VALUE;<br>        Set&lt;Method&gt; ambiguousFactoryMethods = <span class="hljs-literal">null</span>;<br><br>        <span class="hljs-type">int</span> minNrOfArgs;<br>        <span class="hljs-keyword">if</span> (explicitArgs != <span class="hljs-literal">null</span>) &#123;<br>            minNrOfArgs = explicitArgs.length;<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// &lt;2.3&gt; getBean() 没有传递参数，则需要解析保存在 BeanDefinition 构造函数中指定的参数</span><br>            <span class="hljs-keyword">if</span> (mbd.hasConstructorArgumentValues()) &#123;<br>                <span class="hljs-comment">// 构造函数的参数</span><br>                <span class="hljs-type">ConstructorArgumentValues</span> <span class="hljs-variable">cargs</span> <span class="hljs-operator">=</span> mbd.getConstructorArgumentValues();<br>                resolvedValues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorArgumentValues</span>();<br>                <span class="hljs-comment">// 解析构造函数的参数</span><br>                <span class="hljs-comment">// 将该 bean 的构造函数参数解析为 resolvedValues 对象，其中会涉及到其他 bean</span><br>                minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                minNrOfArgs = <span class="hljs-number">0</span>;<br>            &#125;<br>        &#125;<br><br>        Deque&lt;UnsatisfiedDependencyException&gt; causes = <span class="hljs-literal">null</span>;<span class="hljs-comment">// 记录 UnsatisfiedDependencyException 异常的集合</span><br><br>        <span class="hljs-comment">// 遍历 candidates 数组</span><br>        <span class="hljs-keyword">for</span> (Method candidate : candidates) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">parameterCount</span> <span class="hljs-operator">=</span> candidate.getParameterCount();<br><br>            <span class="hljs-keyword">if</span> (parameterCount &gt;= minNrOfArgs) &#123;<br>                <span class="hljs-comment">// 保存参数的对象</span><br>                ArgumentsHolder argsHolder;<br><br>                <span class="hljs-comment">// 方法体的参数</span><br>                Class&lt;?&gt;[] paramTypes = candidate.getParameterTypes();<br>                <span class="hljs-comment">// #getBean(...) 传递了参数</span><br>                <span class="hljs-keyword">if</span> (explicitArgs != <span class="hljs-literal">null</span>) &#123;<br>                    <span class="hljs-comment">// 显示给定参数，参数长度必须完全匹配</span><br>                    <span class="hljs-keyword">if</span> (paramTypes.length != explicitArgs.length) &#123;<br>                        <span class="hljs-keyword">continue</span>;<br>                    &#125;<br>                    <span class="hljs-comment">// 根据参数创建参数持有者 ArgumentsHolder 对象</span><br>                    argsHolder = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArgumentsHolder</span>(explicitArgs);<br>                &#125;<br>                <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-comment">// 为提供参数，解析构造参数</span><br>                    <span class="hljs-keyword">try</span> &#123;<br>                        String[] paramNames = <span class="hljs-literal">null</span>;<br>                        <span class="hljs-comment">// 获取 ParameterNameDiscoverer 对象</span><br>                        <span class="hljs-comment">// ParameterNameDiscoverer 是用于解析方法和构造函数的参数名称的接口，为参数名称探测器</span><br>                        <span class="hljs-type">ParameterNameDiscoverer</span> <span class="hljs-variable">pnd</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.beanFactory.getParameterNameDiscoverer();<br>                        <span class="hljs-comment">// 获取指定构造函数的参数名称</span><br>                        <span class="hljs-keyword">if</span> (pnd != <span class="hljs-literal">null</span>) &#123;<br>                            paramNames = pnd.getParameterNames(candidate);<br>                        &#125;<br>                        <span class="hljs-comment">// 在已经解析的构造函数参数值的情况下，创建一个参数持有者 ArgumentsHolder 对象</span><br>                        argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw,<br>                                                         paramTypes, paramNames, candidate, autowiring, candidates.size() == <span class="hljs-number">1</span>);<br>                    &#125;<br>                    <span class="hljs-keyword">catch</span> (UnsatisfiedDependencyException ex) &#123;<br>                        <span class="hljs-comment">// 若发生 UnsatisfiedDependencyException 异常，添加到 causes 中。</span><br>                        <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;<br>                            logger.trace(<span class="hljs-string">&quot;Ignoring factory method [&quot;</span> + candidate + <span class="hljs-string">&quot;] of bean &#x27;&quot;</span> + beanName + <span class="hljs-string">&quot;&#x27;: &quot;</span> + ex);<br>                        &#125;<br>                        <span class="hljs-comment">// Swallow and try next overloaded factory method.</span><br>                        <span class="hljs-keyword">if</span> (causes == <span class="hljs-literal">null</span>) &#123;<br>                            causes = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayDeque</span>&lt;&gt;(<span class="hljs-number">1</span>);<br>                        &#125;<br>                        causes.add(ex);<br>                        <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// continue ，继续执行</span><br>                    &#125;<br>                &#125;<br><br>                <span class="hljs-comment">// isLenientConstructorResolution 判断解析构造函数的时候是否以宽松模式还是严格模式</span><br>                <span class="hljs-comment">// 严格模式：解析构造函数时，必须所有的都需要匹配，否则抛出异常</span><br>                <span class="hljs-comment">// 宽松模式：使用具有&quot;最接近的模式&quot;进行匹配</span><br>                <span class="hljs-comment">// typeDiffWeight：类型差异权重</span><br>                <span class="hljs-type">int</span> <span class="hljs-variable">typeDiffWeight</span> <span class="hljs-operator">=</span> (mbd.isLenientConstructorResolution() ?<br>                                      argsHolder.getTypeDifferenceWeight(paramTypes) : argsHolder.getAssignabilityWeight(paramTypes));<br>                <span class="hljs-comment">// Choose this factory method if it represents the closest match.</span><br>                <span class="hljs-comment">// 代表最接近的类型匹配，则选择作为构造函数</span><br>                <span class="hljs-keyword">if</span> (typeDiffWeight &lt; minTypeDiffWeight) &#123;<br>                    factoryMethodToUse = candidate;<br>                    argsHolderToUse = argsHolder;<br>                    argsToUse = argsHolder.arguments;<br>                    minTypeDiffWeight = typeDiffWeight;<br>                    ambiguousFactoryMethods = <span class="hljs-literal">null</span>;<br>                &#125;<br>                <span class="hljs-comment">// 如果具有相同参数数量的方法具有相同的类型差异权重，则收集此类型选项</span><br>                <span class="hljs-comment">// 但是，仅在非宽松构造函数解析模式下执行该检查，并显式忽略重写方法（具有相同的参数签名）</span><br>                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (factoryMethodToUse != <span class="hljs-literal">null</span> &amp;&amp; typeDiffWeight == minTypeDiffWeight &amp;&amp;<br>                         !mbd.isLenientConstructorResolution() &amp;&amp;<br>                         paramTypes.length == factoryMethodToUse.getParameterCount() &amp;&amp;<br>                         !Arrays.equals(paramTypes, factoryMethodToUse.getParameterTypes())) &#123;<br>                    <span class="hljs-comment">// 查找到多个可匹配的方法</span><br>                    <span class="hljs-keyword">if</span> (ambiguousFactoryMethods == <span class="hljs-literal">null</span>) &#123;<br>                        ambiguousFactoryMethods = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashSet</span>&lt;&gt;();<br>                        ambiguousFactoryMethods.add(factoryMethodToUse);<br>                    &#125;<br>                    ambiguousFactoryMethods.add(candidate);<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 没有可执行的工厂方法，抛出异常</span><br>        <span class="hljs-keyword">if</span> (factoryMethodToUse == <span class="hljs-literal">null</span> || argsToUse == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">if</span> (causes != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-type">UnsatisfiedDependencyException</span> <span class="hljs-variable">ex</span> <span class="hljs-operator">=</span> causes.removeLast();<br>                <span class="hljs-keyword">for</span> (Exception cause : causes) &#123;<br>                    <span class="hljs-built_in">this</span>.beanFactory.onSuppressedException(cause);<br>                &#125;<br>                <span class="hljs-keyword">throw</span> ex;<br>            &#125;<br>            List&lt;String&gt; argTypes = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(minNrOfArgs);<br>            <span class="hljs-keyword">if</span> (explicitArgs != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">for</span> (Object arg : explicitArgs) &#123;<br>                    argTypes.add(arg != <span class="hljs-literal">null</span> ? arg.getClass().getSimpleName() : <span class="hljs-string">&quot;null&quot;</span>);<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (resolvedValues != <span class="hljs-literal">null</span>) &#123;<br>                Set&lt;ValueHolder&gt; valueHolders = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashSet</span>&lt;&gt;(resolvedValues.getArgumentCount());<br>                valueHolders.addAll(resolvedValues.getIndexedArgumentValues().values());<br>                valueHolders.addAll(resolvedValues.getGenericArgumentValues());<br>                <span class="hljs-keyword">for</span> (ValueHolder value : valueHolders) &#123;<br>                    <span class="hljs-type">String</span> <span class="hljs-variable">argType</span> <span class="hljs-operator">=</span> (value.getType() != <span class="hljs-literal">null</span> ? ClassUtils.getShortName(value.getType()) :<br>                                      (value.getValue() != <span class="hljs-literal">null</span> ? value.getValue().getClass().getSimpleName() : <span class="hljs-string">&quot;null&quot;</span>));<br>                    argTypes.add(argType);<br>                &#125;<br>            &#125;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">argDesc</span> <span class="hljs-operator">=</span> StringUtils.collectionToCommaDelimitedString(argTypes);<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                            <span class="hljs-string">&quot;No matching factory method found: &quot;</span> +<br>                                            (mbd.getFactoryBeanName() != <span class="hljs-literal">null</span> ?<br>                                             <span class="hljs-string">&quot;factory bean &#x27;&quot;</span> + mbd.getFactoryBeanName() + <span class="hljs-string">&quot;&#x27;; &quot;</span> : <span class="hljs-string">&quot;&quot;</span>) +<br>                                            <span class="hljs-string">&quot;factory method &#x27;&quot;</span> + mbd.getFactoryMethodName() + <span class="hljs-string">&quot;(&quot;</span> + argDesc + <span class="hljs-string">&quot;)&#x27;. &quot;</span> +<br>                                            <span class="hljs-string">&quot;Check that a method with the specified name &quot;</span> +<br>                                            (minNrOfArgs &gt; <span class="hljs-number">0</span> ? <span class="hljs-string">&quot;and arguments &quot;</span> : <span class="hljs-string">&quot;&quot;</span>) +<br>                                            <span class="hljs-string">&quot;exists and that it is &quot;</span> +<br>                                            (isStatic ? <span class="hljs-string">&quot;static&quot;</span> : <span class="hljs-string">&quot;non-static&quot;</span>) + <span class="hljs-string">&quot;.&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">void</span>.class == factoryMethodToUse.getReturnType()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                            <span class="hljs-string">&quot;Invalid factory method &#x27;&quot;</span> + mbd.getFactoryMethodName() +<br>                                            <span class="hljs-string">&quot;&#x27;: needs to have a non-void return type!&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ambiguousFactoryMethods != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                            <span class="hljs-string">&quot;Ambiguous factory method matches found in bean &#x27;&quot;</span> + beanName + <span class="hljs-string">&quot;&#x27; &quot;</span> +<br>                                            <span class="hljs-string">&quot;(hint: specify index/type/name arguments for simple parameters to avoid type ambiguities): &quot;</span> +<br>                                            ambiguousFactoryMethods);<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (explicitArgs == <span class="hljs-literal">null</span> &amp;&amp; argsHolderToUse != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 将解析的构造函数加入缓存</span><br>            mbd.factoryMethodToIntrospect = factoryMethodToUse;<br>            argsHolderToUse.storeCache(mbd, factoryMethodToUse);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 创建 Bean 对象，并设置到 bw 中</span><br>    bw.setBeanInstance(instantiate(beanName, mbd, factoryBean, factoryMethodToUse, argsToUse));<br>    <span class="hljs-keyword">return</span> bw;<br>&#125;<br><br><span class="hljs-keyword">private</span> Object <span class="hljs-title function_">instantiate</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd,</span><br><span class="hljs-params">   <span class="hljs-meta">@Nullable</span> Object factoryBean, Method factoryMethod, Object[] args)</span> &#123;<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt;<br>                                            <span class="hljs-built_in">this</span>.beanFactory.getInstantiationStrategy().instantiate(mbd, beanName, <span class="hljs-built_in">this</span>.beanFactory, factoryBean, factoryMethod, args),                                      <span class="hljs-built_in">this</span>.beanFactory.getAccessControlContext());<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.beanFactory.getInstantiationStrategy().instantiate(<br>                mbd, beanName, <span class="hljs-built_in">this</span>.beanFactory, factoryBean, factoryMethod, args);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                        <span class="hljs-string">&quot;Bean instantiation via factory method failed&quot;</span>, ex);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以上该方法：<strong>确定工厂对象，然后获取构造函数和构造参数，最后调用 InstantiationStrategy 对象的 <code>instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner, Constructor ctor, Object... args)</code> 方法，来创建 Bean 实例</strong>。</p>
+<ul>
+<li><p><strong>一、&lt;1&gt;确定工厂对象</strong></p>
+<p>首先获取工厂方法名：</p>
+<ul>
+<li>若工厂方法名不为空，则调用 <code>AbstractAutowireCapableBeanFactory.getBean(String name)</code> 方法，获取工厂对象，</li>
+<li>若为空，则可能为一个静态工厂，对于静态工厂则必须提供工厂类的全类名，同时设置 <code>factoryBean = null</code> 。</li>
+</ul>
+</li>
+<li><p><strong>二、&lt;2&gt;构造参数确认</strong></p>
+<p>工厂对象确定后，则是确认构造参数。构造参数的确认主要分为<strong>三种</strong>情况：</p>
+<ul>
+<li><p><code>explicitArgs</code> 参数</p>
+</li>
+<li><p>缓存中获取</p>
+</li>
+<li><p>配置文件中解析</p>
+<p>&lt;2.1&gt;explicitArgs 参数</p>
+<p><code>explicitArgs</code> 参数，是我们调用 <code>getBean(...)</code> 方法时传递进来的。一般该参数，该参数就是用于初始化 Bean 时所传递的参数。如果该参数不为空，则可以确定构造函数的参数就是它了。</p>
+<p>&lt;2.2&gt;缓存中获取</p>
+<p>在该方法的最后，我们会发现这样一段 <code>argsHolderToUse.storeCache(mbd, factoryMethodToUse)</code> 代码。这段代码主要是将构造函数、构造参数保存到缓存中:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConstructorResolver.ArgumentsHolder.java</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">storeCache</span><span class="hljs-params">(RootBeanDefinition mbd, Executable constructorOrFactoryMethod)</span> &#123;<br>	<span class="hljs-keyword">synchronized</span> (mbd.constructorArgumentLock) &#123;<br>		mbd.resolvedConstructorOrFactoryMethod = constructorOrFactoryMethod;<br>		mbd.constructorArgumentsResolved = <span class="hljs-literal">true</span>;<br>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.resolveNecessary) &#123;<br>			mbd.preparedConstructorArguments = <span class="hljs-built_in">this</span>.preparedArguments;<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			mbd.resolvedConstructorArguments = <span class="hljs-built_in">this</span>.arguments;<br>		&#125;<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// RootBeanDefinition.java</span><br><span class="hljs-comment">// 构造函数的缓存锁</span><br><span class="hljs-keyword">final</span> <span class="hljs-type">Object</span> <span class="hljs-variable">constructorArgumentLock</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>();<br><br><span class="hljs-comment">// 缓存已经解析的构造函数或者工厂方法</span><br><span class="hljs-meta">@Nullable</span><br>Executable resolvedConstructorOrFactoryMethod;<br><br><span class="hljs-comment">// 标记字段，标记构造函数、参数已经解析了。默认为 `false`</span><br><span class="hljs-type">boolean</span> <span class="hljs-variable">constructorArgumentsResolved</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br><br><span class="hljs-comment">// 缓存已经解析的构造函数参数，包可见字段。</span><br><span class="hljs-meta">@Nullable</span><br>Object[] resolvedConstructorArguments;<br></code></pre></td></tr></table></figure>
+
+<p>从缓存中获取就是提取以上几个参数的值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConstructorResolver.java</span><br><br><span class="hljs-comment">// 没有指定，则尝试从配置文件中解析</span><br>Object[] argsToResolve = <span class="hljs-literal">null</span>;<br><span class="hljs-comment">// &lt;2.2&gt; 首先尝试从缓存中获取</span><br><span class="hljs-keyword">synchronized</span> (mbd.constructorArgumentLock) &#123;<br>    <span class="hljs-comment">// 获取缓存中的构造函数或者工厂方法</span><br>    factoryMethodToUse = (Method) mbd.resolvedConstructorOrFactoryMethod;<br>    <span class="hljs-keyword">if</span> (factoryMethodToUse != <span class="hljs-literal">null</span> &amp;&amp; mbd.constructorArgumentsResolved) &#123;<br>        <span class="hljs-comment">// Found a cached factory method...</span><br>        <span class="hljs-comment">// 获取缓存中的构造参数</span><br>        argsToUse = mbd.resolvedConstructorArguments;<br>        <span class="hljs-keyword">if</span> (argsToUse == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 获取缓存中的构造函数参数的包可见字段</span><br>            argsToResolve = mbd.preparedConstructorArguments;<br>        &#125;<br>    &#125;<br>&#125;<br><span class="hljs-comment">// 缓存中存在,则解析存储在 BeanDefinition 中的参数</span><br><span class="hljs-comment">// 如给定方法的构造函数 A(int ,int )，则通过此方法后就会把配置文件中的(&quot;1&quot;,&quot;1&quot;)转换为 (1,1)</span><br><span class="hljs-comment">// 缓存中的值可能是原始值也有可能是最终值</span><br><span class="hljs-keyword">if</span> (argsToResolve != <span class="hljs-literal">null</span>) &#123;<br>    argsToUse = resolvePreparedArguments(beanName, mbd, bw, factoryMethodToUse, argsToResolve, <span class="hljs-literal">true</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>如果缓存中存在构造参数，则需要调用<code>resolvePreparedArguments(String beanName, RootBeanDefinition mbd, BeanWrapper bw, Executable executable, Object[] argsToResolve, boolean fallback)</code>方法，进行转换。</li>
+<li>因为缓存中的值有可能是最终值，<strong>也有可能不是最终值</strong>。比如我们构造函数中的类型为 Integer 类型的 1 ，但是原始的参数类型有可能是 String 类型的 <code>&quot;1&quot;</code> ，所以即便是从缓存中得到了构造参数，也<strong>需要经过一番的类型转换确保参数类型完全对应</strong>。</li>
+</ul>
+<p>&lt;2.3&gt;配置文件中解析</p>
+<p>即没有通过传递参数的方式传递构造参数，缓存中也没有，那就只能通过解析配置文件获取构造参数了。在 bean 解析类的博文中我们了解了，配置文件中的信息都会转换到 BeanDefinition 实例对象中，所以配置文件中的参数可以直接通过 BeanDefinition 对象获取。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractAutowireCapableBeanFactory.java</span><br><br><span class="hljs-comment">// &lt;2.3&gt; getBean() 没有传递参数，则需要解析保存在 BeanDefinition 构造函数中指定的参数</span><br><span class="hljs-keyword">if</span> (mbd.hasConstructorArgumentValues()) &#123;<br>    <span class="hljs-comment">// &lt;2.3.1&gt; 构造函数的参数</span><br>    <span class="hljs-type">ConstructorArgumentValues</span> <span class="hljs-variable">cargs</span> <span class="hljs-operator">=</span> mbd.getConstructorArgumentValues();<br>    resolvedValues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorArgumentValues</span>();<br>    <span class="hljs-comment">// &lt;2.3.2&gt; 解析构造函数的参数</span><br>    <span class="hljs-comment">// 将该 bean 的构造函数参数解析为 resolvedValues 对象，其中会涉及到其他 bean</span><br>    minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>&lt;2.3.1&gt;</code> ，通过 BeanDefinition 的 <code>getConstructorArgumentValues()</code> 方法，就可以获取构造信息了。</li>
+<li><code>&lt;2.3.2&gt;</code> ，有了构造信息就可以获取相关的参数值信息了，获取的参数信息包括直接值和引用，这一步骤的处理交由 <code>resolveConstructorArguments(String beanName, RootBeanDefinition mbd, BeanWrapper bw, ConstructorArgumentValues cargs, ConstructorArgumentValues resolvedValues)</code> 方法来完成。该方法会将构造参数信息解析为 <code>resolvedValues</code> 对象 并返回解析到的参数个数 <code>minNrOfArgs</code> 。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>&lt;3&gt;<strong>构造函数</strong></p>
+<p>确定构造参数后，下一步则是确定构造函数。</p>
+<ul>
+<li>第一步，是通过 <code>getCandidateMethods()</code> 方法，获取所有的构造方法，同时对构造方法进行刷选。</li>
+<li>然后，在对其进行排序处理（<code>candidates.sort(AutowireUtils.EXECUTABLE_COMPARATOR)</code>）。排序的主要目的，是为了能够<strong>更加方便的</strong>找到匹配的构造函数，因为构造函数的确认是根据参数个数确认的。排序的规则是：先按照 <code>public</code> &#x2F; 非 <code>public</code> 构造函数<strong>升序</strong>，再按照构造参数数量<strong>降序</strong>。</li>
+</ul>
+<p>通过迭代 <code>candidates</code>（包含了所有要匹配的构造函数）的方式，依次比较其参数：</p>
+<ul>
+<li>如果显示提供了参数（<code>explicitArgs != null</code>），则直接比较两者<strong>长度</strong>是否相等，如果相等则表示找到了，否则继续比较。</li>
+<li>如果没有显示提供参数，则需要获取 <code>org.springframework.core.ParameterNameDiscoverer</code> 对象。该对象为参数名称探测器，主要用于发现方法和构造函数的参数名称。</li>
+</ul>
+<p>将参数包装成 <code>ConstructorResolver.ArgumentsHolder</code> 对象。该对象用于保存参数，我们称之为参数持有者。当将对象包装成 ArgumentsHolder 对象后，我们就可以通过它来进行构造函数<strong>匹配</strong>。匹配分为严格模式和宽松模式：</p>
+<ul>
+<li>严格模式：解析构造函数时，必须所有参数都需要匹配，否则抛出异常。</li>
+<li>宽松模式：使用具有”最接近的模式”进行匹配。</li>
+</ul>
+<p>判断的依据是根据 BeanDefinition 的 <code>isLenientConstructorResolution</code> 属性（该参数是我们在构造 AbstractBeanDefinition 对象是传递的）来获取类型差异权重（<code>typeDiffWeight</code>） 的。</p>
+<ul>
+<li>如果 <code>typeDiffWeight &lt; minTypeDiffWeight</code> ，则代表“最接近的模式”，选择其作为构造函数。</li>
+<li>否则，只有两者具有相同的参数数量，且类型差异权重相等才会纳入考虑范围。</li>
+</ul>
+</li>
+<li><p><strong>&lt;4&gt;创建Bean实例</strong></p>
+<p>工厂对象、构造函数、构造参数都已经确认了，则最后一步就是调用 <code>org.springframework.beans.factory.support.InstantiationStrategy</code> 对象的 <code>.instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner, Object factoryBean, final Method factoryMethod, @Nullable Object... args)</code> 方法，来创建 bean 实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">instantiate</span><span class="hljs-params">(RootBeanDefinition bd, <span class="hljs-meta">@Nullable</span> String beanName, BeanFactory owner,<span class="hljs-meta">@Nullable</span> Object factoryBean, <span class="hljs-keyword">final</span> Method factoryMethod, Object... args)</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 设置 Method 可访问</span><br>        <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123;<br>            AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; &#123;<br>                ReflectionUtils.makeAccessible(factoryMethod);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>            &#125;);<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            ReflectionUtils.makeAccessible(factoryMethod);<br>        &#125;<br><br>        <span class="hljs-comment">// 获得原 Method 对象</span><br>        <span class="hljs-type">Method</span> <span class="hljs-variable">priorInvokedFactoryMethod</span> <span class="hljs-operator">=</span> currentlyInvokedFactoryMethod.get();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// 设置新的 Method 对象，到 currentlyInvokedFactoryMethod 中</span><br>            currentlyInvokedFactoryMethod.set(factoryMethod);<br>            <span class="hljs-comment">// &lt;x&gt; 创建 Bean 对象</span><br>            <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> factoryMethod.invoke(factoryBean, args);<br>            <span class="hljs-comment">// 未创建，则创建 NullBean 对象</span><br>            <span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span>) &#123;<br>                result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">NullBean</span>();<br>            &#125;<br>            <span class="hljs-keyword">return</span> result;<br>        &#125;<br>        <span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-comment">// 设置老的 Method 对象，到 currentlyInvokedFactoryMethod 中</span><br>            <span class="hljs-keyword">if</span> (priorInvokedFactoryMethod != <span class="hljs-literal">null</span>) &#123;<br>                currentlyInvokedFactoryMethod.set(priorInvokedFactoryMethod);<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                currentlyInvokedFactoryMethod.remove();<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (IllegalArgumentException ex) &#123;<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(factoryMethod,<br>                                             <span class="hljs-string">&quot;Illegal arguments to factory method &#x27;&quot;</span> + factoryMethod.getName() + <span class="hljs-string">&quot;&#x27;; &quot;</span> +<br>                                             <span class="hljs-string">&quot;args: &quot;</span> + StringUtils.arrayToCommaDelimitedString(args), ex);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (IllegalAccessException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(factoryMethod,<br>                                             <span class="hljs-string">&quot;Cannot access factory method &#x27;&quot;</span> + factoryMethod.getName() + <span class="hljs-string">&quot;&#x27;; is it public?&quot;</span>, ex);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (InvocationTargetException ex) &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">msg</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Factory method &#x27;&quot;</span> + factoryMethod.getName() + <span class="hljs-string">&quot;&#x27; threw exception&quot;</span>;<br>        <span class="hljs-keyword">if</span> (bd.getFactoryBeanName() != <span class="hljs-literal">null</span> &amp;&amp; owner <span class="hljs-keyword">instanceof</span> ConfigurableBeanFactory &amp;&amp;<br>            ((ConfigurableBeanFactory) owner).isCurrentlyInCreation(bd.getFactoryBeanName())) &#123;<br>            msg = <span class="hljs-string">&quot;Circular reference involving containing bean &#x27;&quot;</span> + bd.getFactoryBeanName() + <span class="hljs-string">&quot;&#x27; - consider &quot;</span> +<br>                <span class="hljs-string">&quot;declaring the factory method as static for independence from its containing instance. &quot;</span> + msg;<br>        &#125;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(factoryMethod, msg, ex.getTargetException());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>核心的部分，在于 <code>&lt;x&gt;</code> 处，利用 Java 反射执行工厂方法并返回创建好的实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// SimpleInstantiationStrategy.java</span><br><br><span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> factoryMethod.invoke(factoryBean, args);<br></code></pre></td></tr></table></figure></li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/IOC/" class="category-chain-item">IOC</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>二十一、创建Bean之实例化Bean对象一</div>
+      <div>http://www.muzili.ren/2022/06/11/创建Bean之实例化Bean对象1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E5%88%9B%E5%BB%BABean%E4%B9%8B%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96/" title="二十四、创建Bean之循环依赖">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">二十四、创建Bean之循环依赖</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E5%88%9B%E5%BB%BABean%E4%B9%8B%E4%B8%BB%E6%B5%81%E7%A8%8B/" title="二十、创建Bean之主流程">
+                        <span class="hidden-mobile">二十、创建Bean之主流程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

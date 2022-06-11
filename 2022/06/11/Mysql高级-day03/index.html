@@ -1,0 +1,1625 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="MySQL优化、锁、缓存等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql高级三">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day03/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="MySQL优化、锁、缓存等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1.jpg">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/20180919131632347.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555249929012.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555250015377.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555250142451.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555250443958.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555251383805.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553906896564.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553907044500.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553908913515.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553908973840.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553907198462.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553907403957.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553907849829.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553907875221.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553908019755.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553908131373.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553905621992.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556443073322.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556443170082.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554331600009.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554354615030.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554354601867.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554354713628.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554354717336.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554354830589.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554354832708.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554382789984.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554382905352.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554382977653.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554383044542.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554385220580.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554385236768.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554385956215.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554386287454.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554386312524.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554386654793.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554386685610.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554386721653.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554386750004.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554386804807.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554387987130.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554387994533.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554388492478.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554388515936.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554388149305.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554388548562.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556455943670.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.965Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.966Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/mysql/1.jpg">
+  
+  
+  
+  <title>Mysql高级三 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Mysql高级三"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          120 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Mysql高级三</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年6月11日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">Mysql高级三</font></div>
+
+<h3 id="1-应用优化"><a href="#1-应用优化" class="headerlink" title="1. 应用优化"></a>1. 应用优化</h3><p>前面章节，我们介绍了很多数据库的优化措施。但是在实际生产环境中，由于数据库本身的性能局限，就必须要对前台的应用进行一些优化，来降低数据库的访问压力。</p>
+<h4 id="1-1-使用连接池"><a href="#1-1-使用连接池" class="headerlink" title="1.1 使用连接池"></a>1.1 使用连接池</h4><p>对于访问数据库来说，建立连接的代价是比较昂贵的，因为我们频繁的创建关闭连接，是比较耗费资源的，我们有必要建立 数据库连接池，以提高访问的性能。</p>
+<h4 id="1-2-减少对MySQL的访问"><a href="#1-2-减少对MySQL的访问" class="headerlink" title="1.2 减少对MySQL的访问"></a>1.2 减少对MySQL的访问</h4><h5 id="1-2-1-避免对数据进行重复检索"><a href="#1-2-1-避免对数据进行重复检索" class="headerlink" title="1.2.1 避免对数据进行重复检索"></a>1.2.1 避免对数据进行重复检索</h5><p>在编写应用代码时，需要能够理清对数据库的访问逻辑。能够一次连接就获取到结果的，就不用两次连接，这样可以大大减少对数据库无用的重复请求。</p>
+<p>比如 ，需要获取书籍的id 和name字段 ， 则查询如下： </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> id , <span class="hljs-type">name</span> <span class="hljs-keyword">from</span> tb_book;<br></code></pre></td></tr></table></figure>
+
+<p>之后，在业务逻辑中有需要获取到书籍状态信息， 则查询如下：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">select <span class="hljs-built_in">id</span> , status <span class="hljs-keyword">from</span> tb_book;<br></code></pre></td></tr></table></figure>
+
+<p>这样，就需要向数据库提交两次请求，数据库就要做两次查询操作。其实完全可以用一条SQL语句得到想要的结果。</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs fortran"><span class="hljs-keyword">select</span> id, <span class="hljs-keyword">name</span> , <span class="hljs-keyword">status</span> from tb_book;<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="1-2-2-增加cache层"><a href="#1-2-2-增加cache层" class="headerlink" title="1.2.2 增加cache层"></a>1.2.2 增加cache层</h5><p>在应用中，我们可以在应用中增加 缓存 层来达到减轻数据库负担的目的。缓存层有很多种，也有很多实现方式，只要能达到降低数据库的负担又能满足应用需求就可以。</p>
+<p>因此可以部分数据从数据库中抽取出来放到应用端以文本方式存储， 或者使用框架(Mybatis, Hibernate)提供的一级缓存&#x2F;二级缓存，或者使用redis数据库来缓存数据 。</p>
+<h4 id="1-3-负载均衡"><a href="#1-3-负载均衡" class="headerlink" title="1.3 负载均衡"></a>1.3 负载均衡</h4><p>负载均衡是应用中使用非常普遍的一种优化方法，它的机制就是利用某种均衡算法，将固定的负载量分布到不同的服务器上， 以此来降低单台服务器的负载，达到优化的效果。</p>
+<h5 id="1-3-1-利用MySQL复制分流查询"><a href="#1-3-1-利用MySQL复制分流查询" class="headerlink" title="1.3.1 利用MySQL复制分流查询"></a>1.3.1 利用MySQL复制分流查询</h5><p>通过MySQL的主从复制，实现读写分离，使增删改操作走主节点，查询操作走从节点，从而可以降低单台服务器的读写压力。</p>
+<p><img src="/images/mysql/1.jpg" srcset="/img/loading.gif" lazyload alt="1"> </p>
+<h5 id="1-3-2-采用分布式数据库架构"><a href="#1-3-2-采用分布式数据库架构" class="headerlink" title="1.3.2 采用分布式数据库架构"></a>1.3.2 采用分布式数据库架构</h5><p>分布式数据库架构适合大数据量、负载高的情况，它有良好的拓展性和高可用性。通过在多台服务器之间分布数据，可以实现在多台服务器之间的负载均衡，提高访问效率。</p>
+<h3 id="2-Mysql中查询缓存优化"><a href="#2-Mysql中查询缓存优化" class="headerlink" title="2. Mysql中查询缓存优化"></a>2. Mysql中查询缓存优化</h3><h4 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h4><p>开启Mysql的查询缓存，当执行完全相同的SQL语句的时候，服务器就会直接从缓存中读取结果，当数据被修改，之前的缓存会失效，修改比较频繁的表不适合做查询缓存。</p>
+<h4 id="2-2-操作流程"><a href="#2-2-操作流程" class="headerlink" title="2.2 操作流程"></a>2.2 操作流程</h4><p> <img src="/images/mysql/20180919131632347.png" srcset="/img/loading.gif" lazyload alt="20180919131632347"> </p>
+<ol>
+<li>客户端发送一条查询给服务器；</li>
+<li>服务器先会检查查询缓存，如果命中了缓存，则立即返回存储在缓存中的结果。否则进入下一阶段；</li>
+<li>服务器端进行SQL解析、预处理，再由优化器生成对应的执行计划；</li>
+<li>MySQL根据优化器生成的执行计划，调用存储引擎的API来执行查询；</li>
+<li>将结果返回给客户端。</li>
+</ol>
+<h4 id="2-3-查询缓存配置"><a href="#2-3-查询缓存配置" class="headerlink" title="2.3 查询缓存配置"></a>2.3 查询缓存配置</h4><ol>
+<li><p>查看当前的MySQL数据库是否支持查询缓存：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">SHOW</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;have_query_cache&#x27;</span>;	<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1555249929012.png" srcset="/img/loading.gif" lazyload alt="1555249929012"> </p>
+</li>
+<li><p>查看当前MySQL是否开启了查询缓存 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">SHOW</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;query_cache_type&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1555250015377.png" srcset="/img/loading.gif" lazyload alt="1555250015377"> </p>
+</li>
+<li><p>查看查询缓存的占用大小 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">SHOW</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;query_cache_size&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1555250142451.png" srcset="/img/loading.gif" lazyload alt="1555250142451">  	</p>
+</li>
+<li><p>查看查询缓存的状态变量：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">SHOW</span> STATUS <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;Qcache%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1555250443958.png" srcset="/img/loading.gif" lazyload alt="1555250443958"> </p>
+<p>各个变量的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Qcache_free_blocks</td>
+<td>查询缓存中的可用内存块数</td>
+</tr>
+<tr>
+<td>Qcache_free_memory</td>
+<td>查询缓存的可用内存量</td>
+</tr>
+<tr>
+<td>Qcache_hits</td>
+<td>查询缓存命中数</td>
+</tr>
+<tr>
+<td>Qcache_inserts</td>
+<td>添加到查询缓存的查询数</td>
+</tr>
+<tr>
+<td>Qcache_lowmen_prunes</td>
+<td>由于内存不足而从查询缓存中删除的查询数</td>
+</tr>
+<tr>
+<td>Qcache_not_cached</td>
+<td>非缓存查询的数量（由于 query_cache_type 设置而无法缓存或未缓存）</td>
+</tr>
+<tr>
+<td>Qcache_queries_in_cache</td>
+<td>查询缓存中注册的查询数</td>
+</tr>
+<tr>
+<td>Qcache_total_blocks</td>
+<td>查询缓存中的块总数</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h4 id="2-4-开启查询缓存"><a href="#2-4-开启查询缓存" class="headerlink" title="2.4 开启查询缓存"></a>2.4 开启查询缓存</h4><p>MySQL的查询缓存默认是关闭的，需要手动配置参数 query_cache_type ， 来开启查询缓存。query_cache_type 该参数的可取值有三个 ：</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OFF 或 0</td>
+<td>查询缓存功能关闭</td>
+</tr>
+<tr>
+<td>ON 或 1</td>
+<td>查询缓存功能打开，SELECT的结果符合缓存条件即会缓存，否则，不予缓存，显式指定 SQL_NO_CACHE，不予缓存</td>
+</tr>
+<tr>
+<td>DEMAND 或 2</td>
+<td>查询缓存功能按需进行，显式指定 SQL_CACHE 的SELECT语句才会缓存；其它均不予缓存</td>
+</tr>
+</tbody></table>
+<p>在 &#x2F;usr&#x2F;my.cnf 配置中，增加以下配置 ： </p>
+<p><img src="/images/mysql/1555251383805.png" srcset="/img/loading.gif" lazyload alt="1555251383805"> 		</p>
+<p>配置完毕之后，重启服务既可生效 ；</p>
+<p>然后就可以在命令行执行SQL语句进行验证 ，执行一条比较耗时的SQL语句，然后再多执行几次，查看后面几次的执行时间；获取通过查看查询缓存的缓存命中数，来判定是否走查询缓存。</p>
+<h4 id="2-5-查询缓存SELECT选项"><a href="#2-5-查询缓存SELECT选项" class="headerlink" title="2.5 查询缓存SELECT选项"></a>2.5 查询缓存SELECT选项</h4><p>可以在SELECT语句中指定两个与查询缓存相关的选项 ：</p>
+<p>SQL_CACHE : 如果查询结果是可缓存的，并且 query_cache_type 系统变量的值为ON或 DEMAND ，则缓存查询结果 。</p>
+<p>SQL_NO_CACHE : 服务器不使用查询缓存。它既不检查查询缓存，也不检查结果是否已缓存，也不缓存查询结果。</p>
+<p>例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">SELECT</span> SQL_CACHE id, name <span class="hljs-keyword">FROM</span> customer;<br><span class="hljs-keyword">SELECT</span> SQL_NO_CACHE id, name <span class="hljs-keyword">FROM</span> customer;<br></code></pre></td></tr></table></figure>
+
+<p>​	</p>
+<h4 id="2-6-查询缓存失效的情况"><a href="#2-6-查询缓存失效的情况" class="headerlink" title="2.6 查询缓存失效的情况"></a>2.6 查询缓存失效的情况</h4><p>1） SQL 语句不一致的情况， 要想命中查询缓存，查询的SQL语句必须一致。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs SQL">SQL1 : <span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> tb_item;<br>SQL2 : <span class="hljs-keyword">Select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> tb_item;<br></code></pre></td></tr></table></figure>
+
+<p>2） 当查询语句中有一些不确定的时，则不会缓存。如 ： now() , current_date() , curdate() , curtime() , rand() , uuid() , user() , database() 。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs SQL">SQL1 : <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> updatetime <span class="hljs-operator">&lt;</span> now() limit <span class="hljs-number">1</span>;<br>SQL2 : <span class="hljs-keyword">select</span> <span class="hljs-keyword">user</span>();<br>SQL3 : <span class="hljs-keyword">select</span> database();<br></code></pre></td></tr></table></figure>
+
+<p>3） 不使用任何表查询语句。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">select</span> <span class="hljs-string">&#x27;A&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>4）  查询 mysql， information_schema或  performance_schema 数据库中的表时，不会走查询缓存。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> information_schema.engines;<br></code></pre></td></tr></table></figure>
+
+<p>5） 在存储的函数，触发器或事件的主体内执行的查询。</p>
+<p>6） 如果表更改，则使用该表的所有高速缓存查询都将变为无效并从高速缓存中删除。这包括使用<code>MERGE</code>映射到已更改表的表的查询。一个表可以被许多类型的语句，如被改变 INSERT， UPDATE， DELETE， TRUNCATE TABLE， ALTER TABLE， DROP TABLE，或 DROP DATABASE 。</p>
+<h3 id="3-Mysql内存管理及优化"><a href="#3-Mysql内存管理及优化" class="headerlink" title="3. Mysql内存管理及优化"></a>3. Mysql内存管理及优化</h3><h4 id="3-1-内存优化原则"><a href="#3-1-内存优化原则" class="headerlink" title="3.1 内存优化原则"></a>3.1 内存优化原则</h4><p>1） 将尽量多的内存分配给MySQL做缓存，但要给操作系统和其他程序预留足够内存。</p>
+<p>2） MyISAM 存储引擎的数据文件读取依赖于操作系统自身的IO缓存，因此，如果有MyISAM表，就要预留更多的内存给操作系统做IO缓存。</p>
+<p>3） 排序区、连接区等缓存是分配给每个数据库会话（session）专用的，其默认值的设置要根据最大连接数合理分配，如果设置太大，不但浪费资源，而且在并发连接较高时会导致物理内存耗尽。</p>
+<h4 id="3-2-MyISAM-内存优化"><a href="#3-2-MyISAM-内存优化" class="headerlink" title="3.2 MyISAM 内存优化"></a>3.2 MyISAM 内存优化</h4><p>myisam存储引擎使用 key_buffer 缓存索引块，加速myisam索引的读写速度。对于myisam表的数据块，mysql没有特别的缓存机制，完全依赖于操作系统的IO缓存。</p>
+<h5 id="key-buffer-size"><a href="#key-buffer-size" class="headerlink" title="key_buffer_size"></a>key_buffer_size</h5><p>key_buffer_size决定MyISAM索引块缓存区的大小，直接影响到MyISAM表的存取效率。可以在MySQL参数文件中设置key_buffer_size的值，对于一般MyISAM数据库，建议至少将1&#x2F;4可用内存分配给key_buffer_size。</p>
+<p>在&#x2F;usr&#x2F;my.cnf 中做如下配置：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">key_buffer_size</span>=<span class="hljs-number">512</span>M<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="read-buffer-size"><a href="#read-buffer-size" class="headerlink" title="read_buffer_size"></a>read_buffer_size</h5><p>如果需要经常顺序扫描myisam表，可以通过增大read_buffer_size的值来改善性能。但需要注意的是read_buffer_size是每个session独占的，如果默认值设置太大，就会造成内存浪费。</p>
+<h5 id="read-rnd-buffer-size"><a href="#read-rnd-buffer-size" class="headerlink" title="read_rnd_buffer_size"></a>read_rnd_buffer_size</h5><p>对于需要做排序的myisam表的查询，如带有order by子句的sql，适当增加 read_rnd_buffer_size 的值，可以改善此类的sql性能。但需要注意的是 read_rnd_buffer_size 是每个session独占的，如果默认值设置太大，就会造成内存浪费。</p>
+<h4 id="3-3-InnoDB-内存优化"><a href="#3-3-InnoDB-内存优化" class="headerlink" title="3.3 InnoDB 内存优化"></a>3.3 InnoDB 内存优化</h4><p>innodb用一块内存区做IO缓存池，该缓存池不仅用来缓存innodb的索引块，而且也用来缓存innodb的数据块。</p>
+<h5 id="innodb-buffer-pool-size"><a href="#innodb-buffer-pool-size" class="headerlink" title="innodb_buffer_pool_size"></a>innodb_buffer_pool_size</h5><p>该变量决定了 innodb 存储引擎表数据和索引数据的最大缓存区大小。在保证操作系统及其他程序有足够内存可用的情况下，innodb_buffer_pool_size 的值越大，缓存命中率越高，访问InnoDB表需要的磁盘I&#x2F;O 就越少，性能也就越高。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">innodb_buffer_pool_size</span>=<span class="hljs-number">512</span>M<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="innodb-log-buffer-size"><a href="#innodb-log-buffer-size" class="headerlink" title="innodb_log_buffer_size"></a>innodb_log_buffer_size</h5><p>决定了innodb重做日志缓存的大小，对于可能产生大量更新记录的大事务，增加innodb_log_buffer_size的大小，可以避免innodb在事务提交前就执行不必要的日志写入磁盘操作。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">innodb_log_buffer_size</span>=<span class="hljs-number">10</span>M<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-Mysql并发参数调整"><a href="#4-Mysql并发参数调整" class="headerlink" title="4. Mysql并发参数调整"></a>4. Mysql并发参数调整</h3><p>从实现上来说，MySQL Server 是多线程结构，包括后台线程和客户服务线程。多线程可以有效利用服务器资源，提高数据库的并发性能。在Mysql中，控制并发连接和线程的主要参数包括 max_connections、back_log、thread_cache_size、table_open_cahce。</p>
+<h4 id="4-1-max-connections"><a href="#4-1-max-connections" class="headerlink" title="4.1 max_connections"></a>4.1 max_connections</h4><p>采用max_connections 控制允许连接到MySQL数据库的最大数量，默认值是 151。如果状态变量 connection_errors_max_connections 不为零，并且一直增长，则说明不断有连接请求因数据库连接数已达到允许最大值而失败，这是可以考虑增大max_connections 的值。</p>
+<p>Mysql 最大可支持的连接数，取决于很多因素，包括给定操作系统平台的线程库的质量、内存大小、每个连接的负荷、CPU的处理速度，期望的响应时间等。在Linux 平台下，性能好的服务器，支持 500-1000 个连接不是难事，需要根据服务器性能进行评估设定。</p>
+<h4 id="4-2-back-log"><a href="#4-2-back-log" class="headerlink" title="4.2 back_log"></a>4.2 back_log</h4><p>back_log 参数控制MySQL监听TCP端口时设置的积压请求栈大小。如果MySql的连接数达到max_connections时，新来的请求将会被存在堆栈中，以等待某一连接释放资源，该堆栈的数量即back_log，如果等待连接的数量超过back_log，将不被授予连接资源，将会报错。5.6.6 版本之前默认值为 50 ， 之后的版本默认为 50 + （max_connections &#x2F; 5）， 但最大不超过900。</p>
+<p>如果需要数据库在较短的时间内处理大量连接请求， 可以考虑适当增大back_log 的值。</p>
+<h4 id="4-3-table-open-cache"><a href="#4-3-table-open-cache" class="headerlink" title="4.3 table_open_cache"></a>4.3 table_open_cache</h4><p>该参数用来控制所有SQL语句执行线程可打开表缓存的数量， 而在执行SQL语句时，每一个SQL执行线程至少要打开 1 个表缓存。该参数的值应该根据设置的最大连接数 max_connections 以及每个连接执行关联查询中涉及的表的最大数量来设定 ：</p>
+<p>​	max_connections x N ；</p>
+<h4 id="4-4-thread-cache-size"><a href="#4-4-thread-cache-size" class="headerlink" title="4.4 thread_cache_size"></a>4.4 thread_cache_size</h4><p>为了加快连接数据库的速度，MySQL 会缓存一定数量的客户服务线程以备重用，通过参数 thread_cache_size 可控制 MySQL 缓存客户服务线程的数量。</p>
+<h4 id="4-5-innodb-lock-wait-timeout"><a href="#4-5-innodb-lock-wait-timeout" class="headerlink" title="4.5 innodb_lock_wait_timeout"></a>4.5 innodb_lock_wait_timeout</h4><p>该参数是用来设置InnoDB 事务等待行锁的时间，默认值是50ms ， 可以根据需要进行动态设置。对于需要快速反馈的业务系统来说，可以将行锁的等待时间调小，以避免事务长时间挂起； 对于后台运行的批量处理程序来说， 可以将行锁的等待时间调大， 以避免发生大的回滚操作。</p>
+<h3 id="5-Mysql锁问题"><a href="#5-Mysql锁问题" class="headerlink" title="5. Mysql锁问题"></a>5. Mysql锁问题</h3><h4 id="5-1-锁概述"><a href="#5-1-锁概述" class="headerlink" title="5.1 锁概述"></a>5.1 锁概述</h4><p>锁是计算机协调多个进程或线程并发访问某一资源的机制（避免争抢）。</p>
+<p>在数据库中，除传统的计算资源（如 CPU、RAM、I&#x2F;O 等）的争用以外，数据也是一种供许多用户共享的资源。如何保证数据并发访问的一致性、有效性是所有数据库必须解决的一个问题，锁冲突也是影响数据库并发访问性能的一个重要因素。从这个角度来说，锁对数据库而言显得尤其重要，也更加复杂。</p>
+<h4 id="5-2-锁分类"><a href="#5-2-锁分类" class="headerlink" title="5.2 锁分类"></a>5.2 锁分类</h4><p>从对数据操作的粒度分 ： </p>
+<p>1） 表锁：操作时，会锁定整个表。</p>
+<p>2） 行锁：操作时，会锁定当前操作行。</p>
+<p>从对数据操作的类型分：</p>
+<p>1） 读锁（共享锁）：针对同一份数据，多个读操作可以同时进行而不会互相影响。</p>
+<p>2） 写锁（排它锁）：当前操作没有完成之前，它会阻断其他写锁和读锁。</p>
+<h4 id="5-3-Mysql-锁"><a href="#5-3-Mysql-锁" class="headerlink" title="5.3 Mysql 锁"></a>5.3 Mysql 锁</h4><p>相对其他数据库而言，MySQL的锁机制比较简单，其最显著的特点是不同的存储引擎支持不同的锁机制。下表中罗列出了各存储引擎对锁的支持情况：</p>
+<table>
+<thead>
+<tr>
+<th>存储引擎</th>
+<th>表级锁</th>
+<th>行级锁</th>
+<th>页面锁</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MyISAM</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>InnoDB</td>
+<td>支持</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>MEMORY</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>BDB</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+<p>MySQL这3种锁的特性可大致归纳如下 ：</p>
+<table>
+<thead>
+<tr>
+<th>锁类型</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>表级锁</td>
+<td>偏向MyISAM 存储引擎，开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高,并发度最低。</td>
+</tr>
+<tr>
+<td>行级锁</td>
+<td>偏向InnoDB 存储引擎，开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低,并发度也最高。</td>
+</tr>
+<tr>
+<td>页面锁</td>
+<td>开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般。</td>
+</tr>
+</tbody></table>
+<p>从上述特点可见，很难笼统地说哪种锁更好，只能就具体应用的特点来说哪种锁更合适！仅从锁的角度来说：表级锁更适合于以查询为主，只有少量按索引条件更新数据的应用，如Web 应用；而行级锁则更适合于有大量按索引条件并发更新少量不同数据，同时又有并查询的应用，如一些在线事务处理（OLTP）系统。</p>
+<h4 id="5-2-MyISAM-表锁"><a href="#5-2-MyISAM-表锁" class="headerlink" title="5.2 MyISAM 表锁"></a>5.2 MyISAM 表锁</h4><p>MyISAM 存储引擎只支持表锁，这也是MySQL开始几个版本中唯一支持的锁类型。</p>
+<h5 id="5-2-1-如何加表锁"><a href="#5-2-1-如何加表锁" class="headerlink" title="5.2.1 如何加表锁"></a>5.2.1 如何加表锁</h5><p>MyISAM 在执行查询语句（SELECT）前，会自动给涉及的所有表加读锁，在执行更新操作（UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加写锁，这个过程并不需要用户干预，因此，用户一般不需要直接用 LOCK TABLE 命令给 MyISAM 表显式加锁。</p>
+<p>显示加表锁语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs SQL">加读锁 ： lock <span class="hljs-keyword">table</span> table_name read;<br><br>加写锁 ： lock <span class="hljs-keyword">table</span> table_name write；<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="5-2-2-读锁案例"><a href="#5-2-2-读锁案例" class="headerlink" title="5.2.2 读锁案例"></a>5.2.2 读锁案例</h5><p>准备环境</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">create</span> database demo_03 <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8mb4;<br><br>use demo_03;<br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `tb_book` (<br>  `id` <span class="hljs-type">INT</span>(<span class="hljs-number">11</span>) auto_increment,<br>  `name` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `publish_time` <span class="hljs-type">DATE</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `status` <span class="hljs-type">CHAR</span>(<span class="hljs-number">1</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>myisam <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8 ;<br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tb_book (id, name, publish_time, status) <span class="hljs-keyword">VALUES</span>(<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;java编程思想&#x27;</span>,<span class="hljs-string">&#x27;2088-08-01&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tb_book (id, name, publish_time, status) <span class="hljs-keyword">VALUES</span>(<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;solr编程思想&#x27;</span>,<span class="hljs-string">&#x27;2088-08-08&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br><br><br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `tb_user` (<br>  `id` <span class="hljs-type">INT</span>(<span class="hljs-number">11</span>) auto_increment,<br>  `name` <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>myisam <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8 ;<br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tb_user (id, name) <span class="hljs-keyword">VALUES</span>(<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;令狐冲&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tb_user (id, name) <span class="hljs-keyword">VALUES</span>(<span class="hljs-keyword">NULL</span>,<span class="hljs-string">&#x27;田伯光&#x27;</span>);<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>客户端 一 ：</p>
+<p>1）获得tb_book 表的读锁 </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">lock</span> <span class="hljs-keyword">table</span> tb_book <span class="hljs-keyword">read</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>2） 执行查询操作</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553906896564.png" srcset="/img/loading.gif" lazyload alt="1553906896564"> </p>
+<p>可以正常执行 ， 查询出数据。</p>
+<p>客户端 二 ：</p>
+<p>3） 执行查询操作</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553907044500.png" srcset="/img/loading.gif" lazyload alt="1553907044500"> </p>
+<p>客户端 一 ：</p>
+<p>4）查询未锁定的表</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> <span class="hljs-type">name</span> <span class="hljs-keyword">from</span> tb_seller;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553908913515.png" srcset="/img/loading.gif" lazyload alt="1553908913515"> </p>
+<p>客户端 二 ：</p>
+<p>5）查询未锁定的表</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> <span class="hljs-type">name</span> <span class="hljs-keyword">from</span> tb_seller;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553908973840.png" srcset="/img/loading.gif" lazyload alt="1553908973840"> </p>
+<p>可以正常查询出未锁定的表；</p>
+<p>客户端 一 ：</p>
+<p>6） 执行插入操作 </p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_book <span class="hljs-keyword">values</span>(<span class="hljs-literal">null</span>,<span class="hljs-string">&#x27;Mysql高级&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553907198462.png" srcset="/img/loading.gif" lazyload alt="1553907198462"> </p>
+<p>执行插入， 直接报错 ， 由于当前tb_book 获得的是 读锁， 不能执行更新操作。</p>
+<p>客户端 二 ：</p>
+<p>7） 执行插入操作 </p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_book <span class="hljs-keyword">values</span>(<span class="hljs-literal">null</span>,<span class="hljs-string">&#x27;Mysql高级&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553907403957.png" srcset="/img/loading.gif" lazyload alt="1553907403957"> </p>
+<p>当在客户端一中释放锁指令 unlock tables  后 ， 客户端二中的 inesrt 语句 ， 立即执行 ；</p>
+<h5 id="5-2-3-写锁案例"><a href="#5-2-3-写锁案例" class="headerlink" title="5.2.3 写锁案例"></a>5.2.3 写锁案例</h5><p>客户端 一 :</p>
+<p>1）获得tb_book 表的写锁 </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">lock</span> <span class="hljs-keyword">table</span> tb_book <span class="hljs-keyword">write</span> ;<br></code></pre></td></tr></table></figure>
+
+<p>2）执行查询操作</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book ;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553907849829.png" srcset="/img/loading.gif" lazyload alt="1553907849829"> </p>
+<p>查询操作执行成功；</p>
+<p>3）执行更新操作</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">update</span> tb_book <span class="hljs-keyword">set</span> <span class="hljs-type">name</span> = <span class="hljs-string">&#x27;java编程思想（第二版）&#x27;</span> <span class="hljs-keyword">where</span> id = <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553907875221.png" srcset="/img/loading.gif" lazyload alt="1553907875221"> </p>
+<p>更新操作执行成功 ；</p>
+<p>客户端 二 :</p>
+<p>4）执行查询操作</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book ;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553908019755.png" srcset="/img/loading.gif" lazyload alt="1553908019755"> </p>
+<p>当在客户端一中释放锁指令 unlock tables  后 ， 客户端二中的 select 语句 ， 立即执行 ；</p>
+<p><img src="/images/mysql/1553908131373.png" srcset="/img/loading.gif" lazyload alt="1553908131373"> </p>
+<h5 id="5-2-4-结论"><a href="#5-2-4-结论" class="headerlink" title="5.2.4 结论"></a>5.2.4 结论</h5><p>锁模式的相互兼容性如表中所示：</p>
+<p><img src="/images/mysql/1553905621992.png" srcset="/img/loading.gif" lazyload alt="1553905621992"> </p>
+<p>由上表可见： </p>
+<p>​	1） 对MyISAM 表的读操作，不会阻塞其他用户对同一表的读请求，但会阻塞对同一表的写请求；</p>
+<p>​	2） 对MyISAM 表的写操作，则会阻塞其他用户对同一表的读和写操作；</p>
+<p>​	简而言之，就是读锁会阻塞写，但是不会阻塞读。而写锁，则既会阻塞读，又会阻塞写。</p>
+<p>此外，MyISAM 的读写锁调度是写优先，这也是MyISAM不适合做写为主的表的存储引擎的原因。因为写锁后，其他线程不能做任何操作，大量的更新会使查询很难得到锁，从而造成永远阻塞。</p>
+<h5 id="5-2-5-查看锁的争用情况"><a href="#5-2-5-查看锁的争用情况" class="headerlink" title="5.2.5 查看锁的争用情况"></a>5.2.5 查看锁的争用情况</h5><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">open</span> <span class="hljs-keyword">tables</span>；<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556443073322.png" srcset="/img/loading.gif" lazyload alt="1556443073322"> </p>
+<p>In_user : 表当前被查询使用的次数。如果该数为零，则表是打开的，但是当前没有被使用。</p>
+<p>Name_locked：表名称是否被锁定。名称锁定用于取消表或对表进行重命名等操作。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Table_locks%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556443170082.png" srcset="/img/loading.gif" lazyload alt="1556443170082"> </p>
+<p>Table_locks_immediate ： 指的是能够立即获得表级锁的次数，每立即获取锁，值加1。</p>
+<p>Table_locks_waited ： 指的是不能立即获取表级锁而需要等待的次数，每等待一次，该值加1，此值高说明存在着较为严重的表级锁争用情况。</p>
+<h4 id="5-3-InnoDB-行锁"><a href="#5-3-InnoDB-行锁" class="headerlink" title="5.3 InnoDB 行锁"></a>5.3 InnoDB 行锁</h4><h5 id="5-3-1-行锁介绍"><a href="#5-3-1-行锁介绍" class="headerlink" title="5.3.1 行锁介绍"></a>5.3.1 行锁介绍</h5><p>行锁特点 ：偏向InnoDB 存储引擎，开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低,并发度也最高。</p>
+<p>InnoDB 与 MyISAM 的最大不同有两点：一是支持事务；二是 采用了行级锁。</p>
+<h5 id="5-3-2-背景知识"><a href="#5-3-2-背景知识" class="headerlink" title="5.3.2 背景知识"></a>5.3.2 背景知识</h5><p><strong>事务及其ACID属性</strong></p>
+<p>事务是由一组SQL语句组成的逻辑处理单元。</p>
+<p>事务具有以下4个特性，简称为事务ACID属性。</p>
+<table>
+<thead>
+<tr>
+<th>ACID属性</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原子性（Atomicity）</td>
+<td>事务是一个原子操作单元，其对数据的修改，要么全部成功，要么全部失败。</td>
+</tr>
+<tr>
+<td>一致性（Consistent）</td>
+<td>在事务开始和完成时，数据都必须保持一致状态。</td>
+</tr>
+<tr>
+<td>隔离性（Isolation）</td>
+<td>数据库系统提供一定的隔离机制，保证事务在不受外部并发操作影响的 “独立” 环境下运行。</td>
+</tr>
+<tr>
+<td>持久性（Durable）</td>
+<td>事务完成之后，对于数据的修改是永久的。</td>
+</tr>
+</tbody></table>
+<p><strong>并发事务处理带来的问题</strong></p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>含义</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>丢失更新（Lost Update）</td>
+<td>当两个或多个事务选择同一行，最初的事务修改的值，会被后面的事务修改的值覆盖。</td>
+<td></td>
+</tr>
+<tr>
+<td>脏读（Dirty Reads）</td>
+<td>当一个事务正在访问数据，并且对数据进行了修改，而这种修改还没有提交到数据库中，这时，另外一个事务也访问这个数据，然后使用了这个数据。</td>
+<td></td>
+</tr>
+<tr>
+<td>不可重复读（Non-Repeatable Reads）</td>
+<td>一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现和以前读出的数据不一致。<strong>针对update操作</strong></td>
+<td>使用<strong>行级锁</strong>，锁定该行，当前事务多次读取操作完成后才释放该锁，这个时候才允许其他事务更改刚才的数据。</td>
+</tr>
+<tr>
+<td>幻读（Phantom Reads）</td>
+<td>一个事务按照相同的查询条件重新读取以前查询过的数据，却发现其他事务插入了满足其查询条件的新数据。<strong>针对insert和delete操作</strong></td>
+<td>使用<strong>表级锁</strong>，锁定整张表，当前事务多次读取数据总量之后才释放该锁，这个时候才允许其他事务新增数据。</td>
+</tr>
+</tbody></table>
+<p><strong>事务隔离级别</strong></p>
+<p>为了解决上述提到的事务并发问题，数据库提供一定的事务隔离机制来解决这个问题。数据库的事务隔离越严格，并发副作用越小，但付出的代价也就越大，因为事务隔离实质上就是使用事务在一定程度上“串行化” 进行，这显然与“并发” 是矛盾的。 </p>
+<p>数据库的隔离级别有4个，由低到高依次为Read uncommitted、Read committed、Repeatable read、Serializable，这四个级别可以逐个解决脏写、脏读、不可重复读、幻读这几类问题。</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>丢失更新</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read uncommitted</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>Read committed</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>Repeatable read（默认）</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+</tr>
+<tr>
+<td>Serializable</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+<p>备注 ： √  代表可能出现 ， × 代表不会出现 。</p>
+<p>Mysql 的数据库的默认隔离级别为 Repeatable read ， 查看方式：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams">show <span class="hljs-keyword">variables</span> like <span class="hljs-comment">&#x27;tx_isolation&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1554331600009.png" srcset="/img/loading.gif" lazyload alt="1554331600009">  </p>
+<h5 id="5-3-3-InnoDB-的行锁模式"><a href="#5-3-3-InnoDB-的行锁模式" class="headerlink" title="5.3.3 InnoDB 的行锁模式"></a>5.3.3 InnoDB 的行锁模式</h5><p>InnoDB  实现了以下两种类型的行锁。</p>
+<ul>
+<li>共享锁（S）：又称为读锁，简称S锁，共享锁就是多个事务对于同一数据可以共享一把锁，都能访问到数据，但是只能读不能修改，我们可以用<code>select ...... lock in share mode;</code>的方式手工加上一把<code>S锁</code>。</li>
+<li>排他锁（X）：又称为写锁，简称X锁，排他锁就是不能与其他锁并存，如一个事务获取了一个数据行的排他锁，其他事务就不能再获取该行的其他锁，包括共享锁和排他锁，但是获取排他锁的事务是可以对数据就行读取和修改，我们用一个<code>FOR UPDATE</code>给一行数据加上一个<code>X锁</code>。</li>
+</ul>
+<p>对于UPDATE、DELETE和INSERT语句，InnoDB会自动给涉及数据集加排他锁（X)；</p>
+<p>对于普通SELECT语句，InnoDB不会加任何锁；</p>
+<p>可以通过以下语句显示给记录集加共享锁或排他锁 。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">共享锁（S）：<span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> table_name <span class="hljs-keyword">WHERE</span> ... LOCK <span class="hljs-keyword">IN</span> SHARE MODE<br><br>排他锁（X) ：<span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> table_name <span class="hljs-keyword">WHERE</span> ... <span class="hljs-keyword">FOR</span> <span class="hljs-keyword">UPDATE</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="5-3-4-案例准备工作"><a href="#5-3-4-案例准备工作" class="headerlink" title="5.3.4 案例准备工作"></a>5.3.4 案例准备工作</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> test_innodb_lock(<br>	id <span class="hljs-type">int</span>(<span class="hljs-number">11</span>),<br>	name <span class="hljs-type">varchar</span>(<span class="hljs-number">16</span>),<br>	sex <span class="hljs-type">varchar</span>(<span class="hljs-number">1</span>)<br>)engine <span class="hljs-operator">=</span> innodb <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8;<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;100&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;400&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;500&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">6</span>,<span class="hljs-string">&#x27;600&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">7</span>,<span class="hljs-string">&#x27;700&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">8</span>,<span class="hljs-string">&#x27;800&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">9</span>,<span class="hljs-string">&#x27;900&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> test_innodb_lock <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;200&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br><br><span class="hljs-keyword">create</span> index idx_test_innodb_lock_id <span class="hljs-keyword">on</span> test_innodb_lock(id);<br><span class="hljs-keyword">create</span> index idx_test_innodb_lock_name <span class="hljs-keyword">on</span> test_innodb_lock(name);<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="5-3-5-行锁基本演示"><a href="#5-3-5-行锁基本演示" class="headerlink" title="5.3.5 行锁基本演示"></a>5.3.5 行锁基本演示</h5><table>
+<thead>
+<tr>
+<th>Session-1</th>
+<th>Session-2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="/images/mysql/1554354615030.png" srcset="/img/loading.gif" lazyload alt="1554354615030">      关闭自动提交功能</td>
+<td><img src="/images/mysql/1554354601867.png" srcset="/img/loading.gif" lazyload alt="1554354601867">  关闭自动提交功能</td>
+</tr>
+<tr>
+<td><img src="/images/mysql/1554354713628.png" srcset="/img/loading.gif" lazyload alt="1554354713628"> 可以正常的查询出全部的数据</td>
+<td><img src="/images/mysql/1554354717336.png" srcset="/img/loading.gif" lazyload alt="1554354717336"> 可以正常的查询出全部的数据</td>
+</tr>
+<tr>
+<td><img src="/images/mysql/1554354830589.png" srcset="/img/loading.gif" lazyload alt="1554354830589">查询id 为3的数据 ；</td>
+<td><img src="/images/mysql/1554354832708.png" srcset="/img/loading.gif" lazyload alt="1554354832708">获取id为3的数据 ；</td>
+</tr>
+<tr>
+<td><img src="/images/mysql/1554382789984.png" srcset="/img/loading.gif" lazyload alt="1554382789984"> 更新id为3的数据，但是不提交；</td>
+<td><img src="/images/mysql/1554382905352.png" srcset="/img/loading.gif" lazyload alt="1554382905352"> 更新id为3 的数据， 出于等待状态</td>
+</tr>
+<tr>
+<td><img src="/images/mysql/1554382977653.png" srcset="/img/loading.gif" lazyload alt="1554382977653"> 通过commit， 提交事务</td>
+<td><img src="/images/mysql/1554383044542.png" srcset="/img/loading.gif" lazyload alt="1554383044542"> 解除阻塞，更新正常进行</td>
+</tr>
+<tr>
+<td>以上， 操作的都是同一行的数据，接下来，演示不同行的数据 ：</td>
+<td></td>
+</tr>
+<tr>
+<td><img src="/images/mysql/1554385220580.png" srcset="/img/loading.gif" lazyload alt="1554385220580"> 更新id为3数据，正常的获取到行锁 ， 执行更新 ；</td>
+<td><img src="/images/mysql/1554385236768.png" srcset="/img/loading.gif" lazyload alt="1554385236768"> 由于与Session-1 操作不是同一行，获取当前行锁，执行更新；</td>
+</tr>
+</tbody></table>
+<h5 id="5-3-6-无索引行锁升级为表锁"><a href="#5-3-6-无索引行锁升级为表锁" class="headerlink" title="5.3.6 无索引行锁升级为表锁"></a>5.3.6 无索引行锁升级为表锁</h5><p>如果不通过索引条件检索数据，那么InnoDB将对表中的所有记录加锁，实际效果跟表锁一样。</p>
+<p>查看当前表的索引 ： show  index  from test_innodb_lock ;</p>
+<p><img src="/images/mysql/1554385956215.png" srcset="/img/loading.gif" lazyload alt="1554385956215"> </p>
+<table>
+<thead>
+<tr>
+<th>Session-1</th>
+<th>Session-2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>关闭事务的自动提交<img src="/images/mysql/1554386287454.png" srcset="/img/loading.gif" lazyload alt="1554386287454"></td>
+<td>关闭事务的自动提交<img src="/images/mysql/1554386312524.png" srcset="/img/loading.gif" lazyload alt="1554386312524"></td>
+</tr>
+<tr>
+<td>执行更新语句 ：<img src="/images/mysql/1554386654793.png" srcset="/img/loading.gif" lazyload alt="1554386654793"></td>
+<td>执行更新语句， 但处于阻塞状态：<img src="/images/mysql/1554386685610.png" srcset="/img/loading.gif" lazyload alt="1554386685610"></td>
+</tr>
+<tr>
+<td>提交事务：<img src="/images/mysql/1554386721653.png" srcset="/img/loading.gif" lazyload alt="1554386721653"></td>
+<td>解除阻塞，执行更新成功 ：<img src="/images/mysql/1554386750004.png" srcset="/img/loading.gif" lazyload alt="1554386750004"></td>
+</tr>
+<tr>
+<td></td>
+<td>执行提交操作 ：<img src="/images/mysql/1554386804807.png" srcset="/img/loading.gif" lazyload alt="1554386804807"></td>
+</tr>
+</tbody></table>
+<p>由于 执行更新时 ， name字段本来为varchar类型， 我们是作为数组类型使用，存在类型转换，索引失效，最终行锁变为表锁 ；</p>
+<h5 id="5-3-7-间隙锁危害"><a href="#5-3-7-间隙锁危害" class="headerlink" title="5.3.7 间隙锁危害"></a>5.3.7 间隙锁危害</h5><p>当我们用范围条件，而不是使用相等条件检索数据，并请求共享或排他锁时，InnoDB会给符合条件的已有数据进行加锁； 对于键值在条件范围内但并不存在的记录，叫做 “间隙（GAP）” ， InnoDB也会对这个 “间隙” 加锁，这种锁机制就是所谓的 间隙锁（Next-Key锁） 。</p>
+<p>示例 ： </p>
+<table>
+<thead>
+<tr>
+<th>Session-1</th>
+<th>Session-2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>关闭事务自动提交 <img src="/images/mysql/1554387987130.png" srcset="/img/loading.gif" lazyload alt="1554387987130"></td>
+<td>关闭事务自动提交<img src="/images/mysql/1554387994533.png" srcset="/img/loading.gif" lazyload alt="1554387994533"></td>
+</tr>
+<tr>
+<td>根据id范围更新数据<img src="/images/mysql/1554388492478.png" srcset="/img/loading.gif" lazyload alt="1554388492478"></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>插入id为2的记录， 出于阻塞状态<img src="/images/mysql/1554388515936.png" srcset="/img/loading.gif" lazyload alt="1554388515936"></td>
+</tr>
+<tr>
+<td>提交事务 ；<img src="/images/mysql/1554388149305.png" srcset="/img/loading.gif" lazyload alt="1554388149305"></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>解除阻塞 ， 执行插入操作 ：<img src="/images/mysql/1554388548562.png" srcset="/img/loading.gif" lazyload alt="1554388548562"></td>
+</tr>
+<tr>
+<td></td>
+<td>提交事务 ：</td>
+</tr>
+</tbody></table>
+<h5 id="5-3-8-InnoDB-行锁争用情况"><a href="#5-3-8-InnoDB-行锁争用情况" class="headerlink" title="5.3.8 InnoDB 行锁争用情况"></a>5.3.8 InnoDB 行锁争用情况</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span>  status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;innodb_row_lock%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556455943670.png" srcset="/img/loading.gif" lazyload alt="1556455943670"></p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">Innodb_row_lock_current_waits:</span> 当前正在等待锁定的数量<br><br><span class="hljs-symbol">Innodb_row_lock_time:</span> 从系统启动到现在锁定总时间长度<br><br><span class="hljs-symbol">Innodb_row_lock_time_avg:</span>每次等待所花平均时长<br><br><span class="hljs-symbol">Innodb_row_lock_time_max:</span>从系统启动到现在等待最长的一次所花的时间<br><br><span class="hljs-symbol">Innodb_row_lock_waits:</span> 系统启动后到现在总共等待的次数<br><br><br>当等待的次数很高，而且每次等待的时长也不小的时候，我们就需要分析系统中为什么会有如此多的等待，然后根据分析结果着手制定优化计划。<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="5-3-9-总结"><a href="#5-3-9-总结" class="headerlink" title="5.3.9 总结"></a>5.3.9 总结</h5><p>InnoDB存储引擎由于实现了行级锁定，虽然在锁定机制的实现方面带来了性能损耗可能比表锁会更高一些，但是在整体并发处理能力方面要远远由于MyISAM的表锁的。当系统并发量较高的时候，InnoDB的整体性能和MyISAM相比就会有比较明显的优势。</p>
+<p>但是，InnoDB的行级锁同样也有其脆弱的一面，当我们使用不当的时候，可能会让InnoDB的整体性能表现不仅不能比MyISAM高，甚至可能会更差。</p>
+<p>优化建议：</p>
+<ul>
+<li>尽可能让所有数据检索都能通过索引来完成，避免无索引行锁升级为表锁。</li>
+<li>合理设计索引，尽量缩小锁的范围</li>
+<li>尽可能减少索引条件，及索引范围，避免间隙锁</li>
+<li>尽量控制事务大小，减少锁定资源量和时间长度</li>
+<li>尽可使用低级别事务隔离（但是需要业务层面满足需求）</li>
+</ul>
+<h3 id="6-常用SQL技巧"><a href="#6-常用SQL技巧" class="headerlink" title="6. 常用SQL技巧"></a>6. 常用SQL技巧</h3><h4 id="6-1-SQL执行顺序"><a href="#6-1-SQL执行顺序" class="headerlink" title="6.1 SQL执行顺序"></a>6.1 SQL执行顺序</h4><p>编写顺序</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DISTINCT</span><br>	<span class="hljs-operator">&lt;</span><span class="hljs-keyword">select</span> list<span class="hljs-operator">&gt;</span><br><span class="hljs-keyword">FROM</span><br>	<span class="hljs-operator">&lt;</span>left_table<span class="hljs-operator">&gt;</span> <span class="hljs-operator">&lt;</span>join_type<span class="hljs-operator">&gt;</span><br><span class="hljs-keyword">JOIN</span><br>	<span class="hljs-operator">&lt;</span>right_table<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">ON</span> <span class="hljs-operator">&lt;</span>join_condition<span class="hljs-operator">&gt;</span><br><span class="hljs-keyword">WHERE</span><br>	<span class="hljs-operator">&lt;</span>where_condition<span class="hljs-operator">&gt;</span><br><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span><br>	<span class="hljs-operator">&lt;</span>group_by_list<span class="hljs-operator">&gt;</span><br><span class="hljs-keyword">HAVING</span><br>	<span class="hljs-operator">&lt;</span>having_condition<span class="hljs-operator">&gt;</span><br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span><br>	<span class="hljs-operator">&lt;</span>order_by_condition<span class="hljs-operator">&gt;</span><br>LIMIT<br>	<span class="hljs-operator">&lt;</span>limit_params<span class="hljs-operator">&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>执行顺序</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">FROM</span>	<span class="hljs-operator">&lt;</span>left_table<span class="hljs-operator">&gt;</span><br><br><span class="hljs-keyword">ON</span> 		<span class="hljs-operator">&lt;</span>join_condition<span class="hljs-operator">&gt;</span><br><br><span class="hljs-operator">&lt;</span>join_type<span class="hljs-operator">&gt;</span>		<span class="hljs-keyword">JOIN</span>	<span class="hljs-operator">&lt;</span>right_table<span class="hljs-operator">&gt;</span><br><br><span class="hljs-keyword">WHERE</span>		<span class="hljs-operator">&lt;</span>where_condition<span class="hljs-operator">&gt;</span><br><br><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> 	<span class="hljs-operator">&lt;</span>group_by_list<span class="hljs-operator">&gt;</span><br><br><span class="hljs-keyword">HAVING</span>		<span class="hljs-operator">&lt;</span>having_condition<span class="hljs-operator">&gt;</span><br><br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DISTINCT</span>		<span class="hljs-operator">&lt;</span><span class="hljs-keyword">select</span> list<span class="hljs-operator">&gt;</span><br><br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span>	<span class="hljs-operator">&lt;</span>order_by_condition<span class="hljs-operator">&gt;</span><br><br>LIMIT		<span class="hljs-operator">&lt;</span>limit_params<span class="hljs-operator">&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="6-2-正则表达式使用"><a href="#6-2-正则表达式使用" class="headerlink" title="6.2 正则表达式使用"></a>6.2 正则表达式使用</h4><p>正则表达式（Regular Expression）是指一个用来描述或者匹配一系列符合某个句法规则的字符串的单个字符串。</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>^</td>
+<td>在字符串开始处进行匹配</td>
+</tr>
+<tr>
+<td>$</td>
+<td>在字符串末尾处进行匹配</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配任意单个字符, 包括换行符</td>
+</tr>
+<tr>
+<td>[…]</td>
+<td>匹配出括号内的任意字符</td>
+</tr>
+<tr>
+<td>[^…]</td>
+<td>匹配不出括号内的任意字符</td>
+</tr>
+<tr>
+<td>a*</td>
+<td>匹配零个或者多个a(包括空串)</td>
+</tr>
+<tr>
+<td>a+</td>
+<td>匹配一个或者多个a(不包括空串)</td>
+</tr>
+<tr>
+<td>a?</td>
+<td>匹配零个或者一个a</td>
+</tr>
+<tr>
+<td>a1|a2</td>
+<td>匹配a1或a2</td>
+</tr>
+<tr>
+<td>a(m)</td>
+<td>匹配m个a</td>
+</tr>
+<tr>
+<td>a(m,)</td>
+<td>至少匹配m个a</td>
+</tr>
+<tr>
+<td>a(m,n)</td>
+<td>匹配m个a 到 n个a</td>
+</tr>
+<tr>
+<td>a(,n)</td>
+<td>匹配0到n个a</td>
+</tr>
+<tr>
+<td>(…)</td>
+<td>将模式元素组成单一元素</td>
+</tr>
+</tbody></table>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> regexp <span class="hljs-string">&#x27;^T&#x27;</span>;<br><br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> regexp <span class="hljs-string">&#x27;2$&#x27;</span>;<br><br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> regexp <span class="hljs-string">&#x27;[uvw]&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="6-3-MySQL-常用函数"><a href="#6-3-MySQL-常用函数" class="headerlink" title="6.3 MySQL 常用函数"></a>6.3 MySQL 常用函数</h4><p>数字函数</p>
+<table>
+<thead>
+<tr>
+<th>函数名称</th>
+<th>作 用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ABS</td>
+<td>求绝对值</td>
+</tr>
+<tr>
+<td>SQRT</td>
+<td>求二次方根</td>
+</tr>
+<tr>
+<td>MOD</td>
+<td>求余数</td>
+</tr>
+<tr>
+<td>CEIL 和 CEILING</td>
+<td>两个函数功能相同，都是返回不小于参数的最小整数，即向上取整</td>
+</tr>
+<tr>
+<td>FLOOR</td>
+<td>向下取整，返回值转化为一个BIGINT</td>
+</tr>
+<tr>
+<td>RAND</td>
+<td>生成一个0~1之间的随机数，传入整数参数是，用来产生重复序列</td>
+</tr>
+<tr>
+<td>ROUND</td>
+<td>对所传参数进行四舍五入</td>
+</tr>
+<tr>
+<td>SIGN</td>
+<td>返回参数的符号</td>
+</tr>
+<tr>
+<td>POW 和 POWER</td>
+<td>两个函数的功能相同，都是所传参数的次方的结果值</td>
+</tr>
+<tr>
+<td>SIN</td>
+<td>求正弦值</td>
+</tr>
+<tr>
+<td>ASIN</td>
+<td>求反正弦值，与函数 SIN 互为反函数</td>
+</tr>
+<tr>
+<td>COS</td>
+<td>求余弦值</td>
+</tr>
+<tr>
+<td>ACOS</td>
+<td>求反余弦值，与函数 COS 互为反函数</td>
+</tr>
+<tr>
+<td>TAN</td>
+<td>求正切值</td>
+</tr>
+<tr>
+<td>ATAN</td>
+<td>求反正切值，与函数 TAN 互为反函数</td>
+</tr>
+<tr>
+<td>COT</td>
+<td>求余切值</td>
+</tr>
+</tbody></table>
+<p>字符串函数</p>
+<table>
+<thead>
+<tr>
+<th>函数名称</th>
+<th>作 用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LENGTH</td>
+<td>计算字符串长度函数，返回字符串的字节长度</td>
+</tr>
+<tr>
+<td>CONCAT</td>
+<td>合并字符串函数，返回结果为连接参数产生的字符串，参数可以使一个或多个</td>
+</tr>
+<tr>
+<td>INSERT</td>
+<td>替换字符串函数</td>
+</tr>
+<tr>
+<td>LOWER</td>
+<td>将字符串中的字母转换为小写</td>
+</tr>
+<tr>
+<td>UPPER</td>
+<td>将字符串中的字母转换为大写</td>
+</tr>
+<tr>
+<td>LEFT</td>
+<td>从左侧字截取符串，返回字符串左边的若干个字符</td>
+</tr>
+<tr>
+<td>RIGHT</td>
+<td>从右侧字截取符串，返回字符串右边的若干个字符</td>
+</tr>
+<tr>
+<td>TRIM</td>
+<td>删除字符串左右两侧的空格</td>
+</tr>
+<tr>
+<td>REPLACE</td>
+<td>字符串替换函数，返回替换后的新字符串</td>
+</tr>
+<tr>
+<td>SUBSTRING</td>
+<td>截取字符串，返回从指定位置开始的指定长度的字符换</td>
+</tr>
+<tr>
+<td>REVERSE</td>
+<td>字符串反转（逆序）函数，返回与原始字符串顺序相反的字符串</td>
+</tr>
+</tbody></table>
+<p>日期函数</p>
+<table>
+<thead>
+<tr>
+<th>函数名称</th>
+<th>作 用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CURDATE 和 CURRENT_DATE</td>
+<td>两个函数作用相同，返回当前系统的日期值</td>
+</tr>
+<tr>
+<td>CURTIME 和 CURRENT_TIME</td>
+<td>两个函数作用相同，返回当前系统的时间值</td>
+</tr>
+<tr>
+<td>NOW 和  SYSDATE</td>
+<td>两个函数作用相同，返回当前系统的日期和时间值</td>
+</tr>
+<tr>
+<td>MONTH</td>
+<td>获取指定日期中的月份</td>
+</tr>
+<tr>
+<td>MONTHNAME</td>
+<td>获取指定日期中的月份英文名称</td>
+</tr>
+<tr>
+<td>DAYNAME</td>
+<td>获取指定曰期对应的星期几的英文名称</td>
+</tr>
+<tr>
+<td>DAYOFWEEK</td>
+<td>获取指定日期对应的一周的索引位置值</td>
+</tr>
+<tr>
+<td>WEEK</td>
+<td>获取指定日期是一年中的第几周，返回值的范围是否为 0〜52 或 1〜53</td>
+</tr>
+<tr>
+<td>DAYOFYEAR</td>
+<td>获取指定曰期是一年中的第几天，返回值范围是1~366</td>
+</tr>
+<tr>
+<td>DAYOFMONTH</td>
+<td>获取指定日期是一个月中是第几天，返回值范围是1~31</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>获取年份，返回值范围是 1970〜2069</td>
+</tr>
+<tr>
+<td>TIME_TO_SEC</td>
+<td>将时间参数转换为秒数</td>
+</tr>
+<tr>
+<td>SEC_TO_TIME</td>
+<td>将秒数转换为时间，与TIME_TO_SEC 互为反函数</td>
+</tr>
+<tr>
+<td>DATE_ADD 和 ADDDATE</td>
+<td>两个函数功能相同，都是向日期添加指定的时间间隔</td>
+</tr>
+<tr>
+<td>DATE_SUB 和 SUBDATE</td>
+<td>两个函数功能相同，都是向日期减去指定的时间间隔</td>
+</tr>
+<tr>
+<td>ADDTIME</td>
+<td>时间加法运算，在原始时间上添加指定的时间</td>
+</tr>
+<tr>
+<td>SUBTIME</td>
+<td>时间减法运算，在原始时间上减去指定的时间</td>
+</tr>
+<tr>
+<td>DATEDIFF</td>
+<td>获取两个日期之间间隔，返回参数 1 减去参数 2 的值</td>
+</tr>
+<tr>
+<td>DATE_FORMAT</td>
+<td>格式化指定的日期，根据参数返回指定格式的值</td>
+</tr>
+<tr>
+<td>WEEKDAY</td>
+<td>获取指定日期在一周内的对应的工作日索引</td>
+</tr>
+</tbody></table>
+<p>聚合函数</p>
+<table>
+<thead>
+<tr>
+<th>函数名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MAX</td>
+<td>查询指定列的最大值</td>
+</tr>
+<tr>
+<td>MIN</td>
+<td>查询指定列的最小值</td>
+</tr>
+<tr>
+<td>COUNT</td>
+<td>统计查询结果的行数</td>
+</tr>
+<tr>
+<td>SUM</td>
+<td>求和，返回指定列的总和</td>
+</tr>
+<tr>
+<td>AVG</td>
+<td>求平均值，返回指定列数据的平均值</td>
+</tr>
+</tbody></table>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/MySQL/" class="category-chain-item">MySQL</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Mysql高级三</div>
+      <div>http://www.muzili.ren/2022/06/11/Mysql高级-day03/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day02/" title="Mysql高级二">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Mysql高级二</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day01/" title="Mysql高级一">
+                        <span class="hidden-mobile">Mysql高级一</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

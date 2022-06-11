@@ -1,0 +1,1070 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="MySQL常用工具、日志等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql高级四">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day04/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="MySQL常用工具、日志等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555325632715.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555326108697.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553993244446.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553993537874.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554079717375.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554080016778.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554095452022.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554118609489.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554118675264.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554125506938.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554128184632.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554128089851.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554130333472.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554130448709.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554130532577.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554130669360.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554130856485.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1.jpg">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554477759735.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554479387365.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554544658640.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1554544679538.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555075760661.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555076434270.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555077276426.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555081714638.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555152703824.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555235426739.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555235982584.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/aop-datasource.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.966Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.967Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/mysql/1555325632715.png">
+  
+  
+  
+  <title>Mysql高级四 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Mysql高级四"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          37k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          313 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Mysql高级四</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年6月11日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">Mysql高级四</font></div>
+
+<h3 id="1-MySql中常用工具"><a href="#1-MySql中常用工具" class="headerlink" title="1. MySql中常用工具"></a>1. MySql中常用工具</h3><h4 id="1-1-mysql"><a href="#1-1-mysql" class="headerlink" title="1.1 mysql"></a>1.1 mysql</h4><p>该mysql不是指mysql服务，而是指mysql的客户端工具。</p>
+<p>语法 ：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">mysql <span class="hljs-selector-attr">[options]</span> <span class="hljs-selector-attr">[database]</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="1-1-1-连接选项"><a href="#1-1-1-连接选项" class="headerlink" title="1.1.1 连接选项"></a>1.1.1 连接选项</h5><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros">参数 ： <br>	-u, <span class="hljs-attribute">--user</span>=name			指定用户名<br>	-p, --password[=name]	指定密码<br>	-h, <span class="hljs-attribute">--host</span>=name			指定服务器IP或域名<br>	-P, <span class="hljs-attribute">--port</span>=#			指定连接端口<br><br>示例 ：<br>	mysql -h 127.0.0.1 -P 3306 -u root -p<br>	<br>	mysql -h127.0.0.1 -P3306 -uroot -p2143<br>	<br></code></pre></td></tr></table></figure>
+
+<h5 id="1-1-2-执行选项"><a href="#1-1-2-执行选项" class="headerlink" title="1.1.2 执行选项"></a>1.1.2 执行选项</h5><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">-e, <span class="hljs-attribute">--execute</span>=name		执行SQL语句并退出<br></code></pre></td></tr></table></figure>
+
+<p>此选项可以在Mysql客户端执行SQL语句，而不用连接到MySQL数据库再执行，对于一些批处理脚本，这种方式尤其方便。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">示例：<br>	mysql -uroot -p2143 db01 -e <span class="hljs-string">&quot;select * from tb_book&quot;</span><span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1555325632715.png" srcset="/img/loading.gif" lazyload alt="1555325632715"> </p>
+<h4 id="1-2-mysqladmin"><a href="#1-2-mysqladmin" class="headerlink" title="1.2 mysqladmin"></a>1.2 mysqladmin</h4><p>mysqladmin 是一个执行管理操作的客户端程序。可以用它来检查服务器的配置和当前状态、创建并删除数据库等。</p>
+<p>可以通过 ： mysqladmin –help  指令查看帮助文档</p>
+<p><img src="/images/mysql/1555326108697.png" srcset="/img/loading.gif" lazyload alt="1555326108697"> </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">示例 ：<br>	mysqladmin -uroot -p2143 <span class="hljs-keyword">create</span> <span class="hljs-string">&#x27;test01&#x27;</span>;  <br>	mysqladmin -uroot -p2143 <span class="hljs-keyword">drop</span> <span class="hljs-string">&#x27;test01&#x27;</span>;<br>	mysqladmin -uroot -p2143 <span class="hljs-keyword">version</span>;<br>	<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-3-mysqlbinlog"><a href="#1-3-mysqlbinlog" class="headerlink" title="1.3 mysqlbinlog"></a>1.3 mysqlbinlog</h4><p>由于服务器生成的二进制日志文件以二进制格式保存，所以如果想要检查这些文本的文本格式，就会使用到mysqlbinlog 日志管理工具。</p>
+<p>语法 ：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs routeros">mysqlbinlog [options]  log-files1 log-files2 <span class="hljs-built_in">..</span>.<br><br>选项：<br>	<br>	-d, <span class="hljs-attribute">--database</span>=name : 指定数据库名称，只列出指定的数据库相关操作。<br>	<br>	-o, <span class="hljs-attribute">--offset</span>=# : 忽略掉日志中的前n行命令。<br>	<br>	-r,<span class="hljs-attribute">--result-file</span>=name : 将输出的文本格式日志输出到指定文件。<br>	<br>	-s, --short-form : 显示简单格式， 省略掉一些信息。<br>	<br>	<span class="hljs-attribute">--start-datatime</span>=date1  <span class="hljs-attribute">--stop-datetime</span>=date2 : 指定日期间隔内的所有日志。<br>	<br>	<span class="hljs-attribute">--start-position</span>=pos1 <span class="hljs-attribute">--stop-position</span>=pos2 : 指定位置间隔内的所有日志。<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-4-mysqldump"><a href="#1-4-mysqldump" class="headerlink" title="1.4 mysqldump"></a>1.4 mysqldump</h4><p>mysqldump 客户端工具用来备份数据库或在不同数据库之间进行数据迁移。备份内容包含创建表，及插入表的SQL语句。</p>
+<p>语法 ：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs css">mysqldump <span class="hljs-selector-attr">[options]</span> db_name <span class="hljs-selector-attr">[tables]</span><br><br>mysqldump <span class="hljs-selector-attr">[options]</span> <span class="hljs-attr">--database</span>/-<span class="hljs-selector-tag">B</span> db1 <span class="hljs-selector-attr">[db2 db3...]</span><br><br>mysqldump <span class="hljs-selector-attr">[options]</span> <span class="hljs-attr">--all-databases</span>/-<span class="hljs-selector-tag">A</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="1-4-1-连接选项"><a href="#1-4-1-连接选项" class="headerlink" title="1.4.1 连接选项"></a>1.4.1 连接选项</h5><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">参数 ： <br>	-u, <span class="hljs-attribute">--user</span>=name			指定用户名<br>	-p, --password[=name]	指定密码<br>	-h, <span class="hljs-attribute">--host</span>=name			指定服务器IP或域名<br>	-P, <span class="hljs-attribute">--port</span>=#			指定连接端口<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="1-4-2-输出内容选项"><a href="#1-4-2-输出内容选项" class="headerlink" title="1.4.2 输出内容选项"></a>1.4.2 输出内容选项</h5><figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sas">参数：<br>	--<span class="hljs-keyword">add</span>-<span class="hljs-keyword">drop</span>-database		在每个数据库创建语句前加上 <span class="hljs-keyword">Drop</span> database 语句<br>	--<span class="hljs-keyword">add</span>-<span class="hljs-keyword">drop</span>-<span class="hljs-keyword">table</span>		在每个表创建语句前加上 <span class="hljs-keyword">Drop</span> <span class="hljs-keyword">table</span> 语句 , 默认开启 ; 不开启 (--<span class="hljs-keyword">skip</span>-<span class="hljs-keyword">add</span>-<span class="hljs-keyword">drop</span>-<span class="hljs-keyword">table</span>)<br>	<br>	-n, --no-<span class="hljs-keyword">create</span>-db		不包含数据库的创建语句<br>	-t, --no-<span class="hljs-keyword">create</span>-info	不包含数据表的创建语句<br>	-d --no-data			不包含数据<br>	<br>	 -T, --tab=name			自动生成两个文件：一个.sql文件，创建表结构的语句；<br>	 						一个.txt文件，数据文件，相当于<span class="hljs-keyword">select</span> <span class="hljs-keyword">into</span> outfile  <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sas">示例 ： <br>	mysqldump -uroot -p2143 db01 tb_book --<span class="hljs-keyword">add</span>-<span class="hljs-keyword">drop</span>-database --<span class="hljs-keyword">add</span>-<span class="hljs-keyword">drop</span>-<span class="hljs-keyword">table</span> &gt; a<br>	<br>	mysqldump -uroot -p2143 -T /tmp test city<br></code></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="1-5-mysqlimport-x2F-source"><a href="#1-5-mysqlimport-x2F-source" class="headerlink" title="1.5 mysqlimport&#x2F;source"></a>1.5 mysqlimport&#x2F;source</h4><p>mysqlimport 是客户端数据导入工具，用来导入mysqldump 加 -T 参数后导出的文本文件。</p>
+<p>语法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">mysqlimport <span class="hljs-selector-attr">[options]</span>  db_name  textfile1  <span class="hljs-selector-attr">[textfile2...]</span><br></code></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mysqlimport -uroot -p2143 test <span class="hljs-regexp">/tmp/</span>city.txt<br></code></pre></td></tr></table></figure>
+
+
+
+<p>如果需要导入sql文件,可以使用mysql中的source 指令 : </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">source</span> <span class="hljs-regexp">/root/</span>tb_book.sql<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-6-mysqlshow"><a href="#1-6-mysqlshow" class="headerlink" title="1.6 mysqlshow"></a>1.6 mysqlshow</h4><p>mysqlshow 客户端对象查找工具，用来很快地查找存在哪些数据库、数据库中的表、表中的列或者索引。</p>
+<p>语法：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">mysqlshow <span class="hljs-comment">[options]</span> <span class="hljs-comment">[db_name <span class="hljs-comment">[table_name <span class="hljs-comment">[col_name]</span>]</span>]</span><br></code></pre></td></tr></table></figure>
+
+<p>参数：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-attr">--count</span>		显示数据库及表的统计信息（数据库，表 均可以不指定）<br><br>-<span class="hljs-selector-tag">i</span>			显示指定数据库或者指定表的状态信息<br></code></pre></td></tr></table></figure>
+
+
+
+<p>示例：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-comment">#查询每个数据库的表的数量及表中记录的数量</span><br>mysqlshow -uroot -p2143 --<span class="hljs-built_in">count</span><br><br><span class="hljs-comment">#查询test库中每个表中的字段书，及行数</span><br>mysqlshow -uroot -p2143 test --<span class="hljs-built_in">count</span><br><br><span class="hljs-comment">#查询test库中book表的详细情况</span><br>mysqlshow -uroot -p2143 test <span class="hljs-keyword">book </span>--<span class="hljs-built_in">count</span><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-Mysql-日志"><a href="#2-Mysql-日志" class="headerlink" title="2. Mysql 日志"></a>2. Mysql 日志</h3><p>在任何一种数据库中，都会有各种各样的日志，记录着数据库工作的方方面面，以帮助数据库管理员追踪数据库曾经发生过的各种事件。MySQL 也不例外，在 MySQL 中，有 4 种不同的日志，分别是错误日志、二进制日志（BINLOG 日志）、查询日志和慢查询日志，这些日志记录着数据库在不同方面的踪迹。</p>
+<h4 id="2-1-错误日志"><a href="#2-1-错误日志" class="headerlink" title="2.1 错误日志"></a>2.1 错误日志</h4><p>错误日志是 MySQL 中最重要的标志之一，它记录了当 mysqld 启动和停止时，以及服务器在运行过程中发生任何严重错误时的相关信息。当数据库出现任何故障导致无法正常使用时，可以首先查看此日志。</p>
+<p>该日志是默认开启的 ， 默认存放目录为 mysql 的数据目录（var&#x2F;lib&#x2F;mysql）, 默认的日志文件名为  hostname.err（hostname是主机名）。</p>
+<p>查看日志位置指令 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;log_error%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553993244446.png" srcset="/img/loading.gif" lazyload alt="1553993244446"> </p>
+<p>查看日志内容 ： </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tail -f /var/lib/mysql/xaxh-server.err<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553993537874.png" srcset="/img/loading.gif" lazyload alt="1553993537874"> </p>
+<h4 id="2-2-二进制日志"><a href="#2-2-二进制日志" class="headerlink" title="2.2 二进制日志"></a>2.2 二进制日志</h4><h5 id="2-2-1概述"><a href="#2-2-1概述" class="headerlink" title="2.2.1概述"></a>2.2.1概述</h5><p>二进制日志（BINLOG）记录了所有的 DDL（数据定义语言）语句和 DML（数据操纵语言）语句，但是不包括数据查询语句。此日志对于灾难时的数据恢复起着极其重要的作用，MySQL的主从复制， 就是通过该binlog实现的。</p>
+<p>二进制日志，默认情况下是没有开启的，需要到MySQL的配置文件中开启，并配置MySQL日志的格式。 </p>
+<p>配置文件位置 : &#x2F;usr&#x2F;my.cnf</p>
+<p>日志存放位置 : 配置时，给定了文件名但是没有指定路径，日志默认写入Mysql的数据目录。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment">#配置开启binlog日志， 日志的文件前缀为 mysqlbin -----&gt; 生成的文件名如 : mysqlbin.000001,mysqlbin.000002</span><br><span class="hljs-attr">log_bin</span>=mysqlbin<br><span class="hljs-comment">#5.7版本不加上会报错，自己测的</span><br><span class="hljs-attr">server-id</span>=<span class="hljs-number">1</span><br><br><span class="hljs-comment">#配置二进制日志的格式</span><br><span class="hljs-attr">binlog_format</span>=STATEMENT<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-2-2-日志格式"><a href="#2-2-2-日志格式" class="headerlink" title="2.2.2 日志格式"></a>2.2.2 日志格式</h5><p><strong>STATEMENT</strong></p>
+<p>该日志格式在日志文件中记录的都是SQL语句（statement），每一条对数据进行修改的SQL都会记录在日志文件中，通过Mysql提供的mysqlbinlog工具，可以清晰的查看到每条语句的文本。主从复制的时候，从库（slave）会将日志解析为原文本，并在从库重新执行一次。</p>
+<p><strong>ROW</strong></p>
+<p>该日志格式在日志文件中记录的是每一行的数据变更，而不是记录SQL语句。比如，执行SQL语句 ： update tb_book set status&#x3D;’1’ , 如果是STATEMENT 日志格式，在日志中会记录一行SQL文件； 如果是ROW，由于是对全表进行更新，也就是每一行记录都会发生变更，ROW 格式的日志中会记录每一行的数据变更。</p>
+<p><strong>MIXED</strong></p>
+<p>这是目前MySQL默认的日志格式，即混合了STATEMENT 和 ROW两种格式。默认情况下采用STATEMENT，但是在一些特殊情况下采用ROW来进行记录。MIXED 格式能尽量利用两种模式的优点，而避开他们的缺点。</p>
+<h5 id="2-2-3-日志读取"><a href="#2-2-3-日志读取" class="headerlink" title="2.2.3 日志读取"></a>2.2.3 日志读取</h5><p>由于日志以二进制方式存储，不能直接读取，需要用mysqlbinlog工具来查看，语法如下 ：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs applescript">mysqlbinlog <span class="hljs-built_in">log</span>-<span class="hljs-built_in">file</span>；<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>查看STATEMENT格式日志</strong> </p>
+<p>执行插入语句 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_book <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;Lucene&#x27;</span>,<span class="hljs-string">&#x27;2088-05-01&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p> 查看日志文件 ：</p>
+<p><img src="/images/mysql/1554079717375.png" srcset="/img/loading.gif" lazyload alt="1554079717375"> </p>
+<p>mysqlbin.index : 该文件是日志索引文件 ， 记录日志的文件名；</p>
+<p>mysqlbing.000001 ：日志文件</p>
+<p>查看日志内容 ：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mysqlbinlog</span> mysqlbing.<span class="hljs-number">000001</span>；<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1554080016778.png" srcset="/img/loading.gif" lazyload alt="1554080016778"> </p>
+<p><strong>查看ROW格式日志</strong></p>
+<p>配置 :</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment">#配置开启binlog日志， 日志的文件前缀为 mysqlbin -----&gt; 生成的文件名如 : mysqlbin.000001,mysqlbin.000002</span><br><span class="hljs-attr">log_bin</span>=mysqlbin<br><br><span class="hljs-comment">#配置二进制日志的格式</span><br><span class="hljs-attr">binlog_format</span>=ROW<br><br></code></pre></td></tr></table></figure>
+
+<p>插入数据 :</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_book <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;SpringCloud实战&#x27;</span>,<span class="hljs-string">&#x27;2088-05-05&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>如果日志格式是 ROW , 直接查看数据 , 是查看不懂的 ; 可以在mysqlbinlog 后面加上参数 -vv  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL">mysqlbinlog <span class="hljs-operator">-</span>vv mysqlbin<span class="hljs-number">.000002</span> <br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1554095452022.png" srcset="/img/loading.gif" lazyload alt="1554095452022"> </p>
+<h5 id="2-2-4-日志删除"><a href="#2-2-4-日志删除" class="headerlink" title="2.2.4 日志删除"></a>2.2.4 日志删除</h5><p>对于比较繁忙的系统，由于每天生成日志量大 ，这些日志如果长时间不清楚，将会占用大量的磁盘空间。下面我们将会讲解几种删除日志的常见方法 ：</p>
+<p><strong>方式一</strong> </p>
+<p>通过 Reset Master 指令删除全部 binlog 日志，删除之后，日志编号，将从 xxxx.000001重新开始 。</p>
+<p>查询之前 ，先查询下日志文件 ： </p>
+<p><img src="/images/mysql/1554118609489.png" srcset="/img/loading.gif" lazyload alt="1554118609489">   </p>
+<p>执行删除日志指令： </p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs coq"><span class="hljs-keyword">Reset</span> Master<br></code></pre></td></tr></table></figure>
+
+<p>执行之后， 查看日志文件 ：</p>
+<p><img src="/images/mysql/1554118675264.png" srcset="/img/loading.gif" lazyload alt="1554118675264"> </p>
+<p><strong>方式二</strong></p>
+<p>执行指令 <code> purge  master logs to &#39;mysqlbin.******&#39;</code> ，该命令将删除  <code> ******</code> 编号之前的所有日志。 </p>
+<p><strong>方式三</strong></p>
+<p>执行指令 <code> purge master logs before &#39;yyyy-mm-dd hh24:mi:ss&#39;</code> ，该命令将删除日志为 “yyyy-mm-dd hh24:mi:ss” 之前产生的所有日志 。</p>
+<p><strong>方式四</strong></p>
+<p>设置参数 –expire_logs_days&#x3D;# ，此参数的含义是设置日志的过期天数， 过了指定的天数后日志将会被自动删除，这样将有利于减少DBA 管理日志的工作量。</p>
+<p>配置如下 ： </p>
+<p><img src="/images/mysql/1554125506938.png" srcset="/img/loading.gif" lazyload alt="1554125506938"> </p>
+<h4 id="2-3-查询日志"><a href="#2-3-查询日志" class="headerlink" title="2.3 查询日志"></a>2.3 查询日志</h4><p>查询日志中记录了客户端的所有操作语句，而二进制日志不包含查询数据的SQL语句。</p>
+<p>默认情况下， 查询日志是未开启的。如果需要开启查询日志，可以设置以下配置 ：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment">#该选项用来开启查询日志 ， 可选值 ： 0 或者 1 ； 0 代表关闭， 1 代表开启 </span><br><span class="hljs-attr">general_log</span>=<span class="hljs-number">1</span><br><br><span class="hljs-comment">#设置日志的文件名 ， 如果没有指定， 默认的文件名为 host_name.log </span><br><span class="hljs-attr">general_log_file</span>=file_name<br><br></code></pre></td></tr></table></figure>
+
+<p>在 mysql 的配置文件 &#x2F;usr&#x2F;my.cnf 中配置如下内容 ： </p>
+<p><img src="/images/mysql/1554128184632.png" srcset="/img/loading.gif" lazyload alt="1554128184632"> </p>
+<p>配置完毕之后，在数据库执行以下操作 ：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book;<br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book <span class="hljs-keyword">where</span> id = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">update</span> tb_book <span class="hljs-keyword">set</span> <span class="hljs-type">name</span> = <span class="hljs-string">&#x27;lucene入门指南&#x27;</span> <span class="hljs-keyword">where</span> id = <span class="hljs-number">5</span>;<br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_book <span class="hljs-keyword">where</span> id &lt; <span class="hljs-number">8</span>;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>执行完毕之后， 再次来查询日志文件 ： </p>
+<p><img src="/images/mysql/1554128089851.png" srcset="/img/loading.gif" lazyload alt="1554128089851"> </p>
+<h4 id="2-4-慢查询日志"><a href="#2-4-慢查询日志" class="headerlink" title="2.4 慢查询日志"></a>2.4 慢查询日志</h4><p>慢查询日志记录了所有执行时间超过参数 long_query_time 设置值并且扫描记录数不小于 min_examined_row_limit 的所有的SQL语句的日志。long_query_time 默认为 10 秒，最小为 0， 精度可以到微秒。</p>
+<h5 id="2-4-1-文件位置和格式"><a href="#2-4-1-文件位置和格式" class="headerlink" title="2.4.1 文件位置和格式"></a>2.4.1 文件位置和格式</h5><p>慢查询日志默认是关闭的 。可以通过两个参数来控制慢查询日志 ：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment"># 该参数用来控制慢查询日志是否开启， 可取值： 1 和 0 ， 1 代表开启， 0 代表关闭</span><br><span class="hljs-attr">slow_query_log</span>=<span class="hljs-number">1</span> <br><br><span class="hljs-comment"># 该参数用来指定慢查询日志的文件名</span><br><span class="hljs-attr">slow_query_log_file</span>=slow_query.log<br><br><span class="hljs-comment"># 该选项用来配置查询的时间限制， 超过这个时间将认为值慢查询， 将需要进行日志记录， 默认10s</span><br><span class="hljs-attr">long_query_time</span>=<span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="2-4-2-日志的读取"><a href="#2-4-2-日志的读取" class="headerlink" title="2.4.2 日志的读取"></a>2.4.2 日志的读取</h5><p>和错误日志、查询日志一样，慢查询日志记录的格式也是纯文本，可以被直接读取。</p>
+<p>1） 查询long_query_time 的值。</p>
+<p><img src="/images/mysql/1554130333472.png" srcset="/img/loading.gif" lazyload alt="1554130333472"> </p>
+<p>2） 执行查询操作</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> id, title,price,num ,status <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1554130448709.png" srcset="/img/loading.gif" lazyload alt="1554130448709"></p>
+<p>由于该语句执行时间很短，为0s ， 所以不会记录在慢查询日志中。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> <span class="hljs-built_in">title</span> <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%阿尔卡特 (OT-927) 炭黑 联通3G手机 双卡双待165454%&#x27;</span> ;<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1554130532577.png" srcset="/img/loading.gif" lazyload alt="1554130532577"> </p>
+<p>该SQL语句 ， 执行时长为 26.77s ，超过10s ， 所以会记录在慢查询日志文件中。</p>
+<p>3） 查看慢查询日志文件</p>
+<p>直接通过cat 指令查询该日志文件 ： </p>
+<p><img src="/images/mysql/1554130669360.png" srcset="/img/loading.gif" lazyload alt="1554130669360"> </p>
+<p>如果慢查询日志内容很多， 直接查看文件，比较麻烦， 这个时候可以借助于mysql自带的 mysqldumpslow 工具， 来对慢查询日志进行分类汇总。 </p>
+<p><img src="/images/mysql/1554130856485.png" srcset="/img/loading.gif" lazyload alt="1554130856485"> </p>
+<h3 id="3-Mysql复制"><a href="#3-Mysql复制" class="headerlink" title="3. Mysql复制"></a>3. Mysql复制</h3><h4 id="3-1-复制概述"><a href="#3-1-复制概述" class="headerlink" title="3.1 复制概述"></a>3.1 复制概述</h4><p>复制是指将主数据库的DDL 和 DML 操作通过二进制日志传到从库服务器中，然后在从库上对这些日志重新执行（也叫重做），从而使得从库和主库的数据保持同步。</p>
+<p>MySQL支持一台主库同时向多台从库进行复制， 从库同时也可以作为其他从服务器的主库，实现链状复制。</p>
+<h4 id="3-2-复制原理"><a href="#3-2-复制原理" class="headerlink" title="3.2 复制原理"></a>3.2 复制原理</h4><p>MySQL 的主从复制原理如下。</p>
+<p><img src="/images/mysql/1.jpg" srcset="/img/loading.gif" lazyload alt="1554423698190"> </p>
+<p>从上层来看，复制分成三步：</p>
+<ul>
+<li><p>Master 主库在事务提交时，会把数据变更作为时间 Events 记录在二进制日志文件 Binlog 中。</p>
+</li>
+<li><p>主库推送二进制日志文件 Binlog 中的日志事件到从库的中继日志 Relay Log 。</p>
+</li>
+<li><p>slave重做中继日志中的事件，将改变反映它自己的数据。</p>
+</li>
+</ul>
+<h4 id="3-3-复制优势"><a href="#3-3-复制优势" class="headerlink" title="3.3 复制优势"></a>3.3 复制优势</h4><p>MySQL 复制的有点主要包含以下三个方面：</p>
+<ul>
+<li><p>主库出现问题，可以快速切换到从库提供服务。</p>
+</li>
+<li><p>可以在从库上执行查询操作，从主库中更新，实现读写分离，降低主库的访问压力。</p>
+</li>
+<li><p>可以在从库中执行备份，以避免备份期间影响主库的服务。</p>
+</li>
+</ul>
+<h4 id="3-4-搭建步骤"><a href="#3-4-搭建步骤" class="headerlink" title="3.4 搭建步骤"></a>3.4 搭建步骤</h4><h5 id="3-4-1-master"><a href="#3-4-1-master" class="headerlink" title="3.4.1 master"></a>3.4.1 master</h5><p>1） 在master 的配置文件（&#x2F;usr&#x2F;my.cnf）中，配置如下内容：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#mysql 服务ID,保证整个集群环境中唯一</span><br><span class="hljs-attr">server-id</span>=<span class="hljs-string">1</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#mysql binlog 日志的存储路径和文件名</span><br><span class="hljs-attr">log-bin</span>=<span class="hljs-string">/var/lib/mysql/mysqlbin</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#错误日志,默认已经开启</span><br><span class="hljs-comment">#log-err</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#mysql的安装目录</span><br><span class="hljs-comment">#basedir</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#mysql的临时目录</span><br><span class="hljs-comment">#tmpdir</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#mysql的数据存放目录</span><br><span class="hljs-comment">#datadir</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#是否只读,1 代表只读, 0 代表读写</span><br><span class="hljs-attr">read-only</span>=<span class="hljs-string">0</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#忽略的数据, 指不需要同步的数据库</span><br><span class="hljs-attr">binlog-ignore-db</span>=<span class="hljs-string">mysql</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#指定同步的数据库</span><br><span class="hljs-comment">#binlog-do-db=db01</span><br></code></pre></td></tr></table></figure>
+
+<p>2） 执行完毕之后，需要重启Mysql：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">service mysql restart ；<br></code></pre></td></tr></table></figure>
+
+<p>3） 创建同步数据的账户，并且进行授权操作：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">#从数据库的账号，不是系统账号，ip从机ip，主机密码<br><span class="hljs-keyword">grant</span> replication slave <span class="hljs-keyword">on</span> <span class="hljs-operator">*</span>.<span class="hljs-operator">*</span> <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;itcast&#x27;</span>@<span class="hljs-string">&#x27;192.168.192.131&#x27;</span> identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;itcast&#x27;</span>;	<br><br>flush privileges;<br></code></pre></td></tr></table></figure>
+
+<p>4） 查看master状态：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> master status;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1554477759735.png" srcset="/img/loading.gif" lazyload alt="1554477759735"> </p>
+<p>字段含义：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada">File : 从哪个日志文件开始推送日志文件 <br>Position ： 从哪个位置开始推送日志<br>Binlog_Ignore_DB : 指定不需要同步的数据库<br></code></pre></td></tr></table></figure>
+
+<h5 id="3-4-2-slave"><a href="#3-4-2-slave" class="headerlink" title="3.4.2 slave"></a>3.4.2 slave</h5><p>1） 在 slave 端配置文件中，配置如下内容：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#mysql服务端ID,唯一</span><br><span class="hljs-attr">server-id</span>=<span class="hljs-string">2</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">#指定binlog日志</span><br><span class="hljs-attr">log-bin</span>=<span class="hljs-string">/var/lib/mysql/mysqlbin</span><br></code></pre></td></tr></table></figure>
+
+<p>2）  执行完毕之后，需要重启Mysql：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">service mysql <span class="hljs-built_in">restart</span>；<br></code></pre></td></tr></table></figure>
+
+<p>3） 执行如下指令 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">#用户是主机mysql用户，不是系统用户，都是下划线<br>change master <span class="hljs-keyword">to</span> master_host<span class="hljs-operator">=</span> <span class="hljs-string">&#x27;192.168.192.130&#x27;</span>, master_user<span class="hljs-operator">=</span><span class="hljs-string">&#x27;itcast&#x27;</span>, master_password<span class="hljs-operator">=</span><span class="hljs-string">&#x27;itcast&#x27;</span>, master_log_file<span class="hljs-operator">=</span><span class="hljs-string">&#x27;mysqlbin.000001&#x27;</span>, master_log_pos<span class="hljs-operator">=</span><span class="hljs-number">413</span>;<br></code></pre></td></tr></table></figure>
+
+<p>指定当前从库对应的主库的IP地址，用户名，密码，从哪个日志文件开始的那个位置开始同步推送日志。</p>
+<p>4） 开启同步操作</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs crmsh"><span class="hljs-literal">start</span> <span class="hljs-literal">slave</span>;<br><br>show <span class="hljs-literal">slave</span> status;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1554479387365.png" srcset="/img/loading.gif" lazyload alt="1554479387365"> </p>
+<p>5） 停止同步操作</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh"><span class="hljs-literal">stop</span> <span class="hljs-literal">slave</span>;<br></code></pre></td></tr></table></figure>
+
+<h5 id="3-4-3-验证同步操作"><a href="#3-4-3-验证同步操作" class="headerlink" title="3.4.3 验证同步操作"></a>3.4.3 验证同步操作</h5><p>1） 在主库中创建数据库，创建表，并插入数据 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> database db01;<br><br><span class="hljs-keyword">user</span> db01;<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">user</span>(<br>	id <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> auto_increment,<br>	name <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>	sex <span class="hljs-type">varchar</span>(<span class="hljs-number">1</span>),<br>	<span class="hljs-keyword">primary</span> key (id)<br>)engine<span class="hljs-operator">=</span>innodb <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8;<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span>(id,name,sex) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;Tom&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span>(id,name,sex) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;Trigger&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span>(id,name,sex) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;Dawn&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>2） 在从库中查询数据，进行验证 ：</p>
+<p>在从库中，可以查看到刚才创建的数据库：</p>
+<p><img src="/images/mysql/1554544658640.png" srcset="/img/loading.gif" lazyload alt="1554544658640"> </p>
+<p>在该数据库中，查询user表中的数据：</p>
+<p><img src="/images/mysql/1554544679538.png" srcset="/img/loading.gif" lazyload alt="1554544679538"> </p>
+<h3 id="4-综合案例"><a href="#4-综合案例" class="headerlink" title="4. 综合案例"></a>4. 综合案例</h3><h4 id="4-1-需求分析"><a href="#4-1-需求分析" class="headerlink" title="4.1 需求分析"></a>4.1 需求分析</h4><p>在业务系统中，需要记录当前业务系统的访问日志，该访问日志包含：操作人，操作时间，访问类，访问方法，请求参数，请求结果，请求结果类型，请求时长 等信息。记录详细的系统访问日志，主要便于对系统中的用户请求进行追踪，并且在系统 的管理后台可以查看到用户的访问记录。</p>
+<p>记录系统中的日志信息，可以通过Spring 框架的AOP来实现。具体的请求处理流程，如下：</p>
+<p><img src="/images/mysql/1555075760661.png" srcset="/img/loading.gif" lazyload alt="1555075760661"> </p>
+<h4 id="4-2-搭建案例环境"><a href="#4-2-搭建案例环境" class="headerlink" title="4.2 搭建案例环境"></a>4.2 搭建案例环境</h4><h5 id="4-2-1-数据库表"><a href="#4-2-1-数据库表" class="headerlink" title="4.2.1 数据库表"></a>4.2.1 数据库表</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE mysql_demo <span class="hljs-keyword">DEFAULT</span> <span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8mb4 ；<br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `brand` (<br>  `id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;品牌名称&#x27;</span>,<br>  `first_char` <span class="hljs-type">varchar</span>(<span class="hljs-number">1</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;品牌首字母&#x27;</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `item` (<br>  `id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;商品id&#x27;</span>,<br>  `title` <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;商品标题&#x27;</span>,<br>  `price` <span class="hljs-keyword">double</span>(<span class="hljs-number">10</span>,<span class="hljs-number">2</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;商品价格，单位为：元&#x27;</span>,<br>  `num` <span class="hljs-type">int</span>(<span class="hljs-number">10</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;库存数量&#x27;</span>,<br>  `categoryid` <span class="hljs-type">bigint</span>(<span class="hljs-number">10</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;所属类目，叶子类目&#x27;</span>,<br>  `status` <span class="hljs-type">varchar</span>(<span class="hljs-number">1</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;商品状态，1-正常，2-下架，3-删除&#x27;</span>,<br>  `sellerid` <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;商家ID&#x27;</span>,<br>  `createtime` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>  `updatetime` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;商品表&#x27;</span>;<br><br><br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `<span class="hljs-keyword">user</span>` (<br>  `id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `username` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `password` <span class="hljs-type">varchar</span>(<span class="hljs-number">96</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `birthday` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `sex` <span class="hljs-type">char</span>(<span class="hljs-number">1</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `email` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `phone` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `qq` <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `operation_log` (<br>  `id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;ID&#x27;</span>,<br>  `operate_class` <span class="hljs-type">varchar</span>(<span class="hljs-number">200</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;操作类&#x27;</span>,<br>  `operate_method` <span class="hljs-type">varchar</span>(<span class="hljs-number">200</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;操作方法&#x27;</span>,<br>  `return_class` <span class="hljs-type">varchar</span>(<span class="hljs-number">200</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;返回值类型&#x27;</span>,<br>  `operate_user` <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;操作用户&#x27;</span>,<br>  `operate_time` <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;操作时间&#x27;</span>,<br>  `param_and_value` <span class="hljs-type">varchar</span>(<span class="hljs-number">500</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;请求参数名及参数值&#x27;</span>,<br>  `cost_time` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;执行方法耗时, 单位 ms&#x27;</span>,<br>  `return_value` <span class="hljs-type">varchar</span>(<span class="hljs-number">200</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;返回值&#x27;</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB  <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4;<br><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-2-pom-xml"><a href="#4-2-2-pom-xml" class="headerlink" title="4.2.2 pom.xml"></a>4.2.2 pom.xml</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.source</span>&gt;</span>1.7<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.source</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.target</span>&gt;</span>1.7<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.target</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.source</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.source</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">maven.compiler.target</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">maven.compiler.target</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">spring.version</span>&gt;</span>5.0.2.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">spring.version</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">slf4j.version</span>&gt;</span>1.6.6<span class="hljs-tag">&lt;/<span class="hljs-name">slf4j.version</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">log4j.version</span>&gt;</span>1.2.12<span class="hljs-tag">&lt;/<span class="hljs-name">log4j.version</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">mybatis.version</span>&gt;</span>3.4.5<span class="hljs-tag">&lt;/<span class="hljs-name">mybatis.version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span> <span class="hljs-comment">&lt;!-- spring --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.aspectj<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>aspectjweaver<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.6.8<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.16.16<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-context<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;spring.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-context-support<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;spring.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-orm<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;spring.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-test<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;spring.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-webmvc<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;spring.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-tx<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;spring.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>junit<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>junit<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>4.12<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>javax.servlet<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>javax.servlet-api<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>provided<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>javax.servlet.jsp<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jsp-api<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>provided<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>log4j<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>log4j<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;log4j.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;mybatis.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.3.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>c3p0<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>c3p0<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.9.1.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>mysql<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mysql-connector-java<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>5.1.5<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jackson-core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.9.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jackson-databind<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.9.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>  <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jackson-annotations<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.9.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br><br><br><br><br> <span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>       <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>         <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>8080<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>         <span class="hljs-tag">&lt;<span class="hljs-name">path</span>&gt;</span>/<span class="hljs-tag">&lt;/<span class="hljs-name">path</span>&gt;</span><br>         <span class="hljs-tag">&lt;<span class="hljs-name">uriEncoding</span>&gt;</span>utf-8<span class="hljs-tag">&lt;/<span class="hljs-name">uriEncoding</span>&gt;</span><br>       <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br>     <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>   <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br> <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-3-web-xml"><a href="#4-2-3-web-xml" class="headerlink" title="4.2.3 web.xml"></a>4.2.3 web.xml</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">web-app</span> <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://java.sun.com/xml/ns/javaee&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">version</span>=<span class="hljs-string">&quot;2.5&quot;</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 解决post乱码 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">filter</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="hljs-tag">&lt;/<span class="hljs-name">filter-class</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">init-param</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">param-name</span>&gt;</span>encoding<span class="hljs-tag">&lt;/<span class="hljs-name">param-name</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">param-value</span>&gt;</span>utf-8<span class="hljs-tag">&lt;/<span class="hljs-name">param-value</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">init-param</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">init-param</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">param-name</span>&gt;</span>forceEncoding<span class="hljs-tag">&lt;/<span class="hljs-name">param-name</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">param-value</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">param-value</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">init-param</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">filter-mapping</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">url-pattern</span>&gt;</span>/*<span class="hljs-tag">&lt;/<span class="hljs-name">url-pattern</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">filter-mapping</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">context-param</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">param-name</span>&gt;</span>contextConfigLocation<span class="hljs-tag">&lt;/<span class="hljs-name">param-name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">param-value</span>&gt;</span>classpath:applicationContext.xml<span class="hljs-tag">&lt;/<span class="hljs-name">param-value</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">context-param</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">listener</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="hljs-tag">&lt;/<span class="hljs-name">listener-class</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">listener</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">servlet</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">servlet-name</span>&gt;</span>springmvc<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-class</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 指定加载的配置文件 ，通过参数contextConfigLocation加载--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">init-param</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">param-name</span>&gt;</span>contextConfigLocation<span class="hljs-tag">&lt;/<span class="hljs-name">param-name</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">param-value</span>&gt;</span>classpath:springmvc.xml<span class="hljs-tag">&lt;/<span class="hljs-name">param-value</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">init-param</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">servlet</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">servlet-mapping</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">servlet-name</span>&gt;</span>springmvc<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-name</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">url-pattern</span>&gt;</span>*.do<span class="hljs-tag">&lt;/<span class="hljs-name">url-pattern</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">servlet-mapping</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">welcome-file-list</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">welcome-file</span>&gt;</span>log-datalist.html<span class="hljs-tag">&lt;/<span class="hljs-name">welcome-file</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">welcome-file-list</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">web-app</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-4-db-properties"><a href="#4-2-4-db-properties" class="headerlink" title="4.2.4 db.properties"></a>4.2.4 db.properties</h5><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">jdbc.driver</span>=<span class="hljs-string">com.mysql.jdbc.Driver</span><br><span class="hljs-attr">jdbc.url</span>=<span class="hljs-string">jdbc:mysql://192.168.142.128:3306/mysql_demo</span><br><span class="hljs-attr">jdbc.username</span>=<span class="hljs-string">root</span><br><span class="hljs-attr">jdbc.password</span>=<span class="hljs-string">itcast</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-5-applicationContext-xml"><a href="#4-2-5-applicationContext-xml" class="headerlink" title="4.2.5 applicationContext.xml"></a>4.2.5 applicationContext.xml</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:aop</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/aop&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:tx</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/tx&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/context&quot;</span></span><br><span class="hljs-tag">	   <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 加载配置文件 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">context:property-placeholder</span> <span class="hljs-attr">location</span>=<span class="hljs-string">&quot;classpath:db.properties&quot;</span>/&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 配置 spring 创建容器时要扫描的包 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">context:component-scan</span> <span class="hljs-attr">base-package</span>=<span class="hljs-string">&quot;cn.itcast&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">context:exclude-filter</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;annotation&quot;</span> <span class="hljs-attr">expression</span>=<span class="hljs-string">&quot;org.springframework.stereotype.Controller&quot;</span>&gt;</span>	<br>        <span class="hljs-tag">&lt;/<span class="hljs-name">context:exclude-filter</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">context:component-scan</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 配置 MyBatis 的 Session 工厂 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;sqlSessionFactory&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;dataSource&quot;</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;dataSource&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;typeAliasesPackage&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;cn.itcast.pojo&quot;</span>/&gt;</span><br>     <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 配置数据源 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;dataSource&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;driverClass&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.driver&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;jdbcUrl&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.url&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;user&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.username&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.password&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 配置 Mapper 扫描器 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;basePackage&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;cn.itcast.mapper&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 配置事务管理器 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;transactionManager&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;dataSource&quot;</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;dataSource&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><br>    <span class="hljs-comment">&lt;!-- 配置事务的注解驱动 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">tx:annotation-driven</span> <span class="hljs-attr">transaction-manager</span>=<span class="hljs-string">&quot;transactionManager&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">tx:annotation-driven</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-6-springmvc-xml"><a href="#4-2-6-springmvc-xml" class="headerlink" title="4.2.6 springmvc.xml"></a>4.2.6 springmvc.xml</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:mvc</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/mvc&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/context&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:aop</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/aop&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans</span></span><br><span class="hljs-string"><span class="hljs-tag">            http://www.springframework.org/schema/beans/spring-beans.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">            http://www.springframework.org/schema/mvc</span></span><br><span class="hljs-string"><span class="hljs-tag">            http://www.springframework.org/schema/mvc/spring-mvc.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">            http://www.springframework.org/schema/aop</span></span><br><span class="hljs-string"><span class="hljs-tag">            http://www.springframework.org/schema/aop/spring-aop.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">            http://www.springframework.org/schema/context</span></span><br><span class="hljs-string"><span class="hljs-tag">            http://www.springframework.org/schema/context/spring-context.xsd&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">context:component-scan</span> <span class="hljs-attr">base-package</span>=<span class="hljs-string">&quot;cn.itcast.controller&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">context:component-scan</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">mvc:annotation-driven</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">mvc:annotation-driven</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">aop:aspectj-autoproxy</span> /&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-2-7-导入基础工程"><a href="#4-2-7-导入基础工程" class="headerlink" title="4.2.7 导入基础工程"></a>4.2.7 导入基础工程</h5><p><img src="/images/mysql/1555076434270.png" srcset="/img/loading.gif" lazyload alt="1555076434270"> </p>
+<h4 id="4-3-通过AOP记录操作日志"><a href="#4-3-通过AOP记录操作日志" class="headerlink" title="4.3 通过AOP记录操作日志"></a>4.3 通过AOP记录操作日志</h4><h5 id="4-3-1-自定义注解"><a href="#4-3-1-自定义注解" class="headerlink" title="4.3.1 自定义注解"></a>4.3.1 自定义注解</h5><p>通过自定义注解，来标示方法需不需要进行记录日志，如果该方法在访问时需要记录日志，则在该方法上标示该注解既可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Inherited</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(ElementType.METHOD)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> OperateLog &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="4-3-2-定义通知类"><a href="#4-3-2-定义通知类" class="headerlink" title="4.3.2 定义通知类"></a>4.3.2 定义通知类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Aspect</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OperateAdvice</span> &#123;<br>   <br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">Logger</span> <span class="hljs-variable">log</span> <span class="hljs-operator">=</span> Logger.getLogger(OperateAdvice.class);<br>   <br>   <span class="hljs-meta">@Autowired</span><br>   <span class="hljs-keyword">private</span> OperationLogService operationLogService;<br>   <br><br>   <span class="hljs-meta">@Around(&quot;execution(* cn.itcast.controller.*.*(..)) &amp;&amp; @annotation(operateLog)&quot;)</span><br>   <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">insertLogAround</span><span class="hljs-params">(ProceedingJoinPoint pjp , OperateLog operateLog)</span> <span class="hljs-keyword">throws</span> Throwable&#123;<br>      System.out.println(<span class="hljs-string">&quot; ************************ 记录日志 [start]  ****************************** &quot;</span>);<br>      <br>      <span class="hljs-type">OperationLog</span> <span class="hljs-variable">op</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">OperationLog</span>();<br>      <br>      <span class="hljs-type">DateFormat</span> <span class="hljs-variable">sdf</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleDateFormat</span>(<span class="hljs-string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);<br><br>      op.setOperateTime(sdf.format(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>()));<br>      op.setOperateUser(DataUtils.getRandStr(<span class="hljs-number">8</span>));<br>      <br>      op.setOperateClass(pjp.getTarget().getClass().getName());<br>      op.setOperateMethod(pjp.getSignature().getName());<br>      <br>      <span class="hljs-comment">//获取方法调用时传递的参数</span><br>      Object[] args = pjp.getArgs();<br>      op.setParamAndValue(Arrays.toString(args));<br><br>      <span class="hljs-type">long</span> <span class="hljs-variable">start_time</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br><br>      <span class="hljs-comment">//放行</span><br>      <span class="hljs-type">Object</span> <span class="hljs-variable">object</span> <span class="hljs-operator">=</span> pjp.proceed();<br><br>      <span class="hljs-type">long</span> <span class="hljs-variable">end_time</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>      op.setCostTime(end_time - start_time);<br><br>      <span class="hljs-keyword">if</span>(object != <span class="hljs-literal">null</span>)&#123;<br>         op.setReturnClass(object.getClass().getName());<br>         op.setReturnValue(object.toString());<br>      &#125;<span class="hljs-keyword">else</span>&#123;<br>         op.setReturnClass(<span class="hljs-string">&quot;java.lang.Object&quot;</span>);<br>         op.setParamAndValue(<span class="hljs-string">&quot;void&quot;</span>);<br>      &#125;<br><br>      log.error(JsonUtils.obj2JsonString(op));<br><br>      operationLogService.insert(op);<br>      <br>      System.out.println(<span class="hljs-string">&quot; ************************** 记录日志 [end]  *************************** &quot;</span>);<br>      <br>      <span class="hljs-keyword">return</span> object;<br>   &#125;<br>   <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="4-3-3-方法上加注解"><a href="#4-3-3-方法上加注解" class="headerlink" title="4.3.3 方法上加注解"></a>4.3.3 方法上加注解</h5><p>在需要记录日志的方法上加上注解@OperateLog。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@OperateLog</span><br><span class="hljs-meta">@RequestMapping(&quot;/insert&quot;)</span><br><span class="hljs-keyword">public</span> Result <span class="hljs-title function_">insert</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Brand brand)</span>&#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        brandService.insert(brand);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Result</span>(<span class="hljs-literal">true</span>,<span class="hljs-string">&quot;操作成功&quot;</span>);<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        e.printStackTrace();<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Result</span>(<span class="hljs-literal">false</span>,<span class="hljs-string">&quot;操作失败&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-4-日志查询后端代码实现"><a href="#4-4-日志查询后端代码实现" class="headerlink" title="4.4 日志查询后端代码实现"></a>4.4 日志查询后端代码实现</h4><h5 id="4-4-1-Mapper接口"><a href="#4-4-1-Mapper接口" class="headerlink" title="4.4.1 Mapper接口"></a>4.4.1 Mapper接口</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">OperationLogMapper</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(OperationLog operationLog)</span>;<br><br>    <span class="hljs-keyword">public</span> List&lt;OperationLog&gt; <span class="hljs-title function_">selectListByCondition</span><span class="hljs-params">(Map dataMap)</span>;<br><br>    <span class="hljs-keyword">public</span> Long <span class="hljs-title function_">countByCondition</span><span class="hljs-params">(Map dataMap)</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="4-4-2-Mapper-xml-映射配置文件"><a href="#4-4-2-Mapper-xml-映射配置文件" class="headerlink" title="4.4.2 Mapper.xml 映射配置文件"></a>4.4.2 Mapper.xml 映射配置文件</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span> ?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">mapper</span> <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="hljs-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span> &gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">&quot;cn.itcast.mapper.OperationLogMapper&quot;</span> &gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insert&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;operationLog&quot;</span>&gt;</span><br>        INSERT INTO operation_log(id,return_value,return_class,operate_user,operate_time,param_and_value,<br>        operate_class,operate_method,cost_time)<br>      VALUES(NULL,#&#123;returnValue&#125;,#&#123;returnClass&#125;,#&#123;operateUser&#125;,#&#123;operateTime&#125;,#&#123;paramAndValue&#125;,<br>        #&#123;operateClass&#125;,#&#123;operateMethod&#125;,#&#123;costTime&#125;)<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectListByCondition&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;map&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;operationLog&quot;</span>&gt;</span><br>      select<br>        id ,<br>        operate_class as operateClass ,<br>        operate_method as operateMethod,<br>        return_class as returnClass,<br>        operate_user as operateUser,<br>        operate_time as operateTime,<br>        param_and_value as paramAndValue,<br>        cost_time as costTime,<br>        return_value as returnValue<br>      from operation_log<br>      <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">refid</span>=<span class="hljs-string">&quot;oplog_where&quot;</span>/&gt;</span><br>      limit #&#123;start&#125;,#&#123;size&#125;<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;countByCondition&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;long&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;map&quot;</span>&gt;</span><br>        select count(*) from operation_log<br>        <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">refid</span>=<span class="hljs-string">&quot;oplog_where&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">sql</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;oplog_where&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">where</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;operateClass != null and operateClass != &#x27;&#x27; &quot;</span>&gt;</span><br>                and operate_class = #&#123;operateClass&#125;<br>            <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;operateMethod != null and operateMethod != &#x27;&#x27; &quot;</span>&gt;</span><br>                and operate_method = #&#123;operateMethod&#125;<br>            <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;returnClass != null and returnClass != &#x27;&#x27; &quot;</span>&gt;</span><br>                and return_class = #&#123;returnClass&#125;<br>            <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;costTime != null&quot;</span>&gt;</span><br>                and cost_time =  #&#123;costTime&#125;<br>            <span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">where</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">sql</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-4-3-Service"><a href="#4-4-3-Service" class="headerlink" title="4.4.3 Service"></a>4.4.3 Service</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-meta">@Transactional</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OperationLogService</span> &#123;<br><br>    <span class="hljs-comment">//private static Logger logger = Logger.getLogger(OperationLogService.class);</span><br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> OperationLogMapper operationLogMapper;<br><br>    <span class="hljs-comment">//插入数据</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">insert</span><span class="hljs-params">(OperationLog operationLog)</span>&#123;<br>        operationLogMapper.insert(operationLog);<br>    &#125;<br><br>    <span class="hljs-comment">//根据条件查询</span><br>    <span class="hljs-keyword">public</span> PageResult <span class="hljs-title function_">selectListByCondition</span><span class="hljs-params">(Map dataMap, Integer pageNum , Integer pageSize)</span>&#123;<br><br>       <span class="hljs-keyword">if</span>(paramMap ==<span class="hljs-literal">null</span>)&#123;<br>            paramMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>();<br>        &#125;<br>        paramMap.put(<span class="hljs-string">&quot;start&quot;</span> , (pageNum-<span class="hljs-number">1</span>)*rows);<br>        paramMap.put(<span class="hljs-string">&quot;rows&quot;</span>,rows);<br><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">costTime</span> <span class="hljs-operator">=</span> paramMap.get(<span class="hljs-string">&quot;costTime&quot;</span>);<br>        <span class="hljs-keyword">if</span>(costTime != <span class="hljs-literal">null</span>)&#123;<br>            <span class="hljs-keyword">if</span>(<span class="hljs-string">&quot;&quot;</span>.equals(costTime.toString()))&#123;<br>                paramMap.put(<span class="hljs-string">&quot;costTime&quot;</span>,<span class="hljs-literal">null</span>);<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>                paramMap.put(<span class="hljs-string">&quot;costTime&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">Long</span>(paramMap.get(<span class="hljs-string">&quot;costTime&quot;</span>).toString()));<br>            &#125;<br>        &#125;<br><br>        System.out.println(dataMap);<br><br><br>        <span class="hljs-type">long</span> <span class="hljs-variable">countStart</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-type">Long</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> operationLogMapper.countByCondition(dataMap);<br>        <span class="hljs-type">long</span> <span class="hljs-variable">countEnd</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        System.out.println(<span class="hljs-string">&quot;Count Cost Time : &quot;</span> + (countEnd-countStart)+<span class="hljs-string">&quot; ms&quot;</span>);<br><br><br>        List&lt;OperationLog&gt; list = operationLogMapper.selectListByCondition(dataMap);<br>        <span class="hljs-type">long</span> <span class="hljs-variable">queryEnd</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        System.out.println(<span class="hljs-string">&quot;Query Cost Time : &quot;</span> + (queryEnd-countEnd)+<span class="hljs-string">&quot; ms&quot;</span>);<br><br><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PageResult</span>(count,list);<br><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="4-4-4-Controller"><a href="#4-4-4-Controller" class="headerlink" title="4.4.4 Controller"></a>4.4.4 Controller</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/operationLog&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OperationLogController</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> OperationLogService operationLogService;<br><br>    <span class="hljs-meta">@RequestMapping(&quot;/findList&quot;)</span><br>    <span class="hljs-keyword">public</span> PageResult <span class="hljs-title function_">findList</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Map dataMap, Integer pageNum , Integer pageSize)</span>&#123;<br>        <span class="hljs-type">PageResult</span> <span class="hljs-variable">page</span> <span class="hljs-operator">=</span> operationLogService.selectListByCondition(dataMap, pageNum, pageSize);<br>        <span class="hljs-keyword">return</span> page;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-5-日志查询前端代码实现"><a href="#4-5-日志查询前端代码实现" class="headerlink" title="4.5 日志查询前端代码实现"></a>4.5 日志查询前端代码实现</h4><p>前端代码使用 BootStrap + AdminLTE 进行布局， 使用Vuejs 进行视图层展示。</p>
+<h5 id="4-5-1-js"><a href="#4-5-1-js" class="headerlink" title="4.5.1 js"></a>4.5.1 js</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">   <span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Vue</span>(&#123;</span><br><span class="language-javascript">       <span class="hljs-attr">el</span>: <span class="hljs-string">&#x27;#app&#x27;</span>,</span><br><span class="language-javascript">       <span class="hljs-attr">data</span>: &#123;</span><br><span class="language-javascript">           <span class="hljs-attr">dataList</span>:[],</span><br><span class="language-javascript">           <span class="hljs-attr">searchEntity</span>:&#123;</span><br><span class="language-javascript">               <span class="hljs-attr">operateClass</span>:<span class="hljs-string">&#x27;&#x27;</span>,</span><br><span class="language-javascript">               <span class="hljs-attr">operateMethod</span>:<span class="hljs-string">&#x27;&#x27;</span>,</span><br><span class="language-javascript">               <span class="hljs-attr">returnClass</span>:<span class="hljs-string">&#x27;&#x27;</span>,</span><br><span class="language-javascript">               <span class="hljs-attr">costTime</span>:<span class="hljs-string">&#x27;&#x27;</span></span><br><span class="language-javascript">           &#125;,</span><br><span class="language-javascript"></span><br><span class="language-javascript">           <span class="hljs-attr">page</span>: <span class="hljs-number">1</span>,  <span class="hljs-comment">//显示的是哪一页</span></span><br><span class="language-javascript">           <span class="hljs-attr">pageSize</span>: <span class="hljs-number">10</span>, <span class="hljs-comment">//每一页显示的数据条数</span></span><br><span class="language-javascript">           <span class="hljs-attr">total</span>: <span class="hljs-number">150</span>, <span class="hljs-comment">//记录总数</span></span><br><span class="language-javascript">           <span class="hljs-attr">maxPage</span>:<span class="hljs-number">8</span>  <span class="hljs-comment">//最大页数</span></span><br><span class="language-javascript">       &#125;,</span><br><span class="language-javascript">       <span class="hljs-attr">methods</span>: &#123;</span><br><span class="language-javascript">           <span class="hljs-attr">pageHandler</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">page</span>) &#123;</span><br><span class="language-javascript">               <span class="hljs-variable language_">this</span>.<span class="hljs-property">page</span> = page;</span><br><span class="language-javascript">               <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">search</span>();</span><br><span class="language-javascript">           &#125;,</span><br><span class="language-javascript"></span><br><span class="language-javascript">           <span class="hljs-attr">search</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">               <span class="hljs-keyword">var</span> _this = <span class="hljs-variable language_">this</span>;</span><br><span class="language-javascript">               <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">showLoading</span>();</span><br><span class="language-javascript">               axios.<span class="hljs-title function_">post</span>(<span class="hljs-string">&#x27;/operationLog/findList.do?pageNum=&#x27;</span> + _this.<span class="hljs-property">page</span> + <span class="hljs-string">&quot;&amp;pageSize=&quot;</span> + _this.<span class="hljs-property">pageSize</span>, _this.<span class="hljs-property">searchEntity</span>).<span class="hljs-title function_">then</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) &#123;</span><br><span class="language-javascript">                   <span class="hljs-keyword">if</span> (response) &#123;</span><br><span class="language-javascript">                       _this.<span class="hljs-property">dataList</span> = response.<span class="hljs-property">data</span>.<span class="hljs-property">dataList</span>;</span><br><span class="language-javascript">                       _this.<span class="hljs-property">total</span> = response.<span class="hljs-property">data</span>.<span class="hljs-property">total</span>;</span><br><span class="language-javascript">                       _this.<span class="hljs-title function_">hideLoading</span>();</span><br><span class="language-javascript">                   &#125;</span><br><span class="language-javascript">               &#125;)</span><br><span class="language-javascript">           &#125;,</span><br><span class="language-javascript"></span><br><span class="language-javascript">           <span class="hljs-attr">showLoading</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">               $(<span class="hljs-string">&#x27;#loadingModal&#x27;</span>).<span class="hljs-title function_">modal</span>(&#123;<span class="hljs-attr">backdrop</span>: <span class="hljs-string">&#x27;static&#x27;</span>, <span class="hljs-attr">keyboard</span>: <span class="hljs-literal">false</span>&#125;);</span><br><span class="language-javascript">           &#125;,</span><br><span class="language-javascript"></span><br><span class="language-javascript">           <span class="hljs-attr">hideLoading</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">               $(<span class="hljs-string">&#x27;#loadingModal&#x27;</span>).<span class="hljs-title function_">modal</span>(<span class="hljs-string">&#x27;hide&#x27;</span>);</span><br><span class="language-javascript">           &#125;,</span><br><span class="language-javascript">       &#125;,</span><br><span class="language-javascript"></span><br><span class="language-javascript">       <span class="hljs-attr">created</span>:<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;</span><br><span class="language-javascript">           <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">pageHandler</span>(<span class="hljs-number">1</span>);</span><br><span class="language-javascript">       &#125;</span><br><span class="language-javascript">   &#125;);</span><br><span class="language-javascript"></span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-5-2-列表数据展示"><a href="#4-5-2-列表数据展示" class="headerlink" title="4.5.2 列表数据展示"></a>4.5.2 列表数据展示</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">tr</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;item in dataList&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;ids&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;checkbox&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.id&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.operateClass&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.operateMethod&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.returnClass&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.returnValue&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.operateUser&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.operateTime&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123;item.costTime&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">td</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;text-center&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn bg-olive btn-xs&quot;</span>&gt;</span>详情<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn bg-olive btn-xs&quot;</span>&gt;</span>删除<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>4.5.3 分页插件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;wrap&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;wrap&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">zpagenav</span> <span class="hljs-attr">v-bind:page</span>=<span class="hljs-string">&quot;page&quot;</span> <span class="hljs-attr">v-bind:page-size</span>=<span class="hljs-string">&quot;pageSize&quot;</span> <span class="hljs-attr">v-bind:total</span>=<span class="hljs-string">&quot;total&quot;</span></span><br><span class="hljs-tag">              <span class="hljs-attr">v-bind:max-page</span>=<span class="hljs-string">&quot;maxPage&quot;</span>  <span class="hljs-attr">v-on:pagehandler</span>=<span class="hljs-string">&quot;pageHandler&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">zpagenav</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-6-联调测试"><a href="#4-6-联调测试" class="headerlink" title="4.6 联调测试"></a>4.6 联调测试</h4><p>可以通过postman来访问业务系统，再查看数据库中的日志信息，验证能不能将用户的访问日志记录下来。</p>
+<p><img src="/images/mysql/1555077276426.png" srcset="/img/loading.gif" lazyload alt="1555077276426"> </p>
+<h4 id="4-7-分析性能问题"><a href="#4-7-分析性能问题" class="headerlink" title="4.7 分析性能问题"></a>4.7 分析性能问题</h4><p>系统中用户访问日志的数据量，随着时间的推移，这张表的数据量会越来越大，因此我们需要根据业务需求，来对日志查询模块的性能进行优化。</p>
+<p>1） 分页查询优化</p>
+<p>由于在进行日志查询时，是进行分页查询，那也就意味着，在查看时，至少需要查询两次：</p>
+<p>A. 查询符合条件的总记录数。–&gt; count 操作</p>
+<p>B. 查询符合条件的列表数据。–&gt; 分页查询 limit 操作</p>
+<p>通常来说，count() 都需要扫描大量的行（意味着需要访问大量的数据）才能获得精确的结果，因此是很难对该SQL进行优化操作的。如果需要对count进行优化，可以采用另外一种思路，可以增加汇总表，或者redis缓存来专门记录该表对应的记录数，这样的话，就可以很轻松的实现汇总数据的查询，而且效率很高，但是这种统计并不能保证百分之百的准确 。对于数据库的操作，“快速、精确、实现简单”，三者永远只能满足其二，必须舍掉其中一个。</p>
+<p>2） 条件查询优化</p>
+<p>针对于条件查询,需要对查询条件,及排序字段建立索引。</p>
+<p>3） 读写分离</p>
+<p>通过主从复制集群，来完成读写分离，使写操作走主节点， 而读操作，走从节点。</p>
+<p>4） MySQL服务器优化</p>
+<p>5） 应用优化</p>
+<h4 id="4-8-性能优化-分页"><a href="#4-8-性能优化-分页" class="headerlink" title="4.8 性能优化 - 分页"></a>4.8 性能优化 - 分页</h4><h5 id="4-8-1-优化count"><a href="#4-8-1-优化count" class="headerlink" title="4.8.1 优化count"></a>4.8.1 优化count</h5><p>创建一张表用来记录日志表的总数据量：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> log_counter(<br>	logcount <span class="hljs-type">bigint</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span><br>)engine <span class="hljs-operator">=</span> innodb <span class="hljs-keyword">default</span> CHARSET <span class="hljs-operator">=</span> utf8;<br></code></pre></td></tr></table></figure>
+
+<p>在每次插入数据之后，更新该表 ：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateLogCounter&quot;</span> &gt;</span><br>    update log_counter set logcount = logcount + 1<br><span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>在进行分页查询时, 获取总记录数，从该表中查询既可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;countLogFromCounter&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;long&quot;</span>&gt;</span><br>    select logcount from log_counter limit 1<br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="4-8-2-优化-limit"><a href="#4-8-2-优化-limit" class="headerlink" title="4.8.2 优化 limit"></a>4.8.2 优化 limit</h5><p>在进行分页时，一般通过创建覆盖索引，能够比较好的提高性能。一个非常常见，而又非常头疼的分页场景就是 “limit 1000000,10” ，此时MySQL需要搜索出前1000010 条记录后，仅仅需要返回第 1000001 到 1000010 条记录，前1000000 记录会被抛弃，查询代价非常大。 </p>
+<p><img src="/images/mysql/1555081714638.png" srcset="/img/loading.gif" lazyload alt="1555081714638"> </p>
+<p>当点击比较靠后的页码时，就会出现这个问题，查询效率非常慢。</p>
+<p>优化SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> operation_log limit <span class="hljs-number">3000000</span> , <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+
+<p>将上述SQL优化为 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> operation_log t , (<span class="hljs-keyword">select</span> id <span class="hljs-keyword">from</span> operation_log <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> id limit <span class="hljs-number">3000000</span>,<span class="hljs-number">10</span>) b <span class="hljs-keyword">where</span> t.id <span class="hljs-operator">=</span> b.id ;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;selectListByCondition&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;map&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;operationLog&quot;</span>&gt;</span><br>  select<br>    id ,<br>    operate_class as operateClass ,<br>    operate_method as operateMethod,<br>    return_class as returnClass,<br>    operate_user as operateUser,<br>    operate_time as operateTime,<br>    param_and_value as paramAndValue,<br>    cost_time as costTime,<br>    return_value as returnValue<br>  from operation_log t,<br>    <br>  (select id from operation_log <br>  <span class="hljs-tag">&lt;<span class="hljs-name">where</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">include</span> <span class="hljs-attr">refid</span>=<span class="hljs-string">&quot;oplog_where&quot;</span>/&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">where</span>&gt;</span><br>  order by id limit #&#123;start&#125;,#&#123;rows&#125;) b  where t.id = b.id  <br><span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-9-性能优化-索引"><a href="#4-9-性能优化-索引" class="headerlink" title="4.9 性能优化 - 索引"></a>4.9 性能优化 - 索引</h4><p><img src="/images/mysql/1555152703824.png" srcset="/img/loading.gif" lazyload alt="1555152703824"></p>
+<p>当根据操作人进行查询时， 查询的效率很低，耗时比较长。原因就是因为在创建数据库表结构时，并没有针对于 操作人 字段建立索引。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">CREATE</span> INDEX idx_user_method_return_cost <span class="hljs-keyword">ON</span> operation_log(operate_user,operate_method,return_class,cost_time);<br></code></pre></td></tr></table></figure>
+
+<p>同上 ， 为了查询效率高，我们也需要对 操作方法、返回值类型、操作耗时 等字段进行创建索引，以提高查询效率。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">CREATE</span> INDEX idx_optlog_method_return_cost <span class="hljs-keyword">ON</span> operation_log(operate_method,return_class,cost_time);<br><br><span class="hljs-keyword">CREATE</span> INDEX idx_optlog_return_cost <span class="hljs-keyword">ON</span> operation_log(return_class,cost_time);<br><br><span class="hljs-keyword">CREATE</span> INDEX idx_optlog_cost <span class="hljs-keyword">ON</span> operation_log(cost_time);<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="4-10-性能优化-排序"><a href="#4-10-性能优化-排序" class="headerlink" title="4.10 性能优化 - 排序"></a>4.10 性能优化 - 排序</h4><p>在查询数据时，如果业务需求中需要我们对结果内容进行了排序处理 , 这个时候,我们还需要对排序的字段建立适当的索引, 来提高排序的效率 。</p>
+<h4 id="4-11-性能优化-读写分离"><a href="#4-11-性能优化-读写分离" class="headerlink" title="4.11 性能优化 - 读写分离"></a>4.11 性能优化 - 读写分离</h4><h5 id="4-11-1-概述"><a href="#4-11-1-概述" class="headerlink" title="4.11.1 概述"></a>4.11.1 概述</h5><p>在Mysql主从复制的基础上，可以使用读写分离来降低单台Mysql节点的压力，从而来提高访问效率，读写分离的架构如下：</p>
+<p><img src="/images/mysql/1555235426739.png" srcset="/img/loading.gif" lazyload alt="1555235426739"> </p>
+<p>对于读写分离的实现，可以通过Spring AOP 来进行动态的切换数据源，进行操作 ：</p>
+<h5 id="4-11-2-实现方式"><a href="#4-11-2-实现方式" class="headerlink" title="4.11.2 实现方式"></a>4.11.2 实现方式</h5><p>db.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">jdbc.write.driver</span>=<span class="hljs-string">com.mysql.jdbc.Driver</span><br><span class="hljs-attr">jdbc.write.url</span>=<span class="hljs-string">jdbc:mysql://192.168.142.128:3306/mysql_demo</span><br><span class="hljs-attr">jdbc.write.username</span>=<span class="hljs-string">root</span><br><span class="hljs-attr">jdbc.write.password</span>=<span class="hljs-string">itcast</span><br><br><span class="hljs-attr">jdbc.read.driver</span>=<span class="hljs-string">com.mysql.jdbc.Driver</span><br><span class="hljs-attr">jdbc.read.url</span>=<span class="hljs-string">jdbc:mysql://192.168.142.129:3306/mysql_demo</span><br><span class="hljs-attr">jdbc.read.username</span>=<span class="hljs-string">root</span><br><span class="hljs-attr">jdbc.read.password</span>=<span class="hljs-string">itcast</span><br></code></pre></td></tr></table></figure>
+
+<p>applicationContext-datasource.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:aop</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/aop&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:tx</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/tx&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/context&quot;</span></span><br><span class="hljs-tag">       <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;</span>&gt;</span><br><br><br>    <span class="hljs-comment">&lt;!-- 配置数据源 - Read --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;readDataSource&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;</span> <span class="hljs-attr">destroy-method</span>=<span class="hljs-string">&quot;close&quot;</span>  <span class="hljs-attr">lazy-init</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;driverClass&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.read.driver&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;jdbcUrl&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.read.url&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;user&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.read.username&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.read.password&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><br><br>    <span class="hljs-comment">&lt;!-- 配置数据源 - Write --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;writeDataSource&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;</span>  <span class="hljs-attr">destroy-method</span>=<span class="hljs-string">&quot;close&quot;</span>  <span class="hljs-attr">lazy-init</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;driverClass&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.write.driver&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;jdbcUrl&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.write.url&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;user&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.write.username&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;password&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;$&#123;jdbc.write.password&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><br><br>    <span class="hljs-comment">&lt;!-- 配置动态分配的读写 数据源 --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;dataSource&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;cn.itcast.aop.datasource.ChooseDataSource&quot;</span> <span class="hljs-attr">lazy-init</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;targetDataSources&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">map</span> <span class="hljs-attr">key-type</span>=<span class="hljs-string">&quot;java.lang.String&quot;</span> <span class="hljs-attr">value-type</span>=<span class="hljs-string">&quot;javax.sql.DataSource&quot;</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;write&quot;</span> <span class="hljs-attr">value-ref</span>=<span class="hljs-string">&quot;writeDataSource&quot;</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;read&quot;</span> <span class="hljs-attr">value-ref</span>=<span class="hljs-string">&quot;readDataSource&quot;</span>/&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">map</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;defaultTargetDataSource&quot;</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;writeDataSource&quot;</span>/&gt;</span><br><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;methodType&quot;</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">map</span> <span class="hljs-attr">key-type</span>=<span class="hljs-string">&quot;java.lang.String&quot;</span>&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;read&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;,get,select,count,list,query,find&quot;</span>/&gt;</span><br>                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&quot;write&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;,add,create,update,delete,remove,insert&quot;</span>/&gt;</span><br>            <span class="hljs-tag">&lt;/<span class="hljs-name">map</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>ChooseDataSource</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ChooseDataSource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractRoutingDataSource</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Map&lt;String, List&lt;String&gt;&gt; METHOD_TYPE_MAP = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;String, List&lt;String&gt;&gt;();<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 实现父类中的抽象方法，获取数据源名称</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">determineCurrentLookupKey</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> DataSourceHandler.getDataSource();<br>    &#125;<br><br>    <span class="hljs-comment">// 设置方法名前缀对应的数据源</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setMethodType</span><span class="hljs-params">(Map&lt;String, String&gt; map)</span> &#123;<br>        <span class="hljs-keyword">for</span> (String key : map.keySet()) &#123;<br>            List&lt;String&gt; v = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;String&gt;();<br>            String[] types = map.get(key).split(<span class="hljs-string">&quot;,&quot;</span>);<br>            <span class="hljs-keyword">for</span> (String type : types) &#123;<br>                <span class="hljs-keyword">if</span> (!StringUtils.isEmpty(type)) &#123;<br>                    v.add(type);<br>                &#125;<br>            &#125;<br>            METHOD_TYPE_MAP.put(key, v);<br>        &#125;<br>        System.out.println(<span class="hljs-string">&quot;METHOD_TYPE_MAP : &quot;</span>+METHOD_TYPE_MAP);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>DataSourceHandler</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DataSourceHandler</span> &#123;<br><br>    <span class="hljs-comment">// 数据源名称</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ThreadLocal&lt;String&gt; holder = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocal</span>&lt;String&gt;();<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 在项目启动的时候将配置的读、写数据源加到holder中</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">putDataSource</span><span class="hljs-params">(String datasource)</span> &#123;<br>        holder.set(datasource);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 从holer中获取数据源字符串</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">getDataSource</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> holder.get();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>DataSourceAspect</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Aspect</span><br><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Order(-9999)</span><br><span class="hljs-meta">@EnableAspectJAutoProxy(proxyTargetClass = true)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DataSourceAspect</span> &#123;<br><br>    <span class="hljs-keyword">protected</span> <span class="hljs-type">Logger</span> <span class="hljs-variable">logger</span> <span class="hljs-operator">=</span> LoggerFactory.getLogger(<span class="hljs-built_in">this</span>.getClass());<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 配置前置通知,使用在方法aspect()上注册的切入点</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Before(&quot;execution(* cn.itcast.service.*.*(..))&quot;)</span><br>    <span class="hljs-meta">@Order(-9999)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">before</span><span class="hljs-params">(JoinPoint point)</span> &#123;<br>        <br>        <span class="hljs-type">String</span> <span class="hljs-variable">className</span> <span class="hljs-operator">=</span> point.getTarget().getClass().getName();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> point.getSignature().getName();<br>        logger.info(className + <span class="hljs-string">&quot;.&quot;</span> + method + <span class="hljs-string">&quot;(&quot;</span> + Arrays.asList(point.getArgs())+ <span class="hljs-string">&quot;)&quot;</span>);<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">for</span> (String key : ChooseDataSource.METHOD_TYPE_MAP.keySet()) &#123;<br>                <span class="hljs-keyword">for</span> (String type : ChooseDataSource.METHOD_TYPE_MAP.get(key)) &#123;<br>                    <span class="hljs-keyword">if</span> (method.startsWith(type)) &#123;<br>                        System.out.println(<span class="hljs-string">&quot;key : &quot;</span> + key);<br>                        DataSourceHandler.putDataSource(key);<br>                        <span class="hljs-keyword">break</span>;<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            e.printStackTrace();<br>        &#125;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过 @Order(-9999) 注解来控制事务管理器, 与该通知类的加载顺序 , 需要让通知类 , 先加载 , 来判定使用哪个数据源 .</p>
+<h5 id="4-11-3-验证"><a href="#4-11-3-验证" class="headerlink" title="4.11.3 验证"></a>4.11.3 验证</h5><p>在主库和从库中，执行如下SQL语句，来查看是否读的时候， 从从库中读取 ； 写入操作的时候，是否写入到主库。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Innodb_rows_%&#x27;</span> ;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1555235982584.png" srcset="/img/loading.gif" lazyload alt="1555235982584"> </p>
+<h5 id="4-11-4-原理"><a href="#4-11-4-原理" class="headerlink" title="4.11.4 原理"></a>4.11.4 原理</h5><p><img src="/images/mysql/aop-datasource.png" srcset="/img/loading.gif" lazyload alt="1555235982584"></p>
+<h4 id="4-12-性能优化-应用优化"><a href="#4-12-性能优化-应用优化" class="headerlink" title="4.12 性能优化 - 应用优化"></a>4.12 性能优化 - 应用优化</h4><h5 id="4-12-1-缓存"><a href="#4-12-1-缓存" class="headerlink" title="4.12.1 缓存"></a>4.12.1 缓存</h5><p>可以在业务系统中使用redis来做缓存，缓存一些基础性的数据，来降低关系型数据库的压力，提高访问效率。</p>
+<h5 id="4-12-2-全文检索"><a href="#4-12-2-全文检索" class="headerlink" title="4.12.2 全文检索"></a>4.12.2 全文检索</h5><p>如果业务系统中的数据量比较大（达到千万级别），这个时候，如果再对数据库进行查询，特别是进行分页查询，速度将变得很慢（因为在分页时首先需要count求合计数），为了提高访问效率，这个时候，可以考虑加入Solr 或者 ElasticSearch全文检索服务，来提高访问效率。</p>
+<h5 id="4-13-3-非关系数据库"><a href="#4-13-3-非关系数据库" class="headerlink" title="4.13.3 非关系数据库"></a>4.13.3 非关系数据库</h5><p>也可以考虑将非核心（重要）数据，存在 MongoDB 中，这样可以提高插入以及查询的效率。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/MySQL/" class="category-chain-item">MySQL</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Mysql高级四</div>
+      <div>http://www.muzili.ren/2022/06/11/Mysql高级-day04/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/NVIDIA%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/" title="NVIDIA显卡驱动安装">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">NVIDIA显卡驱动安装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day02/" title="Mysql高级二">
+                        <span class="hidden-mobile">Mysql高级二</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

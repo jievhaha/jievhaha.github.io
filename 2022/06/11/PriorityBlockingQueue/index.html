@@ -1,0 +1,712 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="PriorityBlockingQueue是一个支持优先级的无界阻塞队列，底层采用二叉堆实现的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PriorityBlockingQueue">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/PriorityBlockingQueue/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="PriorityBlockingQueue是一个支持优先级的无界阻塞队列，底层采用二叉堆实现的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/JUC/BlockingQueue/erchadui.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.968Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.968Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="并发">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/JUC/BlockingQueue/erchadui.png">
+  
+  
+  
+  <title>PriorityBlockingQueue - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="PriorityBlockingQueue"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">PriorityBlockingQueue</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">PriorityBlockingQueue</font></div>
+
+<blockquote>
+<table><tr><td bgcolor="#6495ED"><font color="#FFF"> PriorityBlockingQueue是一个支持优先级的无界阻塞队列，底层采用二叉堆实现的。默认情况下元素采用自然顺序升序排序，当然我们也可以通过构造函数来指定Comparator来对元素进行排序。需要注意的是PriorityBlockingQueue不能保证同优先级元素的顺序。ArrayBlockingQueue、LinkedBlockingQueue都是采用FIFO原则来确定线程执行的先后顺序</font></td></tr></table>
+</blockquote>
+<h4 id="二叉堆"><a href="#二叉堆" class="headerlink" title="二叉堆"></a>二叉堆</h4><h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><p>父节点的键值总是保持固定的序关系于任何一个子节点的键值，且每个节点的左子树和右子树都是一个二叉堆。它有两种表现形式：最大堆、最小堆。 最大堆：父节点的键值总是大于或等于任何一个子节点的键值， 最小堆：父节点的键值总是小于或等于任何一个子节点的键值。</p>
+<p>二叉堆一般用数组表示，如果父节点的节点位置在n处，那么其左孩子节点为：2 * n + 1 ，其右孩子节点为2 * (n + 1)，其父节点为（n - 1） &#x2F; 2 处。</p>
+<p><img src="/images/JUC/BlockingQueue/erchadui.png" srcset="/img/loading.gif" lazyload alt="二叉堆举例"></p>
+<h5 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h5><p>最小堆为例：首先将要添加的元素N插添加到堆的末尾位置（在二叉堆中我们称之为空穴）。如果元素N放入空穴中而不破坏堆的序（其值大于跟父节点值（最大堆是小于父节点）），那么插入完成。否则，我们则将该元素N的节点与其父节点进行交换，然后与其新父节点进行比较直到它的父节点不在比它小（最大堆是大）或者到达根节点。</p>
+<h5 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h5><p>删除元素与增加元素一样，需要维护整个二叉堆的序。删除位置1的元素（数组下标0），则把最后一个元素空出来移到最前边，然后和它的两个子节点比较，如果两个子节点中较小的节点小于该节点，就将他们交换，直到两个子节点都比该元素大为止。</p>
+<h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><p>内部也是用可重入锁<code>ReentrantLock</code>实现同步机制，但只有一个<code>notEmpty</code>的Condition，<code>ArrayBlockingQueue</code>定义了两个Condition，之所以这样，因为<code>PriorityBlockingQueue</code>是一个<em><strong>无界队列，插入总是会成功</strong></em>，除非消耗尽了资源导致服务器挂。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PriorityBlockingQueue</span>&lt;E&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractQueue</span>&lt;E&gt;<br>    <span class="hljs-keyword">implements</span> <span class="hljs-title class_">BlockingQueue</span>&lt;E&gt;, java.io.Serializable &#123;<br>    <span class="hljs-comment">// 默认容量</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">DEFAULT_INITIAL_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">11</span>;<br>    <span class="hljs-comment">// 最大容量</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">MAX_ARRAY_SIZE</span> <span class="hljs-operator">=</span> Integer.MAX_VALUE - <span class="hljs-number">8</span>;<br>    <span class="hljs-comment">// 二叉堆数组</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> Object[] queue;<br>    <span class="hljs-comment">// 队列元素的个数</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-type">int</span> size;<br>    <span class="hljs-comment">// 比较器，如果为空，则为自然顺序</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; comparator;<br>    <span class="hljs-comment">// 内部锁</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ReentrantLock lock;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Condition notEmpty;<span class="hljs-comment">//非空</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> allocationSpinLock;<br>    <span class="hljs-comment">// 优先队列：主要用于序列化，这是为了兼容之前的版本。只有在序列化和反序列化才非空</span><br>    <span class="hljs-keyword">private</span> PriorityQueue&lt;E&gt; q;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="三个基本添加方法"><a href="#三个基本添加方法" class="headerlink" title="三个基本添加方法"></a>三个基本添加方法</h4><p><code>add</code>、<code>put</code>、<code>offer</code>，<code>add</code>和<code>put</code>内部直接调用<code>offer</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//add</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">add</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">return</span> offer(e);<br>&#125;<br><span class="hljs-comment">//put</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">put</span><span class="hljs-params">(E e)</span> &#123;<br>    offer(e); <span class="hljs-comment">// never need to block</span><br>&#125;<br><span class="hljs-comment">//offer</span><br><span class="hljs-comment">//正如该方法注释所说，插入一个元素到该优先级队列，该队列是无界的，所以这个方法永远都是插入成功的。</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">offer</span><span class="hljs-params">(E e)</span> &#123;<br>    <span class="hljs-keyword">if</span> (e == <span class="hljs-literal">null</span>)<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NullPointerException</span>();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">ReentrantLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.lock;<br>    lock.lock();<br>    <span class="hljs-type">int</span> n, cap;<br>    Object[] array;<br>    <span class="hljs-keyword">while</span> ((n = size) &gt;= (cap = (array = queue).length))<br>        tryGrow(array, cap);<span class="hljs-comment">//进行扩容</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; cmp = comparator;<span class="hljs-comment">//创建队列对象没传入Comparator实现类默认为null</span><br>        <span class="hljs-keyword">if</span> (cmp == <span class="hljs-literal">null</span>)<br>            siftUpComparable(n, e, array);<span class="hljs-comment">//自然排序</span><br>        <span class="hljs-keyword">else</span><br>            siftUpUsingComparator(n, e, array, cmp);<span class="hljs-comment">//自定义排序</span><br>        size = n + <span class="hljs-number">1</span>;<br>        notEmpty.signal();<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        lock.unlock();<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-comment">//扩容  通过自旋</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">tryGrow</span><span class="hljs-params">(Object[] array, <span class="hljs-type">int</span> oldCap)</span> &#123;<br>    lock.unlock(); <span class="hljs-comment">// 不需要锁主锁</span><br>    Object[] newArray = <span class="hljs-literal">null</span>;<br>    <span class="hljs-comment">//CAS</span><br>    <span class="hljs-comment">// allocationSpinLock = 0;代表释放了自旋锁</span><br>    <span class="hljs-comment">// allocationSpinLock = 1;代表释放了自旋锁</span><br>    <span class="hljs-keyword">if</span> (allocationSpinLock == <span class="hljs-number">0</span> &amp;&amp;<br>        UNSAFE.compareAndSwapInt(<span class="hljs-built_in">this</span>, allocationSpinLockOffset,<br>                                 <span class="hljs-number">0</span>, <span class="hljs-number">1</span>)) &#123;<span class="hljs-comment">//获取自旋锁，即设置为1</span><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">newCap</span> <span class="hljs-operator">=</span> oldCap + ((oldCap &lt; <span class="hljs-number">64</span>) ?<br>                                   (oldCap + <span class="hljs-number">2</span>) : <span class="hljs-comment">// grow faster if small</span><br>                                   (oldCap &gt;&gt; <span class="hljs-number">1</span>));<br>            <span class="hljs-keyword">if</span> (newCap - MAX_ARRAY_SIZE &gt; <span class="hljs-number">0</span>) &#123;    <span class="hljs-comment">// possible overflow</span><br>                <span class="hljs-type">int</span> <span class="hljs-variable">minCap</span> <span class="hljs-operator">=</span> oldCap + <span class="hljs-number">1</span>;<br>                <span class="hljs-keyword">if</span> (minCap &lt; <span class="hljs-number">0</span> || minCap &gt; MAX_ARRAY_SIZE)<br>                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">OutOfMemoryError</span>();<br>                newCap = MAX_ARRAY_SIZE;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (newCap &gt; oldCap &amp;&amp; queue == array)<br>                newArray = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[newCapmowei];<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            allocationSpinLock = <span class="hljs-number">0</span>;<span class="hljs-comment">// 代表释放了自旋锁</span><br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (newArray == <span class="hljs-literal">null</span>) <span class="hljs-comment">// back off if another thread is allocating</span><br>        Thread.yield();<br>    lock.lock();<br>    <span class="hljs-keyword">if</span> (newArray != <span class="hljs-literal">null</span> &amp;&amp; queue == array) &#123;<br>        queue = newArray;<br>        System.arraycopy(array, <span class="hljs-number">0</span>, newArray, <span class="hljs-number">0</span>, oldCap);<br>    &#125;<br>&#125;<br><span class="hljs-comment">//因为底层是二叉堆，所以需要维持二叉堆顺序，插入的时候和父节点比较</span><br><span class="hljs-comment">//父节点的位置（k - 1) / 2 即：（k - 1) &gt;&gt;&gt; 1 右移一位相当于除以2的1次方</span><br><span class="hljs-comment">//按顺序插入，自然排序</span><br><span class="hljs-comment">//k 二叉堆的末尾即元素数量size</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-keyword">void</span> <span class="hljs-title function_">siftUpComparable</span><span class="hljs-params">(<span class="hljs-type">int</span> k, T x, Object[] array)</span> &#123;<br>    Comparable&lt;? <span class="hljs-built_in">super</span> T&gt; key = (Comparable&lt;? <span class="hljs-built_in">super</span> T&gt;) x;<br>    <span class="hljs-keyword">while</span> (k &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> (k - <span class="hljs-number">1</span>) &gt;&gt;&gt; <span class="hljs-number">1</span>;<br>        <span class="hljs-type">Object</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> array[parent];<br>        <span class="hljs-keyword">if</span> (key.compareTo((T) e) &gt;= <span class="hljs-number">0</span>)<span class="hljs-comment">//二者唯一区别</span><br>            <span class="hljs-keyword">break</span>;<br>        array[k] = e;<br>        k = parent;<br>    &#125;<br>    array[k] = key;<br>&#125;<br><span class="hljs-comment">//按顺序插入，自定义排序</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-keyword">void</span> <span class="hljs-title function_">siftUpUsingComparator</span><span class="hljs-params">(<span class="hljs-type">int</span> k, T x, Object[] array,</span><br><span class="hljs-params">                                              Comparator&lt;? <span class="hljs-built_in">super</span> T&gt; cmp)</span> &#123;<br>    <span class="hljs-keyword">while</span> (k &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> (k - <span class="hljs-number">1</span>) &gt;&gt;&gt; <span class="hljs-number">1</span>;<br>        <span class="hljs-type">Object</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> array[parent];<br>        <span class="hljs-keyword">if</span> (cmp.compare(x, (T) e) &gt;= <span class="hljs-number">0</span>)<span class="hljs-comment">//二者唯一区别</span><br>            <span class="hljs-keyword">break</span>;<br>        array[k] = e;<br>        k = parent;<br>    &#125;<br>    array[k] = x;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="常用出队操作"><a href="#常用出队操作" class="headerlink" title="常用出队操作"></a>常用出队操作</h4><p><code>poll</code>、<code>remove</code>方法来执行出队操作。***出队的永远都是第一个元素：array[0]***。<code>remove</code>底层最后还是调用了<code>poll</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> E <span class="hljs-title function_">poll</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">ReentrantLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.lock;<br>    lock.lock();<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">return</span> dequeue();<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        lock.unlock();<br>    &#125;<br>&#125;<br><span class="hljs-comment">//按照二叉堆删除元素规则出队，删除第一个，末位的和其他元素比较</span><br><span class="hljs-keyword">private</span> E <span class="hljs-title function_">dequeue</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 没有元素 返回null</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> size - <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">if</span> (n &lt; <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">else</span> &#123;<br>        Object[] array = queue;<br>        <span class="hljs-comment">// 出队元素</span><br>        <span class="hljs-type">E</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> (E) array[<span class="hljs-number">0</span>];<br>        <span class="hljs-comment">// 最后一个元素（也就是插入到空穴中的元素）</span><br>        <span class="hljs-type">E</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> (E) array[n];<br>        array[n] = <span class="hljs-literal">null</span>;<br>        <span class="hljs-comment">// 根据比较器释放为null，来执行不同的处理</span><br>        Comparator&lt;? <span class="hljs-built_in">super</span> E&gt; cmp = comparator;<br>        <span class="hljs-keyword">if</span> (cmp == <span class="hljs-literal">null</span>)<br>            siftDownComparable(<span class="hljs-number">0</span>, x, array, n);<br>        <span class="hljs-keyword">else</span><br>            siftDownUsingComparator(<span class="hljs-number">0</span>, x, array, n, cmp);<br>        size = n;<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br><span class="hljs-comment">//自然排序</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-keyword">void</span> <span class="hljs-title function_">siftDownComparable</span><span class="hljs-params">(<span class="hljs-type">int</span> k, T x, Object[] array,</span><br><span class="hljs-params">                                               <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">0</span>) &#123;<br>        Comparable&lt;? <span class="hljs-built_in">super</span> T&gt; key = (Comparable&lt;? <span class="hljs-built_in">super</span> T&gt;)x;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">half</span> <span class="hljs-operator">=</span> n &gt;&gt;&gt; <span class="hljs-number">1</span>;           <span class="hljs-comment">// loop while a non-leaf</span><br>        <span class="hljs-keyword">while</span> (k &lt; half) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> (k &lt;&lt; <span class="hljs-number">1</span>) + <span class="hljs-number">1</span>; <span class="hljs-comment">// assume left child is least</span><br>            <span class="hljs-type">Object</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> array[child];<br>            <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> child + <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span> (right &lt; n &amp;&amp;<br>                ((Comparable&lt;? <span class="hljs-built_in">super</span> T&gt;) c).compareTo((T) array[right]) &gt; <span class="hljs-number">0</span>)<span class="hljs-comment">//左右节点比较</span><br>                c = array[child = right];<br>            <span class="hljs-keyword">if</span> (key.compareTo((T) c) &lt;= <span class="hljs-number">0</span>)<span class="hljs-comment">//该节点和左右节点最小节点比较</span><br>                <span class="hljs-keyword">break</span>;<br>            array[k] = c;<br>            k = child;<br>        &#125;<br>        array[k] = key;<br>    &#125;<br>&#125;<br><span class="hljs-comment">//自定义排序</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-keyword">void</span> <span class="hljs-title function_">siftDownUsingComparator</span><span class="hljs-params">(<span class="hljs-type">int</span> k, T x, Object[] array,</span><br><span class="hljs-params">                                                <span class="hljs-type">int</span> n,</span><br><span class="hljs-params">                                                Comparator&lt;? <span class="hljs-built_in">super</span> T&gt; cmp)</span> &#123;<br>    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">half</span> <span class="hljs-operator">=</span> n &gt;&gt;&gt; <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span> (k &lt; half) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> (k &lt;&lt; <span class="hljs-number">1</span>) + <span class="hljs-number">1</span>;<br>            <span class="hljs-type">Object</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> array[child];<br>            <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> child + <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span> (right &lt; n &amp;&amp; cmp.compare((T) c, (T) array[right]) &gt; <span class="hljs-number">0</span>)<br>                c = array[child = right];<br>            <span class="hljs-keyword">if</span> (cmp.compare(x, (T) c) &lt;= <span class="hljs-number">0</span>)<br>                <span class="hljs-keyword">break</span>;<br>            array[k] = c;<br>            k = child;<br>        &#125;<br>        array[k] = x;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/JUC/" class="category-chain-item">JUC</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/JUC/BlockingQueue/" class="category-chain-item">BlockingQueue</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B9%B6%E5%8F%91/">#并发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PriorityBlockingQueue</div>
+      <div>http://www.muzili.ren/2022/06/11/PriorityBlockingQueue/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/Semaphore/" title="Semaphore">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Semaphore</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/ReentrantLock/" title="重入锁ReentrantLock">
+                        <span class="hidden-mobile">重入锁ReentrantLock</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

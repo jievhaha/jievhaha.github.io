@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="IOC之BeanPostProcessor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二十八、IOC之BeanPostProcessor">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/IOC%E4%B9%8BBeanPostProcessor/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="IOC之BeanPostProcessor">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/spring_IOC/%E5%89%8D%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.961Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.961Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/spring_IOC/%E5%89%8D%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8.png">
+  
+  
+  
+  <title>二十八、IOC之BeanPostProcessor - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="二十八、IOC之BeanPostProcessor"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          121 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">二十八、IOC之BeanPostProcessor</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">IOC之BeanPostProcessor</font></div>
+
+<h4 id="BeanPostProcessor接口"><a href="#BeanPostProcessor接口" class="headerlink" title="BeanPostProcessor接口"></a><code>BeanPostProcessor</code>接口</h4><p>除了<code>Aware</code>这个扩展点，还有<code>BeanPostProcessor</code>，BeanPostProcessor 的作用：在 Bean 完成实例化后，如果我们需要对其进行一些配置、增加一些自己的处理逻辑，那么请使用 BeanPostProcessor。</p>
+<h4 id="BeanPostProcessor实例"><a href="#BeanPostProcessor实例" class="headerlink" title="BeanPostProcessor实例"></a><code>BeanPostProcessor</code>实例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestBeanPostProcessor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">BeanPostProcessor</span> &#123;<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> Object <span class="hljs-title function_">postProcessBeforeInitialization</span><span class="hljs-params">(Object bean, String beanName)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>		System.out.println(<span class="hljs-string">&quot;Bean[&quot;</span> + beanName + <span class="hljs-string">&quot;]开始初始化&quot;</span>);<br>		<span class="hljs-keyword">return</span> bean;<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> Object <span class="hljs-title function_">postProcessAfterInitialization</span><span class="hljs-params">(Object bean, String beanName)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>		System.out.println(<span class="hljs-string">&quot;Bean[&quot;</span> + beanName + <span class="hljs-string">&quot;]完成初始化&quot;</span>);<br>		<span class="hljs-keyword">return</span> bean;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">display</span><span class="hljs-params">()</span>&#123;<br>		System.out.println(<span class="hljs-string">&quot;Hello BeanPostProcessor...&quot;</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span></span><br><span class="hljs-tag">	   <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span><br><span class="hljs-tag">	   <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span><br><br>	<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;testBeanPostProcessor&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;com.jievhaha.TestBeanPostProcessor&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyApplication</span> &#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>		<span class="hljs-type">ClassPathResource</span> <span class="hljs-variable">resource</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathResource</span>(<span class="hljs-string">&quot;applicationContext.xml&quot;</span>);<br>		<span class="hljs-type">DefaultListableBeanFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultListableBeanFactory</span>();<br>		<span class="hljs-type">XmlBeanDefinitionReader</span> <span class="hljs-variable">reader</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">XmlBeanDefinitionReader</span>(factory);<br>		reader.loadBeanDefinitions(resource);<br>		<span class="hljs-type">TestBeanPostProcessor</span> <span class="hljs-variable">testBeanPostProcessor</span> <span class="hljs-operator">=</span> (TestBeanPostProcessor) factory.getBean(<span class="hljs-string">&quot;testBeanPostProcessor&quot;</span>);<br>		testBeanPostProcessor.display();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml">Hello BeanPostProcessor...<br></code></pre></td></tr></table></figure>
+
+<p>并没有执行前置、后置处理器。</p>
+<p>在<code>AbstractAutowireCapableBeanFactory.initializeBean()</code>中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">initializeBean</span><span class="hljs-params">(String beanName, Object bean, <span class="hljs-meta">@Nullable</span> RootBeanDefinition mbd)</span> &#123;<br>    <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// 安全模式</span><br>        AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; &#123;<br>            <span class="hljs-comment">// &lt;1&gt; 激活 Aware 方法，对特殊的 bean 处理：Aware、BeanClassLoaderAware、BeanFactoryAware</span><br>            invokeAwareMethods(beanName, bean);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;, getAccessControlContext());<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// &lt;1&gt; 激活 Aware 方法，对特殊的 bean 处理：Aware、BeanClassLoaderAware、BeanFactoryAware</span><br>        invokeAwareMethods(beanName, bean);<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 后置处理器，before</span><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">wrappedBean</span> <span class="hljs-operator">=</span> bean;<br>    <span class="hljs-keyword">if</span> (mbd == <span class="hljs-literal">null</span> || !mbd.isSynthetic()) &#123;<br>        wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;3&gt; 激活用户自定义的 init 方法</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        invokeInitMethods(beanName, wrappedBean, mbd);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(<br>            (mbd != <span class="hljs-literal">null</span> ? mbd.getResourceDescription() : <span class="hljs-literal">null</span>),<br>            beanName, <span class="hljs-string">&quot;Invocation of init method failed&quot;</span>, ex);<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 后置处理器，after</span><br>    <span class="hljs-keyword">if</span> (mbd == <span class="hljs-literal">null</span> || !mbd.isSynthetic()) &#123;<br>        wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> wrappedBean;<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">applyBeanPostProcessorsBeforeInitialization</span><span class="hljs-params">(Object existingBean, String beanName)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> existingBean;<br>    <span class="hljs-comment">// 遍历 BeanPostProcessor 数组</span><br>    <span class="hljs-keyword">for</span> (BeanPostProcessor processor : getBeanPostProcessors()) &#123;<br>        <span class="hljs-comment">// 处理</span><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">current</span> <span class="hljs-operator">=</span> processor.postProcessBeforeInitialization(result, beanName);<br>        <span class="hljs-comment">// 返回空，则返回 result</span><br>        <span class="hljs-keyword">if</span> (current == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> result;<br>        &#125;<br>        <span class="hljs-comment">// 修改 result</span><br>        result = current;<br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractBeanFactory.java</span><br><span class="hljs-keyword">public</span> List&lt;BeanPostProcessor&gt; <span class="hljs-title function_">getBeanPostProcessors</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.beanPostProcessors;<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;BeanPostProcessor&gt; beanPostProcessors = <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanPostProcessorCacheAwareList</span>();<br></code></pre></td></tr></table></figure>
+
+<p>断点中可以查看到<code>getBeanPostProcessors()</code>的<code>size</code>为0。 </p>
+<p>所以要想执行前置处理器就要保证该<code>List</code>不为空，那就要有<code>this.beanPostProcessors.add()</code>的过程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractBeanFactory.java</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addBeanPostProcessor</span><span class="hljs-params">(BeanPostProcessor beanPostProcessor)</span> &#123;<br>    Assert.notNull(beanPostProcessor, <span class="hljs-string">&quot;BeanPostProcessor must not be null&quot;</span>);<br>    <span class="hljs-built_in">this</span>.beanPostProcessors.remove(beanPostProcessor);<br>    <span class="hljs-built_in">this</span>.beanPostProcessors.add(beanPostProcessor);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该方法是由 AbstractBeanFactory 的父类 <code>org.springframework.beans.factory.config.ConfigurableBeanFactory</code> 接口定义，它的核心意思就是将指定 BeanPostProcessor 注册到该 BeanFactory 创建的 bean 中，同时它是<strong>按照插入的顺序进行注册的</strong>，完全忽略 Ordered 接口所表达任何排序语义（在 BeanPostProcessor 中我们提供一个 Ordered 顺序）。</p>
+<p>所以要可以执行前后置处理器，只需增加如下步骤：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">TestBeanPostProcessor</span> <span class="hljs-variable">test</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TestBeanPostProcessor</span>();<br>factory.addBeanPostProcesssor(test)。<br>    <br>    <br><span class="hljs-type">ClassPathResource</span> <span class="hljs-variable">resource</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathResource</span>(<span class="hljs-string">&quot;applicationContext.xml&quot;</span>);<br><span class="hljs-type">DefaultListableBeanFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultListableBeanFactory</span>();<br><span class="hljs-type">XmlBeanDefinitionReader</span> <span class="hljs-variable">reader</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">XmlBeanDefinitionReader</span>(factory);<br><span class="hljs-type">TestBeanPostProcessor</span> <span class="hljs-variable">beanPostProcessor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TestBeanPostProcessor</span>();<br>factory.addBeanPostProcessor(beanPostProcessor);<br>reader.loadBeanDefinitions(resource);<br><span class="hljs-type">TestBeanPostProcessor</span> <span class="hljs-variable">testBeanPostProcessor</span> <span class="hljs-operator">=</span> (TestBeanPostProcessor) factory.getBean(<span class="hljs-string">&quot;testBeanPostProcessor&quot;</span>);<br>testBeanPostProcessor.display();<br></code></pre></td></tr></table></figure>
+
+<p>这样，使用该factory创建任何Bean都会执行前后置处理器，ApplicationContext方法不需手动注册，会自动检测所有BeanPostProcessor然后进行自动注册（都已测试）。</p>
+<p>总结：一般普通的 BeanFactory 是不支持自动注册 BeanPostProcessor 的，需要我们手动调用 <code>addBeanPostProcessor(BeanPostProcessor beanPostProcessor)</code> 方法进行注册。注册后的 BeanPostProcessor 适用于所有该 BeanFactory 创建的 bean，但是 <strong>ApplicationContext 可以在其 bean 定义中自动检测所有的 BeanPostProcessor 并自动完成注册，同时将他们应用到随后创建的任何 Bean 中</strong>。</p>
+<h4 id="BeanPostProcessor基本原理"><a href="#BeanPostProcessor基本原理" class="headerlink" title="BeanPostProcessor基本原理"></a><code>BeanPostProcessor</code>基本原理</h4><p><code>BeanPostProcessor</code>接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">BeanPostProcessor</span> &#123;<br>	<span class="hljs-meta">@Nullable</span><br>	<span class="hljs-keyword">default</span> Object <span class="hljs-title function_">postProcessBeforeInitialization</span><span class="hljs-params">(Object bean, String beanName)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>		<span class="hljs-keyword">return</span> bean;<br>	&#125;<br><br>	<span class="hljs-meta">@Nullable</span><br>	<span class="hljs-keyword">default</span> Object <span class="hljs-title function_">postProcessAfterInitialization</span><span class="hljs-params">(Object bean, String beanName)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>		<span class="hljs-keyword">return</span> bean;<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>BeanPostProcessor 可以理解为是 Spring 的一个工厂钩子（其实 Spring 提供一系列的钩子，如 Aware 、InitializingBean、DisposableBean），它是 Spring 提供的对象实例化阶段强有力的扩展点，允许 Spring 在实例化 bean 阶段对其进行定制化修改，比较常见的使用场景是处理标记接口实现类或者为当前对象提供代理实现（例如 AOP）。</p>
+<p><code>postProcessBeforeInitialization(Object bean, String beanName)</code> 和 <code>postProcessAfterInitialization(Object bean, String beanName)</code> 两个方法，都接收一个 Object 类型的 <code>bean</code> ，一个 String 类型的 <code>beanName</code> ，其中 <code>bean</code> 是已经实例化了的 <code>instanceBean</code> ，能拿到这个你是不是可以对它为所欲为了？ 这两个方法是初始化 <code>bean</code> 的前后置处理器，他们应用 <code>invokeInitMethods(String beanName, final Object bean, RootBeanDefinition mbd)</code> 方法的前后。</p>
+<p><img src="/images/spring_IOC/%E5%89%8D%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8.png" srcset="/img/loading.gif" lazyload alt="前后置处理器"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">initializeBean</span><span class="hljs-params">(String beanName, Object bean, <span class="hljs-meta">@Nullable</span> RootBeanDefinition mbd)</span> &#123;<br>    <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// 安全模式</span><br>        AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; &#123;<br>            <span class="hljs-comment">// &lt;1&gt; 激活 Aware 方法，对特殊的 bean 处理：Aware、BeanClassLoaderAware、BeanFactoryAware</span><br>            invokeAwareMethods(beanName, bean);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;, getAccessControlContext());<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// &lt;1&gt; 激活 Aware 方法，对特殊的 bean 处理：Aware、BeanClassLoaderAware、BeanFactoryAware</span><br>        invokeAwareMethods(beanName, bean);<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 后置处理器，before</span><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">wrappedBean</span> <span class="hljs-operator">=</span> bean;<br>    <span class="hljs-keyword">if</span> (mbd == <span class="hljs-literal">null</span> || !mbd.isSynthetic()) &#123;<br>        wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;3&gt; 激活用户自定义的 init 方法</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        invokeInitMethods(beanName, wrappedBean, mbd);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(<br>            (mbd != <span class="hljs-literal">null</span> ? mbd.getResourceDescription() : <span class="hljs-literal">null</span>),<br>            beanName, <span class="hljs-string">&quot;Invocation of init method failed&quot;</span>, ex);<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 后置处理器，after</span><br>    <span class="hljs-keyword">if</span> (mbd == <span class="hljs-literal">null</span> || !mbd.isSynthetic()) &#123;<br>        wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> wrappedBean;<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">applyBeanPostProcessorsBeforeInitialization</span><span class="hljs-params">(Object existingBean, String beanName)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> existingBean;<br>    <span class="hljs-comment">// 遍历 BeanPostProcessor 数组</span><br>    <span class="hljs-keyword">for</span> (BeanPostProcessor processor : getBeanPostProcessors()) &#123;<br>        <span class="hljs-comment">// 处理</span><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">current</span> <span class="hljs-operator">=</span> processor.postProcessBeforeInitialization(result, beanName);<br>        <span class="hljs-comment">// 返回空，则返回 result</span><br>        <span class="hljs-keyword">if</span> (current == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> result;<br>        &#125;<br>        <span class="hljs-comment">// 修改 result</span><br>        result = current;<br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">applyBeanPostProcessorsAfterInitialization</span><span class="hljs-params">(Object existingBean, String beanName)</span><br>    <span class="hljs-keyword">throws</span> BeansException &#123;<br><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> existingBean;<br>    <span class="hljs-comment">// 遍历 BeanPostProcessor</span><br>    <span class="hljs-keyword">for</span> (BeanPostProcessor processor : getBeanPostProcessors()) &#123;<br>        <span class="hljs-comment">// 处理</span><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">current</span> <span class="hljs-operator">=</span> processor.postProcessAfterInitialization(result, beanName);<br>        <span class="hljs-comment">// 返回空，则返回 result</span><br>        <span class="hljs-keyword">if</span> (current == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> result;<br>        &#125;<br>        result = current;<br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="自动检测并注册"><a href="#自动检测并注册" class="headerlink" title="自动检测并注册"></a>自动检测并注册</h5><p><code>getBeanPostProcessors()</code> 方法，返回的是 <code>beanPostProcessors</code> 集合，该集合里面存放就是我们自定义的 BeanPostProcessor ，如果该集合中存在元素则调用相应的方法，否则就直接返回 bean 了。这也是为什么使用 BeanFactory 容器是无法输出自定义 BeanPostProcessor 里面的内容，因为在 <code>BeanFactory.getBean(...)</code> 方法的过程中根本就没有将我们自定义的 BeanPostProcessor 注入进来，所以要想 BeanFactory 容器 的 BeanPostProcessor 生效我们必须手动调用 <code>addBeanPostProcessor(BeanPostProcessor beanPostProcessor)</code> 方法，将定义的 BeanPostProcessor 注册到相应的 BeanFactory 中。<strong>但是 ApplicationContext 不需要手动，因为 ApplicationContext 会自动检测并完成注册</strong>。</p>
+<p>ApplicationContext 实现自动注册的原因，在于我们构造一个 ApplicationContext 实例对象的时候会调用 <code>AbstractApplicationContext.registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory)</code> 方法，将检测到的 BeanPostProcessor 注入到 ApplicationContext 容器中，同时应用到该容器创建的 bean 中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractApplicationContext.java</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 实例化并调用已经注入的 BeanPostProcessor</span><br><span class="hljs-comment"> * 必须在应用中 bean 实例化之前调用</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">registerBeanPostProcessors</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactory)</span> &#123;<br>    PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, <span class="hljs-built_in">this</span>);<br>&#125;<br><br><span class="hljs-comment">// PostProcessorRegistrationDelegate.java</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">registerBeanPostProcessors</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext)</span> &#123;<br>    <span class="hljs-comment">// 获取所有的 BeanPostProcessor 的 beanName</span><br>    <span class="hljs-comment">// 这些 beanName 都已经全部加载到容器中去，但是没有实例化</span><br>    String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, <span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>);<br><br>    <span class="hljs-comment">// 记录所有的beanProcessor数量</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">beanProcessorTargetCount</span> <span class="hljs-operator">=</span> beanFactory.getBeanPostProcessorCount() + <span class="hljs-number">1</span> + postProcessorNames.length;<br>    <span class="hljs-comment">// 注册 BeanPostProcessorChecker，它主要是用于在 BeanPostProcessor 实例化期间记录日志</span><br>    <span class="hljs-comment">// 当 Spring 中高配置的后置处理器还没有注册就已经开始了 bean 的实例化过程，这个时候便会打印 BeanPostProcessorChecker 中的内容</span><br>    beanFactory.addBeanPostProcessor(<span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanPostProcessorChecker</span>(beanFactory, beanProcessorTargetCount));<br><br>    <span class="hljs-comment">// PriorityOrdered 保证顺序</span><br>    List&lt;BeanPostProcessor&gt; priorityOrderedPostProcessors = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    List&lt;BeanPostProcessor&gt; internalPostProcessors = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <span class="hljs-comment">// 使用 Ordered 保证顺序</span><br>    List&lt;String&gt; orderedPostProcessorNames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <span class="hljs-comment">// 没有顺序</span><br>    List&lt;String&gt; nonOrderedPostProcessorNames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <span class="hljs-keyword">for</span> (String ppName : postProcessorNames) &#123;<br>        <span class="hljs-keyword">if</span> (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) &#123;<br>            <span class="hljs-comment">// 调用 getBean 获取 bean 实例对象</span><br>            <span class="hljs-type">BeanPostProcessor</span> <span class="hljs-variable">pp</span> <span class="hljs-operator">=</span> beanFactory.getBean(ppName, BeanPostProcessor.class);<br>            priorityOrderedPostProcessors.add(pp);<br>            <span class="hljs-keyword">if</span> (pp <span class="hljs-keyword">instanceof</span> MergedBeanDefinitionPostProcessor) &#123;<br>                internalPostProcessors.add(pp);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (beanFactory.isTypeMatch(ppName, Ordered.class)) &#123;<br>            <span class="hljs-comment">// 有序 Ordered</span><br>            orderedPostProcessorNames.add(ppName);<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 无序</span><br>            nonOrderedPostProcessorNames.add(ppName);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 第一步，注册所有实现了 PriorityOrdered 的 BeanPostProcessor</span><br>    <span class="hljs-comment">// 先排序</span><br>    sortPostProcessors(priorityOrderedPostProcessors, beanFactory);<br>    <span class="hljs-comment">// 后注册</span><br>    registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);<br><br>    <span class="hljs-comment">// 第二步，注册所有实现了 Ordered 的 BeanPostProcessor</span><br>    List&lt;BeanPostProcessor&gt; orderedPostProcessors = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(orderedPostProcessorNames.size());<br>    <span class="hljs-keyword">for</span> (String ppName : orderedPostProcessorNames) &#123;<br>        <span class="hljs-type">BeanPostProcessor</span> <span class="hljs-variable">pp</span> <span class="hljs-operator">=</span> beanFactory.getBean(ppName, BeanPostProcessor.class);<br>        orderedPostProcessors.add(pp);<br>        <span class="hljs-keyword">if</span> (pp <span class="hljs-keyword">instanceof</span> MergedBeanDefinitionPostProcessor) &#123;<br>            internalPostProcessors.add(pp);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 先排序</span><br>    sortPostProcessors(orderedPostProcessors, beanFactory);<br>    <span class="hljs-comment">// 后注册</span><br>    registerBeanPostProcessors(beanFactory, orderedPostProcessors);<br><br>    <span class="hljs-comment">// 第三步注册所有无序的 BeanPostProcessor</span><br>    List&lt;BeanPostProcessor&gt; nonOrderedPostProcessors = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(nonOrderedPostProcessorNames.size());<br>    <span class="hljs-keyword">for</span> (String ppName : nonOrderedPostProcessorNames) &#123;<br>        <span class="hljs-type">BeanPostProcessor</span> <span class="hljs-variable">pp</span> <span class="hljs-operator">=</span> beanFactory.getBean(ppName, BeanPostProcessor.class);<br>        nonOrderedPostProcessors.add(pp);<br>        <span class="hljs-keyword">if</span> (pp <span class="hljs-keyword">instanceof</span> MergedBeanDefinitionPostProcessor) &#123;<br>            internalPostProcessors.add(pp);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 注册，无需排序</span><br>    registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);<br><br>    <span class="hljs-comment">// 最后，注册所有的 MergedBeanDefinitionPostProcessor 类型的 BeanPostProcessor</span><br>    sortPostProcessors(internalPostProcessors, beanFactory);<br>    registerBeanPostProcessors(beanFactory, internalPostProcessors);<br><br>    <span class="hljs-comment">// 加入ApplicationListenerDetector（探测器）</span><br>    <span class="hljs-comment">// 重新注册 BeanPostProcessor 以检测内部 bean，因为 ApplicationListeners 将其移动到处理器链的末尾</span><br>    beanFactory.addBeanPostProcessor(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ApplicationListenerDetector</span>(applicationContext));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>逻辑：</p>
+<ul>
+<li>首先 <code>beanFactory</code> 获取注册到该 BeanFactory 中所有 BeanPostProcessor 类型的 <code>beanName</code> 数组，其实就是找所有实现了 BeanPostProcessor 接口的 bean ，然后迭代这些 bean ，将其按照 PriorityOrdered、Ordered、无序的顺序，添加至相应的 List 集合中，最后依次调用 <code>sortPostProcessors(List postProcessors, ConfigurableListableBeanFactory beanFactory)</code> 方法来进行排序处理、 <code>registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory, List postProcessors)</code> 方法来完成注册。</li>
+<li><strong>排序</strong>很简单，如果 <code>beanFactory</code> 为 DefaultListableBeanFactory ，则返回 BeanFactory 所依赖的比较器，否则反正默认的比较器(OrderComparator)，然后调用 <code>Listsort(Comparator c)</code> 方法即可。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// PostProcessorRegistrationDelegate.java</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sortPostProcessors</span><span class="hljs-params">(List&lt;?&gt; postProcessors, ConfigurableListableBeanFactory beanFactory)</span> &#123;<br>    <span class="hljs-comment">// Nothing to sort?</span><br>    <span class="hljs-keyword">if</span> (postProcessors.size() &lt;= <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 获得 Comparator 对象</span><br>    Comparator&lt;Object&gt; comparatorToUse = <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">if</span> (beanFactory <span class="hljs-keyword">instanceof</span> DefaultListableBeanFactory) &#123;<span class="hljs-comment">// 依赖的 Comparator 对象</span><br>        comparatorToUse = ((DefaultListableBeanFactory) beanFactory).getDependencyComparator();<br>    &#125;<br>    <span class="hljs-keyword">if</span> (comparatorToUse == <span class="hljs-literal">null</span>) &#123;<span class="hljs-comment">// 默认 Comparator 对象</span><br>        comparatorToUse = OrderComparator.INSTANCE;<br>    &#125;<br>    <span class="hljs-comment">// 排序</span><br>    postProcessors.sort(comparatorToUse);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>注册</strong>同样是调用 <code>AbstractBeanFactory.addBeanPostProcessor(BeanPostProcessor beanPostProcessor)</code> 方法完成注册。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">registerBeanPostProcessors</span><span class="hljs-params">(</span><br><span class="hljs-params">    ConfigurableListableBeanFactory beanFactory, List&lt;BeanPostProcessor&gt; postProcessors)</span> &#123;<br><br>    <span class="hljs-comment">// 如果是AbstractBeanFactory，直接全部注册</span><br>    <span class="hljs-keyword">if</span> (beanFactory <span class="hljs-keyword">instanceof</span> AbstractBeanFactory) &#123;<br>        <span class="hljs-comment">// Bulk addition is more efficient against our CopyOnWriteArrayList there</span><br>        ((AbstractBeanFactory) beanFactory).addBeanPostProcessors(postProcessors);<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 遍历 BeanPostProcessor 数组，注册</span><br>        <span class="hljs-keyword">for</span> (BeanPostProcessor postProcessor : postProcessors) &#123;<br>            beanFactory.addBeanPostProcessor(postProcessor);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ol>
+<li>BeanPostProcessor 的作用域是容器级别的，它只和所在的容器相关 ，当 BeanPostProcessor 完成注册后，它会应用于所有跟它在同一个容器内的 bean 。</li>
+<li>BeanFactory 和 ApplicationContext 对 BeanPostProcessor 的处理不同，ApplicationContext 会自动检测所有实现了 BeanPostProcessor 接口的 bean，并完成注册，但是使用 BeanFactory 容器时则需要手动调用 <code>AbstractBeanFactory.addBeanPostProcessor(BeanPostProcessor beanPostProcessor)</code> 方法来完成注册</li>
+<li>ApplicationContext 的 BeanPostProcessor 支持 Ordered，而 BeanFactory 的 BeanPostProcessor 是不支持的，原因在于ApplicationContext 会对 BeanPostProcessor 进行 Ordered 检测并完成排序，而 BeanFactory 中的 BeanPostProcessor 只跟注册的顺序有关。</li>
+</ol>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/IOC/" class="category-chain-item">IOC</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>二十八、IOC之BeanPostProcessor</div>
+      <div>http://www.muzili.ren/2022/06/11/IOC之BeanPostProcessor/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/IOC%E4%B9%8BBean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" title="三十、IOC之Bean的生命周期">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">三十、IOC之Bean的生命周期</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/Docker%E5%AE%89%E8%A3%85%E5%8D%B8%E8%BD%BD/" title="Docker安装">
+                        <span class="hidden-mobile">Docker安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

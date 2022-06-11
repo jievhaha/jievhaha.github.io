@@ -1,0 +1,833 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="不管Bean对象里面的属性是什么类型，它们都是通过 XML 、Properties 或者其他方式来配置这些属性对象类型的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三十四、IoC 之深入分析 Bean 的类型转换体系">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/IoC%20%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%20Bean%20%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E4%BD%93%E7%B3%BB/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="不管Bean对象里面的属性是什么类型，它们都是通过 XML 、Properties 或者其他方式来配置这些属性对象类型的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-11T09:48:09.962Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.963Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>三十四、IoC 之深入分析 Bean 的类型转换体系 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="三十四、IoC 之深入分析 Bean 的类型转换体系"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          20k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          163 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">三十四、IoC 之深入分析 Bean 的类型转换体系</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年6月11日 下午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">IoC 之深入分析 Bean 的类型转换体系</font></div>
+
+<p>不管 Bean 对象里面的属性是什么类型，它们都是通过 XML 、Properties 或者其他方式来配置这些<strong>属性</strong>对象类型的。在 Spring 容器加载过程中，这些属性都是以 String 类型加载进容器的，但是最终都需要将这些 String 类型的属性转换为 Bean 对象属性所对应真正的类型，要想完成这种由字符串到具体对象的转换，就需要这种转换规则相关的信息，而这些信息以及转换过程由 <strong>Spring 类型转换体系</strong>来完成。</p>
+<p>以 XML 为例，在 Spring 容器加载阶段，容器将 xml 文件中定义的 <code>&lt;bean&gt;</code> 解析为 BeanDefinition，BeanDefinition 中存储着我们定义一个 bean 需要的所有信息，包括属性，这些属性是以 String 类型的存储的。当用户触发 Bean 实例化阶段时，Spring 容器会将这些属性转换为这些属性真正对应的类型。我们知道在 Bean 实例化阶段，属性的注入是在实例化 Bean 阶段的属性注入阶段，即 AbstractAutowireCapableBeanFactory 的 <code>populateBean(String beanName, RootBeanDefinition mbd, BeanWrapper bw)</code> 方法。</p>
+<p>在 <code>populateBean(String beanName, RootBeanDefinition mbd, BeanWrapper bw)</code> 方法中，会将 BeanDefinition 中定义的属性值翻译为 PropertyValue ，然后调用 <code>applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs)</code> 方法，进行属性应用。其中 PropertyValue 用于保存单个 bean 属性的信息和值的对象。</p>
+<h4 id="convertForProperty-方法"><a href="#convertForProperty-方法" class="headerlink" title="convertForProperty()方法"></a><code>convertForProperty()</code>方法</h4><p>在 <code>applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs)</code> 方法中，会调用 <code>convertForProperty(Object value, String propertyName, BeanWrapper bw, TypeConverter converter)</code> 进行属性转换：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractAutowireCapableBeanFactory。java</span><br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">private</span> Object <span class="hljs-title function_">convertForProperty</span><span class="hljs-params">(</span><br><span class="hljs-params">        <span class="hljs-meta">@Nullable</span> Object value, String propertyName, BeanWrapper bw, TypeConverter converter)</span> &#123;<br>    <span class="hljs-comment">// 若 TypeConverter 为 BeanWrapperImpl 类型，则使用 BeanWrapperImpl 来进行类型转换</span><br>    <span class="hljs-comment">// 这里主要是因为 BeanWrapperImpl 实现了 PropertyEditorRegistry 接口</span><br>    <span class="hljs-keyword">if</span> (converter <span class="hljs-keyword">instanceof</span> BeanWrapperImpl) &#123;<br>        <span class="hljs-keyword">return</span> ((BeanWrapperImpl) converter).convertForProperty(value, propertyName);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 获得属性对应的 PropertyDescriptor 对象</span><br>        <span class="hljs-type">PropertyDescriptor</span> <span class="hljs-variable">pd</span> <span class="hljs-operator">=</span> bw.getPropertyDescriptor(propertyName);<br>        <span class="hljs-comment">// 获得属性对应的 setting MethodParameter 对象</span><br>        <span class="hljs-type">MethodParameter</span> <span class="hljs-variable">methodParam</span> <span class="hljs-operator">=</span> BeanUtils.getWriteMethodParameter(pd);<br>        <span class="hljs-comment">// 执行转换</span><br>        <span class="hljs-keyword">return</span> converter.convertIfNecessary(value, pd.getPropertyType(), methodParam);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>若 TypeConverter 为 BeanWrapperImpl 类型，则使用 BeanWrapperImpl 来进行类型转换，这里主要是因为 BeanWrapperImpl 实现了 PropertyEditorRegistry 接口。</li>
+<li>否则，调用 TypeConverter 的 <code>convertIfNecessary(Object value, Class requiredType, MethodParameter methodParam)</code> 方法，进行类型转换。TypeConverter 是定义类型转换方法的接口，通常情况下与 PropertyEditorRegistry 配合使用实现类型转换。</li>
+</ul>
+<h5 id="convertIfNecessary-方法"><a href="#convertIfNecessary-方法" class="headerlink" title="convertIfNecessary()方法"></a><code>convertIfNecessary()</code>方法</h5><p><code>convertIfNecessary(Object value, Class requiredType, MethodParameter methodParam)</code> 方法的实现者有两个：DataBinder 和 TypeConverterSupport 类。</p>
+<ul>
+<li>DataBinder 主要用于参数绑定（熟悉 Spring MVC 的都应该知道这个类）</li>
+<li>TypeConverterSupport 则是 TypeConverter 的基本实现，使用的是 <code>typeConverterDelegate</code></li>
+</ul>
+<p>这里只需要关注 TypeConverterSupport 的 <code>convertIfNecessary(Object value, Class requiredType, MethodParameter methodParam)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// TypeConverterSupport.java</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> &lt;T&gt; T <span class="hljs-title function_">convertIfNecessary</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object value, <span class="hljs-meta">@Nullable</span> Class&lt;T&gt; requiredType,</span><br><span class="hljs-params"><span class="hljs-meta">@Nullable</span> MethodParameter methodParam)</span> <span class="hljs-keyword">throws</span> TypeMismatchException &#123;<br>    <span class="hljs-keyword">return</span> convertIfNecessary(value, requiredType,(methodParam != <span class="hljs-literal">null</span> ? <span class="hljs-keyword">new</span>      <span class="hljs-title class_">TypeDescriptor</span>(methodParam) : TypeDescriptor.valueOf(requiredType)));<br>&#125;<br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> &lt;T&gt; T <span class="hljs-title function_">convertIfNecessary</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object value, <span class="hljs-meta">@Nullable</span> Class&lt;T&gt; requiredType,</span><br><span class="hljs-params"><span class="hljs-meta">@Nullable</span> TypeDescriptor typeDescriptor)</span> <span class="hljs-keyword">throws</span> TypeMismatchException &#123;<br><br>    Assert.state(<span class="hljs-built_in">this</span>.typeConverterDelegate != <span class="hljs-literal">null</span>, <span class="hljs-string">&quot;No TypeConverterDelegate&quot;</span>);<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.typeConverterDelegate.convertIfNecessary(<span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, value, requiredType, typeDescriptor);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (ConverterNotFoundException | IllegalStateException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConversionNotSupportedException</span>(value, requiredType, ex);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (ConversionException | IllegalArgumentException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeMismatchException</span>(value, requiredType, ex);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后执行TypeConverterDelegate 的 <code>convertIfNecessary(Object newValue, @Nullable Class requiredType, ...)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// TypeConverterDelegate.java</span><br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> &lt;T&gt; T <span class="hljs-title function_">convertIfNecessary</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> String propertyName, <span class="hljs-meta">@Nullable</span> Object oldValue, <span class="hljs-meta">@Nullable</span> Object newValue,<span class="hljs-meta">@Nullable</span> Class&lt;T&gt; requiredType, <span class="hljs-meta">@Nullable</span> TypeDescriptor typeDescriptor)</span> <span class="hljs-keyword">throws</span> IllegalArgumentException &#123;<br><br>        <span class="hljs-comment">// ... 省略暂时非关键的代码</span><br><br>    <span class="hljs-comment">//如果没有自定义的编辑器则使用 ConversionService</span><br>        <span class="hljs-type">ConversionService</span> <span class="hljs-variable">conversionService</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.propertyEditorRegistry.getConversionService();<br>        <span class="hljs-keyword">if</span> (editor == <span class="hljs-literal">null</span> &amp;&amp; conversionService != <span class="hljs-literal">null</span> &amp;&amp; newValue != <span class="hljs-literal">null</span> &amp;&amp; typeDescriptor != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-type">TypeDescriptor</span> <span class="hljs-variable">sourceTypeDesc</span> <span class="hljs-operator">=</span> TypeDescriptor.forObject(newValue);<br>            <span class="hljs-keyword">if</span> (conversionService.canConvert(sourceTypeDesc, typeDescriptor)) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-keyword">return</span> (T) conversionService.convert(newValue, sourceTypeDesc, typeDescriptor);<br>                &#125; <span class="hljs-keyword">catch</span> (ConversionFailedException ex) &#123;<br>                    conversionAttemptEx = ex;<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// ... 省略暂时非关键的代码</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="ConversionService"><a href="#ConversionService" class="headerlink" title="ConversionService"></a>ConversionService</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConversionService.java</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConversionService</span> &#123;<br><br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">canConvert</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Class&lt;?&gt; sourceType, Class&lt;?&gt; targetType)</span>;<br><br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">canConvert</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> TypeDescriptor sourceType, TypeDescriptor targetType)</span>;<br><br>    <span class="hljs-meta">@Nullable</span><br>    &lt;T&gt; T <span class="hljs-title function_">convert</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object source, Class&lt;T&gt; targetType)</span>;<br><br>    <span class="hljs-meta">@Nullable</span><br>    Object <span class="hljs-title function_">convert</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object source, <span class="hljs-meta">@Nullable</span> TypeDescriptor sourceType, TypeDescriptor targetType)</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>ConfigurableConversionService</strong>：ConversionService 的配置接口，继承 ConversionService 和 ConverterRegistry 两个接口，用于合并他们两者的操作，以便于通过 add 和 remove 的方式添加和删除转换器。</li>
+<li><strong>GenericConversionService</strong>：ConversionService 接口的基础实现，适用于大部分条件下的转换工作，通过 ConfigurableConversionService 接口间接地将 ConverterRegistry 实现为注册 API 。</li>
+<li><strong>DefaultConversionService</strong>：ConversionService 接口的默认实现，适用于大部分条件下的转换工作。</li>
+</ul>
+<p>回到 TypeConverterDelegate 的 <code>convertIfNecessary(String propertyName, Object oldValue, @Nullable Object newValue, Class requiredType, TypeDescriptor typeDescriptor)</code> 方法，在该方法中，如果没有自定义的属性编辑器，则调用 ConversionService 接口的 <code>convert(...)</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConversionService.java</span><br><br>Object <span class="hljs-title function_">convert</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object source, <span class="hljs-meta">@Nullable</span> TypeDescriptor sourceType, TypeDescriptor targetType)</span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>source</code> ：要转换的源对象，可以为 <code>null</code> 。</li>
+<li><code>sourceType</code>：<code>source</code> 的类型的上下文，如果 <code>source</code> 为 <code>null</code> ，则可以为 <code>null</code> 。</li>
+<li><code>targetType</code> ：<code>source</code> 要转换的类型的上下文。</li>
+</ul>
+<p><code>convert(...)</code> 方法，将给定的源对象 <code>source</code> 转换为指定的 <code>targetType</code> 。TypeDescriptors 提供有关发生转换的源位置和目标位置的附加上下文，通常是对象字段或属性位置。该方法由子类 GenericConversionService 实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java</span><br><br><span class="hljs-meta">@Override</span><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">convert</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object source, <span class="hljs-meta">@Nullable</span> TypeDescriptor sourceType, TypeDescriptor targetType)</span> &#123;<br>    Assert.notNull(targetType, <span class="hljs-string">&quot;Target type to convert to cannot be null&quot;</span>);<br>    <span class="hljs-comment">// &lt;1&gt; 如果 sourceType 为空，则直接处理结果</span><br>    <span class="hljs-keyword">if</span> (sourceType == <span class="hljs-literal">null</span>) &#123;<br>        Assert.isTrue(source == <span class="hljs-literal">null</span>, <span class="hljs-string">&quot;Source must be [null] if source type == [null]&quot;</span>);<br>        <span class="hljs-keyword">return</span> handleResult(<span class="hljs-literal">null</span>, targetType, convertNullSource(<span class="hljs-literal">null</span>, targetType));<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 如果类型不对，抛出 IllegalArgumentException 异常</span><br>    <span class="hljs-keyword">if</span> (source != <span class="hljs-literal">null</span> &amp;&amp; !sourceType.getObjectType().isInstance(source)) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Source to convert from must be an instance of [&quot;</span> +<br>                sourceType + <span class="hljs-string">&quot;]; instead it was a [&quot;</span> + source.getClass().getName() + <span class="hljs-string">&quot;]&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">// &lt;3&gt; 获得对应的 GenericConverter 对象</span><br>    <span class="hljs-type">GenericConverter</span> <span class="hljs-variable">converter</span> <span class="hljs-operator">=</span> getConverter(sourceType, targetType);<br>    <span class="hljs-comment">// &lt;4&gt; 如果 converter 非空，则进行转换，然后再处理结果</span><br>    <span class="hljs-keyword">if</span> (converter != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// &lt;4.1&gt; 执行转换</span><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> ConversionUtils.invokeConverter(converter, source, sourceType, targetType);<br>        <span class="hljs-comment">// &lt;4.2&gt; 处理器结果</span><br>        <span class="hljs-keyword">return</span> handleResult(sourceType, targetType, result);<br>    &#125;<br>    <span class="hljs-comment">// &lt;5&gt; 处理 converter 为空的情况</span><br>    <span class="hljs-keyword">return</span> handleConverterNotFound(source, sourceType, targetType);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>&lt;1&gt;</code> 处，如果 <code>sourceType</code> 为空，则直接处理结果。</p>
+</li>
+<li><p><code>&lt;2&gt;</code> 处，如果类型不对，抛出 IllegalArgumentException 异常。</p>
+</li>
+<li><p><code>&lt;3&gt;</code> 处，调用 <code>getConverter(TypeDescriptor sourceType, TypeDescriptor targetType)</code> 方法，获取 GenericConverter 对象 <code>converter</code> 。</p>
+</li>
+<li><p><code>&lt;4&gt;</code> 处，如果 <code>converter</code> 非空，则进行转换，然后再处理结果。</p>
+<p><code>&lt;4.1&gt;</code> 处，调用 <code>ConversionUtils#invokeConverter(GenericConverter converter, Object source, TypeDescriptor sourceType, TypeDescriptor targetType)</code> 方法，执行转换：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConversionUtils.java</span><br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">invokeConverter</span><span class="hljs-params">(GenericConverter converter, <span class="hljs-meta">@Nullable</span> Object source,</span><br><span class="hljs-params">        TypeDescriptor sourceType, TypeDescriptor targetType)</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 执行转换</span><br>        <span class="hljs-keyword">return</span> converter.convert(source, sourceType, targetType);<br>    &#125; <span class="hljs-keyword">catch</span> (ConversionFailedException ex) &#123;<br>        <span class="hljs-keyword">throw</span> ex;<br>    &#125; <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConversionFailedException</span>(sourceType, targetType, source, ex);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>&lt;4.2&gt;</code> 处，调用 <code>handleResult(TypeDescriptor sourceType, TypeDescriptor targetType, Object result)</code> 方法，处理结果，实际上就是<strong>校验</strong>结果。。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java</span><br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">private</span> Object <span class="hljs-title function_">handleResult</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> TypeDescriptor sourceType, TypeDescriptor targetType, <span class="hljs-meta">@Nullable</span> Object result)</span> &#123;<br>	<span class="hljs-keyword">if</span> (result == <span class="hljs-literal">null</span>) &#123;<br>		assertNotPrimitiveTargetType(sourceType, targetType);<br>	&#125;<br>	<span class="hljs-keyword">return</span> result;<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">assertNotPrimitiveTargetType</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> TypeDescriptor sourceType, TypeDescriptor targetType)</span> &#123;<br>	<span class="hljs-keyword">if</span> (targetType.isPrimitive()) &#123;<br>		<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConversionFailedException</span>(sourceType, targetType, <span class="hljs-literal">null</span>,<br>				<span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;A null value cannot be assigned to a primitive type&quot;</span>));<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>&lt;5&gt;</code> 处，调用 <code>handleConverterNotFound(Object source, TypeDescriptor sourceType, TypeDescriptor targetType)</code> 方法，处理 <code>converter</code> 为空的情况：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java</span><br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">private</span> Object <span class="hljs-title function_">handleConverterNotFound</span><span class="hljs-params">(</span><br><span class="hljs-params">        <span class="hljs-meta">@Nullable</span> Object source, <span class="hljs-meta">@Nullable</span> TypeDescriptor sourceType, TypeDescriptor targetType)</span> &#123;<br>    <span class="hljs-comment">// 情况一，如果 source 为空，则返回空</span><br>    <span class="hljs-keyword">if</span> (source == <span class="hljs-literal">null</span>) &#123;<br>        assertNotPrimitiveTargetType(sourceType, targetType);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-comment">// 情况二，如果 sourceType 为空，或者 targetType 是 sourceType 的子类，则返回 source</span><br>    <span class="hljs-keyword">if</span> ((sourceType == <span class="hljs-literal">null</span> || sourceType.isAssignableTo(targetType)) &amp;&amp;<br>            targetType.getObjectType().isInstance(source)) &#123;<br>        <span class="hljs-keyword">return</span> source;<br>    &#125;<br>    <span class="hljs-comment">// 抛出 ConverterNotFoundException 异常</span><br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConverterNotFoundException</span>(sourceType, targetType);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="getConverter-方法"><a href="#getConverter-方法" class="headerlink" title="getConverter()方法"></a><code>getConverter()</code>方法</h4><p>先从 <code>getConverter(TypeDescriptor sourceType, TypeDescriptor targetType)</code> 方法，获取 GenericConverter 对象 <code>converter</code> 开始，即上边**&lt;3&gt;**。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java</span><br><br><span class="hljs-comment">// 所有 Converter 集合的封装对象</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Converters</span> <span class="hljs-variable">converters</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Converters</span>();<br><br><span class="hljs-comment">// GenericConverter 缓存</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Map&lt;ConverterCacheKey, GenericConverter&gt; converterCache = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentReferenceHashMap</span>&lt;&gt;(<span class="hljs-number">64</span>);<br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">protected</span> GenericConverter <span class="hljs-title function_">getConverter</span><span class="hljs-params">(TypeDescriptor sourceType, TypeDescriptor targetType)</span> &#123;<br>    <span class="hljs-comment">// 创建 ConverterCacheKey 对象</span><br>    <span class="hljs-type">ConverterCacheKey</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConverterCacheKey</span>(sourceType, targetType);<br>    <span class="hljs-comment">// 从 converterCache 缓存中，获得 GenericConverter 对象 converter</span><br>    <span class="hljs-type">GenericConverter</span> <span class="hljs-variable">converter</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.converterCache.get(key);<br>    <span class="hljs-comment">// 如果获得到，则返回 converter</span><br>    <span class="hljs-keyword">if</span> (converter != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> (converter != NO_MATCH ? converter : <span class="hljs-literal">null</span>);<br>    &#125;<br>    <span class="hljs-comment">// 如果获取不到，则从 converters 中查找</span><br>    converter = <span class="hljs-built_in">this</span>.converters.find(sourceType, targetType);<br>    <span class="hljs-comment">// 如果查找不到，则获得默认的 Converter 对象</span><br>    <span class="hljs-keyword">if</span> (converter == <span class="hljs-literal">null</span>) &#123;<br>        converter = getDefaultConverter(sourceType, targetType);<br>    &#125;<br>    <span class="hljs-comment">// 如果找到 converter ，则添加 converter 到 converterCache 中，并返回 converter</span><br>    <span class="hljs-keyword">if</span> (converter != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-built_in">this</span>.converterCache.put(key, converter);<br>        <span class="hljs-keyword">return</span> converter;<br>    &#125;<br>    <span class="hljs-comment">// 如果找不到 converter ，则添加 NO_MATCH 占位符到 converterCache 中，并返回 null</span><br>    <span class="hljs-built_in">this</span>.converterCache.put(key, NO_MATCH);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>逻辑比较简单：从 <code>converterCache</code> 缓存中获取，如果存在返回，否则从 <code>converters</code> 中获取，然后加入到 <code>converterCache</code> 缓存中。</p>
+<p>Converters 是 GenericConversionService 内部类，用于管理所有注册的转换器，其内部维护一个 Set 和 Map 的数据结构用于管理转换器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java#Converters</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Set&lt;GenericConverter&gt; globalConverters = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashSet</span>&lt;&gt;();<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Map&lt;ConvertiblePair, ConvertersForPair&gt; converters = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashMap</span>&lt;&gt;(<span class="hljs-number">36</span>);<br></code></pre></td></tr></table></figure>
+
+<p>在 <code>getConverter(TypeDescriptor sourceType, TypeDescriptor targetType)</code> 方法中，如果缓存 <code>converterCache</code> 中不存在，则调用 Converters 对象的 <code>find(TypeDescriptor sourceType, TypeDescriptor targetType)</code> 方法，查找相应的 GenericConverter：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java#Converters</span><br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> GenericConverter <span class="hljs-title function_">find</span><span class="hljs-params">(TypeDescriptor sourceType, TypeDescriptor targetType)</span> &#123;<br>    <span class="hljs-comment">// Search the full type hierarchy</span><br>    List&lt;Class&lt;?&gt;&gt; sourceCandidates = getClassHierarchy(sourceType.getType());<br>    List&lt;Class&lt;?&gt;&gt; targetCandidates = getClassHierarchy(targetType.getType());<br>    <span class="hljs-comment">// 遍历 sourceCandidates 数组</span><br>    <span class="hljs-keyword">for</span> (Class&lt;?&gt; sourceCandidate : sourceCandidates) &#123;<br>        <span class="hljs-comment">// 遍历 targetCandidates 数组</span><br>        <span class="hljs-keyword">for</span> (Class&lt;?&gt; targetCandidate : targetCandidates) &#123;<br>            <span class="hljs-comment">// 创建 ConvertiblePair 对象</span><br>            <span class="hljs-type">ConvertiblePair</span> <span class="hljs-variable">convertiblePair</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConvertiblePair</span>(sourceCandidate, targetCandidate);<br>            <span class="hljs-comment">// 获得 GenericConverter 对象</span><br>            <span class="hljs-type">GenericConverter</span> <span class="hljs-variable">converter</span> <span class="hljs-operator">=</span> getRegisteredConverter(sourceType, targetType, convertiblePair);<br>            <span class="hljs-keyword">if</span> (converter != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">return</span> converter;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">private</span> GenericConverter <span class="hljs-title function_">getRegisteredConverter</span><span class="hljs-params">(TypeDescriptor sourceType,</span><br><span class="hljs-params">        TypeDescriptor targetType, ConvertiblePair convertiblePair)</span> &#123;<br>    <span class="hljs-comment">// Check specifically registered converters</span><br>    <span class="hljs-comment">// 从 converters 中，获得 converter</span><br>    <span class="hljs-type">ConvertersForPair</span> <span class="hljs-variable">convertersForPair</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.converters.get(convertiblePair);<br>    <span class="hljs-keyword">if</span> (convertersForPair != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-type">GenericConverter</span> <span class="hljs-variable">converter</span> <span class="hljs-operator">=</span> convertersForPair.getConverter(sourceType, targetType);<br>        <span class="hljs-keyword">if</span> (converter != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> converter;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// Check ConditionalConverters for a dynamic match</span><br>    <span class="hljs-comment">// 从 globalConverters 中，获得 globalConverter</span><br>    <span class="hljs-keyword">for</span> (GenericConverter globalConverter : <span class="hljs-built_in">this</span>.globalConverters) &#123;<br>        <span class="hljs-keyword">if</span> (((ConditionalConverter) globalConverter).matches(sourceType, targetType)) &#123;<br>            <span class="hljs-keyword">return</span> globalConverter;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 <code>find(TypeDescriptor sourceType, TypeDescriptor targetT)</code> 方法中，会根据 <code>sourceType</code> 和 <code>targetType</code> 去查询 Converters 中维护的 Map 中是否包括支持的注册类型。如果存在返回 GenericConverter ，如果没有存在返回 <code>null</code> 。</p>
+<h4 id="convert-方法"><a href="#convert-方法" class="headerlink" title="convert()方法"></a><code>convert()</code>方法</h4><p>当得到 GenericConverter 后，则调用其 <code>convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType)</code> 方法，进行类型转换，即**&lt;4.1&gt;**处。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// &lt;4.1&gt; 执行转换</span><br><span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> ConversionUtils.invokeConverter(converter, source, sourceType, targetType);<br></code></pre></td></tr></table></figure>
+
+<p>该方法内部调用的就是<code>GenericConverter.convert()</code>，这里就可以得到 Bean 属性定义的真正类型了。</p>
+<h4 id="GenericConverter接口"><a href="#GenericConverter接口" class="headerlink" title="GenericConverter接口"></a><code>GenericConverter</code>接口</h4><p>GenericConverter 是一个转换接口，一个用于在两种或更多种类型之间转换的通用型转换器接口。它是 Converter SPI 体系中最灵活的，也是最复杂的接口，灵活性在于 GenericConverter 可以支持在多个源&#x2F;目标类型对之间进行转换，同时也可以在类型转换过程中访问源&#x2F;目标字段上下文。由于该接口足够复杂，所有当更简单的 Converter 或 ConverterFactory 接口足够使用时，通常不应使用此接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConverter.java</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">GenericConverter</span> &#123;<br>    <span class="hljs-meta">@Nullable</span><br>    Set&lt;ConvertiblePair&gt; <span class="hljs-title function_">getConvertibleTypes</span><span class="hljs-params">()</span>;<br>    <span class="hljs-meta">@Nullable</span><br>    Object <span class="hljs-title function_">convert</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Object source, TypeDescriptor sourceType, TypeDescriptor targetType)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在类型转换体系中，Spring 提供了非常多的类型转换器，除了上面的 GenericConverter，还有 Converter、ConditionalConverter、ConverterFactory。</p>
+<h4 id="Converter接口"><a href="#Converter接口" class="headerlink" title="Converter接口"></a><code>Converter</code>接口</h4><p>Converter 是一个将 <code>类型的源对象转换为</code> 类型的目标对象的转换器。该接口是线程安全的，所以可以共享：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Converter.java</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Converter</span>&lt;S, T&gt; &#123;<br>    <span class="hljs-meta">@Nullable</span><br>    T <span class="hljs-title function_">convert</span><span class="hljs-params">(S source)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="ConditionalConverter接口"><a href="#ConditionalConverter接口" class="headerlink" title="ConditionalConverter接口"></a><code>ConditionalConverter</code>接口</h4><p>ConditionalConverter 接口用于表示有条件的类型转换，通过转入的<code>sourceType</code> 与 <code>targetType</code> 判断转换能否匹配，只有可匹配的转换才会调用convert 方法进行转换。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConditionalConverter.java</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConditionalConverter</span> &#123;<br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">matches</span><span class="hljs-params">(TypeDescriptor sourceType, TypeDescriptor targetType)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="ConverterFactory接口"><a href="#ConverterFactory接口" class="headerlink" title="ConverterFactory接口"></a><code>ConverterFactory</code>接口</h4><p>一个用于“远程”转换的转换工厂，可以将对象从 <code>转换为</code> 的子类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// ConverterFactory.java</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConverterFactory</span>&lt;S, R&gt; &#123;<br>    &lt;T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">R</span>&gt; Converter&lt;S, T&gt; <span class="hljs-title function_">getConverter</span><span class="hljs-params">(Class&lt;T&gt; targetType)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>四种不同的转换器承载着不同的转换过程：</p>
+<ul>
+<li>Converter：用于 <code>1:1</code> 的 <code>source -&gt; target</code> 类型转换。</li>
+<li>ConverterFactory：用于 <code>1:N</code> 的 <code>source -&gt; target</code> 类型转换。</li>
+<li>GenericConverter用于 <code>N:N</code> 的 <code>source -&gt; target</code> 类型转换。</li>
+<li>ConditionalConverter：有条件的 <code>source -&gt; target</code> 类型转换。</li>
+</ul>
+<h4 id="GenericConversionService-接口"><a href="#GenericConversionService-接口" class="headerlink" title="GenericConversionService()接口"></a><code>GenericConversionService()</code>接口</h4><p>ConversionService 接口中定义了两类方法：</p>
+<ul>
+<li><code>canConvert(sourceType, targetType)</code> 方法，用于判 <code>sourceType</code> 能否转成 <code>targetType</code> 。</li>
+<li><code>convert(source, targetType)</code> 方法，用于将 <code>source</code> 转成转入的 TargetType 类型实例。</li>
+</ul>
+<p>这两类方法都是在 GenericConversionService 中实现。<br>类 GenericConversionService 实现 ConfigurableConversionService 接口，而 ConfigurableConversionService 接口继承 ConversionService 和 ConverterRegistry。<br>ConverterRegistry 提供了类型转换器的管理功能，他提供了四个 add 和一个 remove 方法，支持注册&#x2F;删除相应的类型转换器。</p>
+<p>GenericConversionService 作为一个基础实现类，它即支持了不同类型之间的转换，也对各类型转换器进行管理，主要是通过一个 Map 类型的 <code>converterCache</code> 和一个内部类 Converters 。在上面已经分析了 GenericConversionService 执行类型转换的过程 <code>cover(...)</code> 方法。下面我们就一个 <code>addConverter(Converter converter)</code> 方法，来看看它是如何完成转换器的注入的工作的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java</span><br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addConverter</span><span class="hljs-params">(Converter&lt;?, ?&gt; converter)</span> &#123;<br>    <span class="hljs-comment">// &lt;1&gt; 获取 ResolvableType 对象，基于 converter.getClass() 类</span><br>    ResolvableType[] typeInfo = getRequiredTypeInfo(converter.getClass(), Converter.class);<br>    <span class="hljs-comment">// &lt;1&gt; 如果获取不到，并且 converter 是 DecoratingProxy 类型，则基于 ((DecoratingProxy) converter).getDecoratedClass() 类</span><br>    <span class="hljs-keyword">if</span> (typeInfo == <span class="hljs-literal">null</span> &amp;&amp; converter <span class="hljs-keyword">instanceof</span> DecoratingProxy) &#123;<br>        typeInfo = getRequiredTypeInfo(((DecoratingProxy) converter).getDecoratedClass(), Converter.class);<br>    &#125;<br>    <span class="hljs-comment">// 如果获取不到，抛出 IllegalArgumentException 异常</span><br>    <span class="hljs-keyword">if</span> (typeInfo == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Unable to determine source type &lt;S&gt; and target type &lt;T&gt; for your Converter [&quot;</span> + converter.getClass().getName() + <span class="hljs-string">&quot;]; does the class parameterize those types?&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">// &lt;2&gt; 封装成 ConverterAdapter 对象，添加到 converters 中</span><br>    addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ConverterAdapter</span>(converter, typeInfo[<span class="hljs-number">0</span>], typeInfo[<span class="hljs-number">1</span>]));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>&lt;1&gt;</code> 首先，根据 <code>converter</code> 获取 ResolvableType 数组。</li>
+<li><code>&lt;2&gt;</code> 然后，将其与 <code>converter</code> 封装成一个 ConverterAdapter 实例。</li>
+<li><code>&lt;2&gt;</code> 最后，调用 <code>addConverter(GenericConverter converter)</code> 方法，添加到 <code>converters</code> 中。</li>
+<li>ResolvableType 用于封装 Java 的 Type类型。</li>
+<li>ConverterAdapter 则是 Converter 的一个适配器， 它实现了 GenericConverter 和 ConditionalConverter 两个类型转换器。</li>
+</ul>
+<p><code>addConverter(GenericConverter converter)</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java</span><br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addConverter</span><span class="hljs-params">(GenericConverter converter)</span> &#123;<br>    <span class="hljs-comment">// 添加到 converters 中</span><br>    <span class="hljs-built_in">this</span>.converters.add(converter);<br>    <span class="hljs-comment">// 过期缓存</span><br>    invalidateCache();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>直接调用内部类 Converters 的 <code>add(GenericConverter converter)</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(GenericConverter converter)</span> &#123;<br>    <span class="hljs-comment">// 获得 ConvertiblePair 集合</span><br>    Set&lt;ConvertiblePair&gt; convertibleTypes = converter.getConvertibleTypes();<br>    <span class="hljs-comment">// 如果为空，并且 converter 是 ConditionalConverter 类型，则添加到 【globalConverters】 中</span><br>    <span class="hljs-keyword">if</span> (convertibleTypes == <span class="hljs-literal">null</span>) &#123;<br>        Assert.state(converter <span class="hljs-keyword">instanceof</span> ConditionalConverter,<br>                     <span class="hljs-string">&quot;Only conditional converters may return null convertible types&quot;</span>);<br>        <span class="hljs-built_in">this</span>.globalConverters.add(converter);<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 通过迭代的方式依次添加【converters】中</span><br>        <span class="hljs-keyword">for</span> (ConvertiblePair convertiblePair : convertibleTypes) &#123;<br>            <span class="hljs-comment">// 从 converters 中，获得 ConvertersForPair 对象，添加 converter 到 ConvertersForPair 中</span><br>            getMatchableConverters(convertiblePair).add(converter);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>首先调用 GenericConverter 的 <code>getConvertibleTypes()</code> 方法，获取 ConvertiblePair 集合。如果为空，则加入到 <code>globalConverters</code> 集合中，否则通过迭代的方式依次添加 <code>converters</code> 中。</li>
+<li>ConvertiblePair 为 source-to-target 的持有者，它持有 <code>source</code> 和 <code>target</code> 的 class 类型，</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConverter.java#ConvertiblePair</span><br><br><span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ConvertiblePair</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Class&lt;?&gt; sourceType;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Class&lt;?&gt; targetType;<br>    <span class="hljs-comment">// 省略其他代码</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在迭代过程中会根据 ConvertiblePair 获取相应的 ConvertersForPair 对象，然后添加 <code>converter</code> 转换器加入其中。ConvertiblePair 用于管理使用特定GenericConverter.ConvertiblePair 注册的转换器，也是个内部类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// GenericConversionService.java#ConvertersForPair</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ConvertersForPair</span> &#123;<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> LinkedList&lt;GenericConverter&gt; converters = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(GenericConverter converter)</span> &#123;<br>        <span class="hljs-built_in">this</span>.converters.addFirst(converter);<br>    &#125;<br><br>    <span class="hljs-meta">@Nullable</span><br>    <span class="hljs-keyword">public</span> GenericConverter <span class="hljs-title function_">getConverter</span><span class="hljs-params">(TypeDescriptor sourceType, TypeDescriptor targetType)</span> &#123;<br>        <span class="hljs-keyword">for</span> (GenericConverter converter : <span class="hljs-built_in">this</span>.converters) &#123;<br>            <span class="hljs-keyword">if</span> (!(converter <span class="hljs-keyword">instanceof</span> ConditionalGenericConverter) ||<br>                    ((ConditionalGenericConverter) converter).matches(sourceType, targetType)) &#123;<br>                <span class="hljs-keyword">return</span> converter;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其实内部就是维护一个 LinkedList 集合。他内部有两个方法：<code>add(GenericConverter converter)</code> 和 <code>getConverter(TypeDescriptor sourceType, TypeDescriptor targetType)</code>，实现较为简单。</p>
+<h4 id="DefaultConversionService"><a href="#DefaultConversionService" class="headerlink" title="DefaultConversionService"></a><code>DefaultConversionService</code></h4><p>DefaultConversionService 是 ConversionService 的默认实现，它继承 GenericConversionService，GenericConversionService 主要用于转换器的注册和调用，DefaultConversionService 则是为 ConversionService 体系提供一些默认的转换器。在 DefaultConversionService 构造方法中就会添加默认的 Converter ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// DefaultConversionService.java</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">DefaultConversionService</span><span class="hljs-params">()</span> &#123;<br>    addDefaultConverters(<span class="hljs-built_in">this</span>);<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addDefaultConverters</span><span class="hljs-params">(ConverterRegistry converterRegistry)</span> &#123;<br>    addScalarConverters(converterRegistry);<br>    addCollectionConverters(converterRegistry);<br><br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteBufferConverter</span>((ConversionService) converterRegistry));<br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">StringToTimeZoneConverter</span>());<br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ZoneIdToTimeZoneConverter</span>());<br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ZonedDateTimeToCalendarConverter</span>());<br><br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectToObjectConverter</span>());<br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">IdToEntityConverter</span>((ConversionService) converterRegistry));<br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">FallbackObjectToStringConverter</span>());<br>    converterRegistry.addConverter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectToOptionalConverter</span>((ConversionService) converterRegistry));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>Bean的属性转换大致调用流程：</p>
+<p>TypeConverterSupport &#x3D;&gt; ConversionService &#x3D;&gt; Converter</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/IOC/" class="category-chain-item">IOC</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>三十四、IoC 之深入分析 Bean 的类型转换体系</div>
+      <div>http://www.muzili.ren/2022/06/11/IoC 之深入分析 Bean 的类型转换体系/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/JUC%E4%B9%8BAQS%E7%AE%80%E4%BB%8B/" title="AQS">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">AQS</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/IOC%E4%B9%8BInitializingBean%20%E5%92%8C%20init-method/" title="二十九、IOC之InitializingBean 和 init-method">
+                        <span class="hidden-mobile">二十九、IOC之InitializingBean 和 init-method</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

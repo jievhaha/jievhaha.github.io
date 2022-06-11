@@ -1,0 +1,1121 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="MySQL安装、索引、视图、存储过程等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql高级一">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day01/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="MySQL安装、索引、视图、存储过程等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555902055367.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944126588.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944549825.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944596893.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944652560.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944686928.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944713486.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944749984.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555944848294.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/00001.jpg">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555906287178.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551438009843.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551440511890.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551440544483.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551438238293.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551503428635.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551537565159.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551537646323.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551588962944.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552057035580.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.964Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.964Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/mysql/1555902055367.png">
+  
+  
+  
+  <title>Mysql高级一 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Mysql高级一"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          17k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          140 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Mysql高级一</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">Mysql高级一</font></div>
+
+<h3 id="1-Linux-系统安装MySQL"><a href="#1-Linux-系统安装MySQL" class="headerlink" title="1. Linux 系统安装MySQL"></a>1. Linux 系统安装MySQL</h3><h4 id="1-1-下载Linux-安装包"><a href="#1-1-下载Linux-安装包" class="headerlink" title="1.1 下载Linux 安装包"></a>1.1 下载Linux 安装包</h4><h4 id="1-2-安装MySQL"><a href="#1-2-安装MySQL" class="headerlink" title="1.2 安装MySQL"></a>1.2 安装MySQL</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">1</span>). 卸载 centos 中预安装的 mysql<br>	<br>	<span class="hljs-attribute">rpm</span> -qa | grep -i mysql<br>	<br>	<span class="hljs-attribute">rpm</span> -e mysql-libs-<span class="hljs-number">5</span>.<span class="hljs-number">1</span>.<span class="hljs-number">71</span>-<span class="hljs-number">1</span>.el6.x86_64 --nodeps<br>	<br><span class="hljs-attribute">2</span>). 上传 mysql 的安装包<br>	<br>	<span class="hljs-attribute">alt</span> + p -------&gt; put  E:/test/MySQL-<span class="hljs-number">5</span>.<span class="hljs-number">6</span>.<span class="hljs-number">22</span>-<span class="hljs-number">1</span>.el6.i686.rpm-bundle.tar<br><br><span class="hljs-attribute">3</span>). 解压 mysql 的安装包 <br>	<br>	<span class="hljs-attribute">mkdir</span> mysql<br>	<br>	<span class="hljs-attribute">tar</span> -xvf MySQL-<span class="hljs-number">5</span>.<span class="hljs-number">6</span>.<span class="hljs-number">22</span>-<span class="hljs-number">1</span>.el6.i686.rpm-bundle.tar -C /root/mysql<br>	<br><span class="hljs-attribute">4</span>). 安装依赖包 <br>	<br>	<span class="hljs-attribute">yum</span> -y install libaio.so.<span class="hljs-number">1</span> libgcc_s.so.<span class="hljs-number">1</span> libstdc++.so.<span class="hljs-number">6</span> libncurses.so.<span class="hljs-number">5</span> --setopt=protected_multilib=false<br>	<br>	<span class="hljs-attribute">yum</span>  update libstdc++-<span class="hljs-number">4</span>.<span class="hljs-number">4</span>.<span class="hljs-number">7</span>-<span class="hljs-number">4</span>.el6.x86_64<br>	<br><span class="hljs-attribute">5</span>). 安装 mysql-client<br>	<br>	<span class="hljs-attribute">rpm</span> -ivh MySQL-client-<span class="hljs-number">5</span>.<span class="hljs-number">6</span>.<span class="hljs-number">22</span>-<span class="hljs-number">1</span>.el6.i686.rpm<br><br><span class="hljs-attribute">6</span>). 安装 mysql-server<br>	<br>	<span class="hljs-attribute">rpm</span> -ivh MySQL-server-<span class="hljs-number">5</span>.<span class="hljs-number">6</span>.<span class="hljs-number">22</span>-<span class="hljs-number">1</span>.el6.i686.rpm<br>	<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-3-启动-MySQL-服务"><a href="#1-3-启动-MySQL-服务" class="headerlink" title="1.3 启动 MySQL 服务"></a>1.3 启动 MySQL 服务</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs SQL">service mysql <span class="hljs-keyword">start</span><br><br>service mysql stop<br><br>service mysql status<br><br>service mysql restart<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-4-登录MySQL"><a href="#1-4-登录MySQL" class="headerlink" title="1.4 登录MySQL"></a>1.4 登录MySQL</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">mysql 安装完成之后, 会自动生成一个随机的密码, 并且保存在一个密码文件中 : /root/.mysql_secret<br><br>mysql -u root -p <br><br>登录之后, 修改密码 :<br><br><span class="hljs-keyword">set</span> <span class="hljs-keyword">password</span> = <span class="hljs-keyword">password</span>(<span class="hljs-string">&#x27;itcast&#x27;</span>);<br><br>授权远程访问 : <br><br><span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> <span class="hljs-keyword">privileges</span> <span class="hljs-keyword">on</span> *.* <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;root&#x27;</span> @<span class="hljs-string">&#x27;%&#x27;</span> identified <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;itcast&#x27;</span>;<br>flush <span class="hljs-keyword">privileges</span>;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-索引"><a href="#2-索引" class="headerlink" title="2. 索引"></a>2. 索引</h3><h4 id="2-1-索引概述"><a href="#2-1-索引概述" class="headerlink" title="2.1 索引概述"></a>2.1 索引概述</h4><p>MySQL官方对索引的定义为：索引（index）是帮助MySQL高效获取数据的数据结构（有序）。在数据之外，数据库系统还维护者满足特定查找算法的数据结构，这些数据结构以某种方式引用（指向）数据， 这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引。如下面的&#x3D;&#x3D;示意图&#x3D;&#x3D;所示 : </p>
+<p><img src="/images/mysql/1555902055367.png" srcset="/img/loading.gif" lazyload alt="1555902055367"> </p>
+<p>左边是数据表，一共有两列七条记录，最左边的是数据记录的物理地址（注意逻辑上相邻的记录在磁盘上也并不是一定物理相邻的）。为了加快Col2的查找，可以维护一个右边所示的二叉查找树，每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样就可以运用二叉查找快速获取到相应数据。</p>
+<p>一般来说索引本身也很大，不可能全部存储在内存中，因此索引往往以索引文件的形式存储在磁盘上。索引是数据库中用来提高性能的最常用的工具。</p>
+<h4 id="2-2-索引优势劣势"><a href="#2-2-索引优势劣势" class="headerlink" title="2.2 索引优势劣势"></a>2.2 索引优势劣势</h4><p>优势</p>
+<p>1） 类似于书籍的目录索引，提高数据检索的效率，降低数据库的IO成本。</p>
+<p>2） 通过索引列对数据进行排序，降低数据排序的成本，降低CPU的消耗。</p>
+<p>劣势</p>
+<p>1） 实际上索引也是一张表，该表中保存了主键与索引字段，并指向实体类的记录，所以索引列也是要占用空间的。</p>
+<p>2） 虽然索引大大提高了查询效率，同时却也降低更新表的速度，如对表进行INSERT、UPDATE、DELETE。因为更新表时，MySQL 不仅要保存数据，还要保存一下索引文件每次更新添加了索引列的字段，都会调整因为更新所带来的键值变化后的索引信息。</p>
+<h4 id="2-3-索引结构"><a href="#2-3-索引结构" class="headerlink" title="2.3 索引结构"></a>2.3 索引结构</h4><p>索引是在MySQL的存储引擎层中实现的，而不是在服务器层实现的。所以每种存储引擎的索引都不一定完全相同，也不是所有的存储引擎都支持所有的索引类型的。MySQL目前提供了以下4种索引：</p>
+<ul>
+<li>BTREE 索引 ： 最常见的索引类型，大部分索引都支持 B 树索引。</li>
+<li>HASH 索引：只有Memory引擎支持 ， 使用场景简单 。</li>
+<li>R-tree 索引（空间索引）：空间索引是MyISAM引擎的一个特殊索引类型，主要用于地理空间数据类型，通常使用较少，不做特别介绍。</li>
+<li>Full-text （全文索引） ：全文索引也是MyISAM的一个特殊索引类型，主要用于全文索引，InnoDB从Mysql5.6版本开始支持全文索引。</li>
+</ul>
+<center><b>MyISAM、InnoDB、Memory三种存储引擎对各种索引类型的支持</b></center>
+
+<table>
+<thead>
+<tr>
+<th>索引</th>
+<th>InnoDB引擎</th>
+<th>MyISAM引擎</th>
+<th>Memory引擎</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BTREE索引</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>HASH 索引</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>R-tree 索引</td>
+<td>不支持</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>Full-text</td>
+<td>5.6版本之后支持</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+</tbody></table>
+<p>我们平常所说的索引，如果没有特别指明，都是指B+树（多路搜索树，并不一定是二叉的）结构组织的索引。其中聚集索引、复合索引、前缀索引、唯一索引默认都是使用 B+tree 索引，统称为 索引。</p>
+<h5 id="2-3-1-BTREE-结构"><a href="#2-3-1-BTREE-结构" class="headerlink" title="2.3.1 BTREE 结构"></a>2.3.1 BTREE 结构</h5><p>BTree又叫多路平衡搜索树，一颗m叉的BTree特性如下：</p>
+<ul>
+<li>树中每个节点最多包含m个孩子。</li>
+<li>除根节点与叶子节点外，每个节点至少有[ceil(m&#x2F;2)]个孩子。</li>
+<li>若根节点不是叶子节点，则至少有两个孩子。</li>
+<li>所有的叶子节点都在同一层。</li>
+<li>每个非叶子节点由n个key与n+1个指针组成，其中[ceil(m&#x2F;2)-1] &lt;&#x3D; n &lt;&#x3D; m-1</li>
+</ul>
+<p>以5叉BTree为例，key的数量：公式推导[ceil(m&#x2F;2)-1] &lt;&#x3D; n &lt;&#x3D; m-1。所以 2 &lt;&#x3D; n &lt;&#x3D;4 。当n&gt;4时，中间节点分裂到父节点，两边节点分裂。</p>
+<p>插入 C N G A H E K Q M F W L T Z D P R X Y S 数据为例。</p>
+<p>演变过程如下：</p>
+<p>1). 插入前4个字母 C N G A </p>
+<p><img src="/images/mysql/1555944126588.png" srcset="/img/loading.gif" lazyload alt="1555944126588"> </p>
+<p>2). 插入H，n&gt;4，中间元素G字母向上分裂到新的节点</p>
+<p><img src="/images/mysql/1555944549825.png" srcset="/img/loading.gif" lazyload alt="1555944549825"> </p>
+<p>3). 插入E，K，Q不需要分裂</p>
+<p><img src="/images/mysql/1555944596893.png" srcset="/img/loading.gif" lazyload alt="1555944596893"> </p>
+<p>4). 插入M，中间元素M字母向上分裂到父节点G</p>
+<p><img src="/images/mysql/1555944652560.png" srcset="/img/loading.gif" lazyload alt="1555944652560"> </p>
+<p>5). 插入F，W，L，T不需要分裂</p>
+<p><img src="/images/mysql/1555944686928.png" srcset="/img/loading.gif" lazyload alt="1555944686928"> </p>
+<p>6). 插入Z，中间元素T向上分裂到父节点中 </p>
+<p><img src="/images/mysql/1555944713486.png" srcset="/img/loading.gif" lazyload alt="1555944713486"> </p>
+<p>7). 插入D，中间元素D向上分裂到父节点中。然后插入P，R，X，Y不需要分裂</p>
+<p><img src="/images/mysql/1555944749984.png" srcset="/img/loading.gif" lazyload alt="1555944749984"> </p>
+<p>8). 最后插入S，NPQR节点n&gt;5，中间节点Q向上分裂，但分裂后父节点DGMT的n&gt;5，中间节点M向上分裂</p>
+<p><img src="/images/mysql/1555944848294.png" srcset="/img/loading.gif" lazyload alt="1555944848294"> </p>
+<p>到此，该BTREE树就已经构建完成了， BTREE树 和 二叉树 相比， 查询数据的效率更高， 因为对于相同的数据量来说，BTREE的层级结构比二叉树小，因此搜索速度快。</p>
+<h5 id="2-3-3-B-TREE-结构"><a href="#2-3-3-B-TREE-结构" class="headerlink" title="2.3.3 B+TREE 结构"></a>2.3.3 B+TREE 结构</h5><p>B+Tree为BTree的变种，B+Tree与BTree的区别为：</p>
+<p>1). n叉B+Tree最多含有n个key，而BTree最多含有n-1个key。</p>
+<p>2). B+Tree的叶子节点保存所有的key信息，依key大小顺序排列。</p>
+<p>3). 所有的非叶子节点都可以看作是key的索引部分。</p>
+<p><img src="/images/mysql/00001.jpg" srcset="/img/loading.gif" lazyload alt="1555906287178"> </p>
+<p>由于B+Tree只有叶子节点保存key信息，查询任何key都要从root走到叶子。所以B+Tree的查询效率更加稳定（查询效率相当）。</p>
+<p>B+树的除叶子节点外的节点都不带有任何数据信息，只有索引信息，所有数据信息全部存储在叶子节点里，这样，整个树的每个节点所占的内存空间就变小了，读到内存中的索引信息就会更多一些，相当于减少了磁盘IO次数</p>
+<h5 id="2-3-3-MySQL中的B-Tree"><a href="#2-3-3-MySQL中的B-Tree" class="headerlink" title="2.3.3 MySQL中的B+Tree"></a>2.3.3 MySQL中的B+Tree</h5><p>MySql索引数据结构对经典的B+Tree进行了优化。在原B+Tree的基础上，增加一个指向相邻叶子节点的链表指针，就形成了带有顺序指针的B+Tree，提高区间访问的性能。</p>
+<p>MySQL中的 B+Tree 索引结构示意图: </p>
+<p><img src="/images/mysql/1555906287178.png" srcset="/img/loading.gif" lazyload alt="1555906287178">  </p>
+<h4 id="2-4-索引分类"><a href="#2-4-索引分类" class="headerlink" title="2.4 索引分类"></a>2.4 索引分类</h4><p>1） 单值索引 ：即一个索引只包含单个列，一个表可以有多个单列索引</p>
+<p>2） 唯一索引 ：索引列的值必须唯一，但允许有空值</p>
+<p>3） 复合索引 ：即一个索引包含多个列</p>
+<h4 id="2-5-索引语法"><a href="#2-5-索引语法" class="headerlink" title="2.5 索引语法"></a>2.5 索引语法</h4><p>索引在创建表的时候，可以同时创建， 也可以随时增加新的索引。</p>
+<p>准备环境:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">create</span> database demo_01 <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8mb4;<br><br>use demo_01;<br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `city` (<br>  `city_id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `city_name` <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `country_id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`city_id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `country` (<br>  `country_id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `country_name` <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`country_id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `city` (`city_id`, `city_name`, `country_id`) <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;西安&#x27;</span>,<span class="hljs-number">1</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `city` (`city_id`, `city_name`, `country_id`) <span class="hljs-keyword">values</span>(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;NewYork&#x27;</span>,<span class="hljs-number">2</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `city` (`city_id`, `city_name`, `country_id`) <span class="hljs-keyword">values</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;北京&#x27;</span>,<span class="hljs-number">1</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `city` (`city_id`, `city_name`, `country_id`) <span class="hljs-keyword">values</span>(<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;上海&#x27;</span>,<span class="hljs-number">1</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `country` (`country_id`, `country_name`) <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;China&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `country` (`country_id`, `country_name`) <span class="hljs-keyword">values</span>(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;America&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `country` (`country_id`, `country_name`) <span class="hljs-keyword">values</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Japan&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `country` (`country_id`, `country_name`) <span class="hljs-keyword">values</span>(<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;UK&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-5-1-创建索引"><a href="#2-5-1-创建索引" class="headerlink" title="2.5.1 创建索引"></a>2.5.1 创建索引</h5><p>语法 ： 	</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> 	[<span class="hljs-keyword">UNIQUE</span><span class="hljs-operator">|</span>FULLTEXT<span class="hljs-operator">|</span>SPATIAL]  INDEX index_name <br>[<span class="hljs-keyword">USING</span>  index_type]<br><span class="hljs-keyword">ON</span> tbl_name(index_col_name,...)<br><br><br>index_col_name : column_name[(length)][<span class="hljs-keyword">ASC</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">DESC</span>]<br></code></pre></td></tr></table></figure>
+
+<p>示例 ： 为city表中的city_name字段创建索引 ；</p>
+<p><img src="/images/mysql/1551438009843.png" srcset="/img/loading.gif" lazyload alt="1551438009843">    ​	  </p>
+<p>​	</p>
+<h5 id="2-5-2-查看索引"><a href="#2-5-2-查看索引" class="headerlink" title="2.5.2 查看索引"></a>2.5.2 查看索引</h5><p>语法： </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">index</span>  <span class="hljs-keyword">from</span>  <span class="hljs-built_in">table_name</span>;<br></code></pre></td></tr></table></figure>
+
+<p>示例：查看city表中的索引信息；</p>
+<p><img src="/images/mysql/1551440511890.png" srcset="/img/loading.gif" lazyload alt="1551440511890"> </p>
+<p><img src="/images/mysql/1551440544483.png" srcset="/img/loading.gif" lazyload alt="1551440544483"> 	 </p>
+<h5 id="2-5-3-删除索引"><a href="#2-5-3-删除索引" class="headerlink" title="2.5.3 删除索引"></a>2.5.3 删除索引</h5><p>语法 ：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">DROP</span>  <span class="hljs-keyword">INDEX</span>  index_name  <span class="hljs-keyword">ON</span>  tbl_name;<br></code></pre></td></tr></table></figure>
+
+<p>示例 ： 想要删除city表上的索引idx_city_name，可以操作如下：</p>
+<p><img src="/images/mysql/1551438238293.png" srcset="/img/loading.gif" lazyload alt="1551438238293"> 	 </p>
+<h5 id="2-5-4-ALTER命令"><a href="#2-5-4-ALTER命令" class="headerlink" title="2.5.4 ALTER命令"></a>2.5.4 ALTER命令</h5><figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs sas">1). <span class="hljs-keyword">alter</span>  <span class="hljs-keyword">table</span>  tb_name  <span class="hljs-keyword">add</span>  <span class="hljs-keyword">primary</span>  <span class="hljs-keyword">key</span>(column_list); <br><br>	该语句添加一个主键，这意味着索引值必须是唯一的，且不能为<span class="hljs-keyword">NULL</span><br>	<br>2). <span class="hljs-keyword">alter</span>  <span class="hljs-keyword">table</span>  tb_name  <span class="hljs-keyword">add</span>  <span class="hljs-keyword">unique</span> index_name(column_list);<br>	<br>	这条语句创建索引的值必须是唯一的（除了<span class="hljs-keyword">NULL</span>外，<span class="hljs-keyword">NULL</span>可能会出现多次）<br>	<br>3). <span class="hljs-keyword">alter</span>  <span class="hljs-keyword">table</span>  tb_name  <span class="hljs-keyword">add</span>  <span class="hljs-keyword">index</span> index_name(column_list);<br><br>	添加普通索引， 索引值可以出现多次。<br>	<br>4). <span class="hljs-keyword">alter</span>  <span class="hljs-keyword">table</span>  tb_name  <span class="hljs-keyword">add</span>  fulltext  index_name(column_list);<br>	<br>	该语句指定了索引为FULLTEXT， 用于全文索引<br>	<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-6-索引设计原则"><a href="#2-6-索引设计原则" class="headerlink" title="2.6 索引设计原则"></a>2.6 索引设计原则</h4><p>​	索引的设计可以遵循一些已有的原则，创建索引的时候请尽量考虑符合这些原则，便于提升索引的使用效率，更高效的使用索引。</p>
+<ul>
+<li><p>对查询频次较高，且数据量比较大的表建立索引。</p>
+</li>
+<li><p>索引字段的选择，最佳候选列应当从where子句的条件中提取，如果where子句中的组合比较多，那么应当挑选最常用、过滤效果最好的列的组合。</p>
+</li>
+<li><p>使用唯一索引，区分度越高，使用索引的效率越高。</p>
+</li>
+<li><p>索引可以有效的提升查询数据的效率，但索引数量不是多多益善，索引越多，维护索引的代价自然也就水涨船高。对于插入、更新、删除等DML操作比较频繁的表来说，索引过多，会引入相当高的维护代价，降低DML操作的效率，增加相应操作的时间消耗。另外索引过多的话，MySQL也会犯选择困难病，虽然最终仍然会找到一个可用的索引，但无疑提高了选择的代价。</p>
+</li>
+<li><p>使用短索引，索引创建之后也是使用硬盘来存储的，因此提升索引访问的I&#x2F;O效率，也可以提升总体的访问效率。假如构成索引的字段总长度比较短，那么在给定大小的存储块内可以存储更多的索引值，相应的可以有效的提升MySQL访问索引的I&#x2F;O效率。</p>
+</li>
+<li><p>利用最左前缀，N个列组合而成的组合索引，那么相当于是创建了N个索引，如果查询时where子句中使用了组成该索引的前几个字段，那么这条查询SQL可以利用组合索引来提升查询效率。</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs fortran">创建复合索引:<br><br>	CREATE <span class="hljs-built_in">INDEX</span> idx_name_email_status ON tb_seller(<span class="hljs-keyword">NAME</span>,email,<span class="hljs-keyword">STATUS</span>);<br><br>就相当于<br>	对<span class="hljs-keyword">name</span> 创建索引 ;<br>	对<span class="hljs-keyword">name</span> , email 创建了索引 ;<br>	对<span class="hljs-keyword">name</span> , email, <span class="hljs-keyword">status</span> 创建了索引 ;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-视图"><a href="#3-视图" class="headerlink" title="3. 视图"></a>3. 视图</h3><h4 id="3-1-视图概述"><a href="#3-1-视图概述" class="headerlink" title="3.1 视图概述"></a>3.1 视图概述</h4><p>​	视图（View）是一种虚拟存在的表。视图并不在数据库中实际存在，行和列数据来自定义视图的查询中使用的表，并且是在使用视图时动态生成的。通俗的讲，视图就是一条SELECT语句执行后返回的结果集。所以我们在创建视图的时候，主要的工作就落在创建这条SQL查询语句上。</p>
+<p>视图相对于普通的表的优势主要包括以下几项。</p>
+<ul>
+<li>简单：使用视图的用户完全不需要关心后面对应的表的结构、关联条件和筛选条件，对用户来说已经是过滤好的复合条件的结果集。</li>
+<li>安全：使用视图的用户只能访问他们被允许查询的结果集，对表的权限管理并不能限制到某个行某个列，但是通过视图就可以简单的实现。</li>
+<li>数据独立：一旦视图的结构确定了，可以屏蔽表结构变化对用户的影响，源表增加列对视图没有影响；源表修改列名，则可以通过修改视图来解决，不会造成对访问者的影响。</li>
+</ul>
+<h4 id="3-2-创建或者修改视图"><a href="#3-2-创建或者修改视图" class="headerlink" title="3.2 创建或者修改视图"></a>3.2 创建或者修改视图</h4><p>创建视图的语法为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> [<span class="hljs-keyword">OR</span> REPLACE] [ALGORITHM <span class="hljs-operator">=</span> &#123;UNDEFINED <span class="hljs-operator">|</span> <span class="hljs-keyword">MERGE</span> <span class="hljs-operator">|</span> TEMPTABLE&#125;]<br><br><span class="hljs-keyword">VIEW</span> view_name [(column_list)]<br><br><span class="hljs-keyword">AS</span> select_statement<br><br>[<span class="hljs-keyword">WITH</span> [<span class="hljs-keyword">CASCADED</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">LOCAL</span>] <span class="hljs-keyword">CHECK</span> OPTION]<br></code></pre></td></tr></table></figure>
+
+<p>修改视图的语法为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">ALTER</span> [ALGORITHM <span class="hljs-operator">=</span> &#123;UNDEFINED <span class="hljs-operator">|</span> <span class="hljs-keyword">MERGE</span> <span class="hljs-operator">|</span> TEMPTABLE&#125;]<br><br><span class="hljs-keyword">VIEW</span> view_name [(column_list)]<br><br><span class="hljs-keyword">AS</span> select_statement<br><br>[<span class="hljs-keyword">WITH</span> [<span class="hljs-keyword">CASCADED</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">LOCAL</span>] <span class="hljs-keyword">CHECK</span> OPTION]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql">选项 : <br>	<span class="hljs-keyword">WITH</span> [<span class="hljs-keyword">CASCADED</span> <span class="hljs-operator">|</span> <span class="hljs-keyword">LOCAL</span>] <span class="hljs-keyword">CHECK</span> OPTION 决定了是否允许更新数据使记录不再满足视图的条件。<br>	<br>	<span class="hljs-keyword">LOCAL</span> ： 只要满足本视图的条件就可以更新。<br>	<span class="hljs-keyword">CASCADED</span> ： 必须满足所有针对该视图的所有视图的条件才可以更新。 默认值.<br></code></pre></td></tr></table></figure>
+
+<p>示例 , 创建city_country_view视图 , 执行如下SQL : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">or</span> replace <span class="hljs-keyword">view</span> city_country_view <br><span class="hljs-keyword">as</span> <br><span class="hljs-keyword">select</span> t.<span class="hljs-operator">*</span>,c.country_name <span class="hljs-keyword">from</span> country c , city t <span class="hljs-keyword">where</span> c.country_id <span class="hljs-operator">=</span> t.country_id;<br><br></code></pre></td></tr></table></figure>
+
+<p>查询视图 : </p>
+<p><img src="/images/mysql/1551503428635.png" srcset="/img/loading.gif" lazyload alt="1551503428635"> 	</p>
+<h4 id="3-3-查看视图"><a href="#3-3-查看视图" class="headerlink" title="3.3 查看视图"></a>3.3 查看视图</h4><p>​	从 MySQL 5.1 版本开始，使用 SHOW TABLES 命令的时候不仅显示表的名字，同时也会显示视图的名字，而不存在单独显示视图的 SHOW VIEWS 命令。</p>
+<p><img src="/images/mysql/1551537565159.png" srcset="/img/loading.gif" lazyload alt="1551537565159">	 </p>
+<p>同样，在使用 SHOW TABLE STATUS 命令的时候，不但可以显示表的信息，同时也可以显示视图的信息。	</p>
+<p><img src="/images/mysql/1551537646323.png" srcset="/img/loading.gif" lazyload alt="1551537646323"> </p>
+<p>如果需要查询某个视图的定义，可以使用 SHOW CREATE VIEW 命令进行查看 ： </p>
+<p><img src="/images/mysql/1551588962944.png" srcset="/img/loading.gif" lazyload alt="1551588962944">  </p>
+<h4 id="3-4-删除视图"><a href="#3-4-删除视图" class="headerlink" title="3.4 删除视图"></a>3.4 删除视图</h4><p>语法 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">VIEW</span> [IF <span class="hljs-keyword">EXISTS</span>] view_name [, view_name] ...[RESTRICT <span class="hljs-operator">|</span> CASCADE]	<br></code></pre></td></tr></table></figure>
+
+<p>示例 , 删除视图city_country_view :</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-built_in">DROP</span> <span class="hljs-built_in">VIEW</span> city_country_view ;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-存储过程和函数"><a href="#4-存储过程和函数" class="headerlink" title="4. 存储过程和函数"></a>4. 存储过程和函数</h3><h4 id="4-1-存储过程和函数概述"><a href="#4-1-存储过程和函数概述" class="headerlink" title="4.1 存储过程和函数概述"></a>4.1 存储过程和函数概述</h4><p>​	存储过程和函数是  事先经过编译并存储在数据库中的一段 SQL 语句的集合，调用存储过程和函数可以简化应用开发人员的很多工作，减少数据在数据库和应用服务器之间的传输，对于提高数据处理的效率是有好处的。	</p>
+<p>​	存储过程和函数的区别在于函数必须有返回值，而存储过程没有。</p>
+<p>​	函数 ： 是一个有返回值的过程 ；</p>
+<p>​	过程 ： 是一个没有返回值的函数 ；</p>
+<h4 id="4-2-创建存储过程"><a href="#4-2-创建存储过程" class="headerlink" title="4.2 创建存储过程"></a>4.2 创建存储过程</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">PROCEDURE</span> procedure_name ([proc_parameter[,...]])<br><span class="hljs-keyword">begin</span><br>	<span class="hljs-comment">-- SQL语句</span><br><span class="hljs-keyword">end</span> ;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>示例 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql">delimiter $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test1()<br><span class="hljs-keyword">begin</span><br>	<span class="hljs-keyword">select</span> <span class="hljs-string">&#x27;Hello Mysql&#x27;</span> ;<br><span class="hljs-keyword">end</span>$<br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong><font color="red">知识小贴士</font></strong></p>
+<p>DELIMITER</p>
+<p>​	该关键字用来声明SQL语句的分隔符 , 告诉 MySQL 解释器，该段命令是否已经结束了，mysql是否可以执行了。默认情况下，delimiter是分号;。在命令行客户端中，如果有一行命令以分号结束，那么回车后，mysql将会执行该命令。</p>
+<h4 id="4-3-调用存储过程"><a href="#4-3-调用存储过程" class="headerlink" title="4.3 调用存储过程"></a>4.3 调用存储过程</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">call</span> procedure_name() ;	<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-4-查看存储过程"><a href="#4-4-查看存储过程" class="headerlink" title="4.4 查看存储过程"></a>4.4 查看存储过程</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 查询db_name数据库中的所有的存储过程</span><br><span class="hljs-keyword">select</span> name <span class="hljs-keyword">from</span> mysql.proc <span class="hljs-keyword">where</span> db<span class="hljs-operator">=</span><span class="hljs-string">&#x27;db_name&#x27;</span>;<br><br><br><span class="hljs-comment">-- 查询存储过程的状态信息</span><br><span class="hljs-keyword">show</span> <span class="hljs-keyword">procedure</span> status;<br><br><br><span class="hljs-comment">-- 查询某个存储过程的定义</span><br><span class="hljs-keyword">show</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> test.pro_test1 \G;<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-5-删除存储过程"><a href="#4-5-删除存储过程" class="headerlink" title="4.5 删除存储过程"></a>4.5 删除存储过程</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">PROCEDURE</span>  [IF <span class="hljs-keyword">EXISTS</span>] sp_name ；<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-6-语法"><a href="#4-6-语法" class="headerlink" title="4.6 语法"></a>4.6 语法</h4><p>存储过程是可以编程的，意味着可以使用变量，表达式，控制结构 ， 来完成比较复杂的功能。</p>
+<h5 id="4-6-1-变量"><a href="#4-6-1-变量" class="headerlink" title="4.6.1 变量"></a>4.6.1 变量</h5><ul>
+<li>DECLARE</li>
+</ul>
+<p>  通过 DECLARE 可以定义一个局部变量，该变量的作用范围只能在 BEGIN…END 块中。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DECLARE</span> var_name[,...] type [<span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">value</span>]<br></code></pre></td></tr></table></figure>
+
+<p>示例 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql">delimiter $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test2() <br><span class="hljs-keyword">begin</span> <br>	<span class="hljs-keyword">declare</span> num <span class="hljs-type">int</span> <span class="hljs-keyword">default</span> <span class="hljs-number">5</span>;<br>	<span class="hljs-keyword">select</span> num<span class="hljs-operator">+</span> <span class="hljs-number">10</span>; <br><span class="hljs-keyword">end</span>$<br><br>delimiter ; <br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>SET</li>
+</ul>
+<p>直接赋值使用 SET，可以赋常量或者赋表达式，具体语法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">SET var_name = <span class="hljs-built_in">expr</span> [, var_name = <span class="hljs-built_in">expr</span>] ...<br></code></pre></td></tr></table></figure>
+
+<p>示例 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql">DELIMITER $<br><br><span class="hljs-keyword">CREATE</span>  <span class="hljs-keyword">PROCEDURE</span> pro_test3()<br><span class="hljs-keyword">BEGIN</span><br>	<span class="hljs-keyword">DECLARE</span> NAME <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>);<br>	<span class="hljs-keyword">SET</span> NAME <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;MYSQL&#x27;</span>;<br>	<span class="hljs-keyword">SELECT</span> NAME ;<br><span class="hljs-keyword">END</span>$<br><br>DELIMITER ;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>也可以通过select … into 方式进行赋值操作 :</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs SQL">DELIMITER $<br><br><span class="hljs-keyword">CREATE</span>  <span class="hljs-keyword">PROCEDURE</span> pro_test5()<br><span class="hljs-keyword">BEGIN</span><br>	<span class="hljs-keyword">declare</span>  countnum <span class="hljs-type">int</span>;<br>	<span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">into</span> countnum <span class="hljs-keyword">from</span> city;<br>	<span class="hljs-keyword">select</span> countnum;<br><span class="hljs-keyword">END</span>$<br><br>DELIMITER ;<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="4-6-2-if条件判断"><a href="#4-6-2-if条件判断" class="headerlink" title="4.6.2 if条件判断"></a>4.6.2 if条件判断</h5><p>语法结构 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql">if search_condition <span class="hljs-keyword">then</span> statement_list<br><br>	[elseif search_condition <span class="hljs-keyword">then</span> statement_list] ...<br>	<br>	[<span class="hljs-keyword">else</span> statement_list]<br>	<br><span class="hljs-keyword">end</span> if;<br></code></pre></td></tr></table></figure>
+
+<p>需求： </p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ada">根据定义的身高变量，判定当前身高的所属的身材类型 <br><br>	<span class="hljs-number">180</span> 及以上 <span class="hljs-comment">----------&gt; 身材高挑</span><br><br>	<span class="hljs-number">170</span> - <span class="hljs-number">180</span>  <span class="hljs-comment">---------&gt; 标准身材</span><br><br>	<span class="hljs-number">170</span> 以下  <span class="hljs-comment">----------&gt; 一般身材</span><br></code></pre></td></tr></table></figure>
+
+<p>示例 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sql">delimiter $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test6()<br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">declare</span>  height  <span class="hljs-type">int</span>  <span class="hljs-keyword">default</span>  <span class="hljs-number">175</span>; <br>  <span class="hljs-keyword">declare</span>  description  <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>);#<span class="hljs-keyword">desc</span>是<span class="hljs-keyword">SQL</span>关键字<br>  <br>  if  height <span class="hljs-operator">&gt;=</span> <span class="hljs-number">180</span>  <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">set</span> description <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;身材高挑&#x27;</span>;<br>  elseif height <span class="hljs-operator">&gt;=</span> <span class="hljs-number">170</span> <span class="hljs-keyword">and</span> height <span class="hljs-operator">&lt;</span> <span class="hljs-number">180</span>  <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">set</span> description <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;标准身材&#x27;</span>;<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-keyword">set</span> description <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;一般身材&#x27;</span>;#要和<span class="hljs-keyword">else</span>换行写，之前测试不换行一直能结束，输入结束符也不能结束<br>  <span class="hljs-keyword">end</span> if;<br>  <br>  <span class="hljs-keyword">select</span> description ;<br><span class="hljs-keyword">end</span>$<br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+<p>调用结果为 : </p>
+<p><img src="/images/mysql/1552057035580.png" srcset="/img/loading.gif" lazyload alt="1552057035580"> </p>
+<h5 id="4-6-3-传递参数"><a href="#4-6-3-传递参数" class="headerlink" title="4.6.3 传递参数"></a>4.6.3 传递参数</h5><p>语法格式 : </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs oxygene"><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> <span class="hljs-title function_">procedure_name</span><span class="hljs-params">([<span class="hljs-keyword">in</span>/<span class="hljs-keyword">out</span>/inout] 参数名   参数类型)</span><br>...<br><br><br><span class="hljs-title function_">IN</span> :   该参数可以作为输入，也就是需要调用方传入值 , 默认<br><span class="hljs-keyword">OUT</span>:   该参数作为输出，也就是该参数可以作为返回值<br>INOUT: 既可以作为输入参数，也可以作为输出参数<br></code></pre></td></tr></table></figure>
+
+<p><strong>IN - 输入</strong></p>
+<p>需求 :</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">根据定义的身高变量，判定当前身高的所属的身材类型 <br></code></pre></td></tr></table></figure>
+
+<p>示例  : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs sql">delimiter $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test5(<span class="hljs-keyword">in</span> height <span class="hljs-type">int</span>)<br><span class="hljs-keyword">begin</span><br>    <span class="hljs-keyword">declare</span> description <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">default</span> <span class="hljs-string">&#x27;&#x27;</span>;<br>  if height <span class="hljs-operator">&gt;=</span> <span class="hljs-number">180</span> <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">set</span> description<span class="hljs-operator">=</span><span class="hljs-string">&#x27;身材高挑&#x27;</span>;<br>  elseif height <span class="hljs-operator">&gt;=</span> <span class="hljs-number">170</span> <span class="hljs-keyword">and</span> height <span class="hljs-operator">&lt;</span> <span class="hljs-number">180</span> <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">set</span> description<span class="hljs-operator">=</span><span class="hljs-string">&#x27;标准身材&#x27;</span>;<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-keyword">set</span> description<span class="hljs-operator">=</span><span class="hljs-string">&#x27;一般身材&#x27;</span>;<br>  <span class="hljs-keyword">end</span> if;<br>  <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;身高 &#x27;</span>, height , <span class="hljs-string">&#x27;对应的身材类型为:&#x27;</span>,description);<br><span class="hljs-keyword">end</span>$<br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>OUT-输出</strong></p>
+<p> 需求 :</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">根据传入的身高变量，获取当前身高的所属的身材类型  <br></code></pre></td></tr></table></figure>
+
+<p>示例:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test5(<span class="hljs-keyword">in</span> height <span class="hljs-type">int</span> , <span class="hljs-keyword">out</span> description <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>))<br><span class="hljs-keyword">begin</span><br>  if height <span class="hljs-operator">&gt;=</span> <span class="hljs-number">180</span> <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">set</span> description<span class="hljs-operator">=</span><span class="hljs-string">&#x27;身材高挑&#x27;</span>;<br>  elseif height <span class="hljs-operator">&gt;=</span> <span class="hljs-number">170</span> <span class="hljs-keyword">and</span> height <span class="hljs-operator">&lt;</span> <span class="hljs-number">180</span> <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">set</span> description<span class="hljs-operator">=</span><span class="hljs-string">&#x27;标准身材&#x27;</span>;<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-keyword">set</span> description<span class="hljs-operator">=</span><span class="hljs-string">&#x27;一般身材&#x27;</span>;<br>  <span class="hljs-keyword">end</span> if;<br><span class="hljs-keyword">end</span>$	<br></code></pre></td></tr></table></figure>
+
+<p>调用:</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs autoit"><span class="hljs-built_in">call</span> pro_test5(<span class="hljs-number">168</span>, <span class="hljs-symbol">@description</span>)$<br><br><span class="hljs-keyword">select</span> <span class="hljs-symbol">@description</span>$<br></code></pre></td></tr></table></figure>
+
+<p><font color='red'><strong>小知识</strong> </font></p>
+<p>@description :  这种变量要在变量名称前面加上“@”符号，叫做用户会话变量，代表整个会话过程他都是有作用的，这个类似于全局变量一样。</p>
+<p>@@global.sort_buffer_size : 这种在变量前加上 “@@” 符号, 叫做 系统变量 </p>
+<h5 id="4-6-4-case结构"><a href="#4-6-4-case结构" class="headerlink" title="4.6.4 case结构"></a>4.6.4 case结构</h5><p>语法结构 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs SQL">方式一 : <br><br><span class="hljs-keyword">CASE</span> case_value<br><br>  <span class="hljs-keyword">WHEN</span> when_value <span class="hljs-keyword">THEN</span> statement_list<br>  <br>  [<span class="hljs-keyword">WHEN</span> when_value <span class="hljs-keyword">THEN</span> statement_list] ...<br>  <br>  [<span class="hljs-keyword">ELSE</span> statement_list]<br>  <br><span class="hljs-keyword">END</span> <span class="hljs-keyword">CASE</span>;<br><br><br>方式二 : <br><br><span class="hljs-keyword">CASE</span><br><br>  <span class="hljs-keyword">WHEN</span> search_condition <span class="hljs-keyword">THEN</span> statement_list<br>  <br>  [<span class="hljs-keyword">WHEN</span> search_condition <span class="hljs-keyword">THEN</span> statement_list] ...<br>  <br>  [<span class="hljs-keyword">ELSE</span> statement_list]<br>  <br><span class="hljs-keyword">END</span> <span class="hljs-keyword">CASE</span>;<br><br></code></pre></td></tr></table></figure>
+
+<p>需求:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">给定一个月份, 然后计算出所在的季度<br></code></pre></td></tr></table></figure>
+
+<p>示例  :</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs sql">delimiter $<br><br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test9(<span class="hljs-keyword">month</span> <span class="hljs-type">int</span>)<br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">declare</span> <span class="hljs-keyword">result</span> <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>);<br>  <span class="hljs-keyword">case</span> <br>    <span class="hljs-keyword">when</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&gt;=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&lt;=</span><span class="hljs-number">3</span> <span class="hljs-keyword">then</span> <br>      <span class="hljs-keyword">set</span> <span class="hljs-keyword">result</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;第一季度&#x27;</span>;<br>    <span class="hljs-keyword">when</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&gt;=</span> <span class="hljs-number">4</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&lt;=</span><span class="hljs-number">6</span> <span class="hljs-keyword">then</span> <br>      <span class="hljs-keyword">set</span> <span class="hljs-keyword">result</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;第二季度&#x27;</span>;<br>    <span class="hljs-keyword">when</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&gt;=</span> <span class="hljs-number">7</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&lt;=</span><span class="hljs-number">9</span> <span class="hljs-keyword">then</span> <br>      <span class="hljs-keyword">set</span> <span class="hljs-keyword">result</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;第三季度&#x27;</span>;<br>    <span class="hljs-keyword">when</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&gt;=</span> <span class="hljs-number">10</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">month</span> <span class="hljs-operator">&lt;=</span><span class="hljs-number">12</span> <span class="hljs-keyword">then</span> <br>      <span class="hljs-keyword">set</span> <span class="hljs-keyword">result</span> <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;第四季度&#x27;</span>;<br>  <span class="hljs-keyword">end</span> <span class="hljs-keyword">case</span>;<br>  <br>  <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;您输入的月份为 :&#x27;</span>, <span class="hljs-keyword">month</span> , <span class="hljs-string">&#x27; , 该月份为 : &#x27;</span> , <span class="hljs-keyword">result</span>) <span class="hljs-keyword">as</span> content ;<br>  <br><span class="hljs-keyword">end</span>$<br><br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="4-6-5-while循环"><a href="#4-6-5-while循环" class="headerlink" title="4.6.5 while循环"></a>4.6.5 while循环</h5><p>语法结构: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql">while search_condition do<br><br>	statement_list<br>	<br><span class="hljs-keyword">end</span> while;<br></code></pre></td></tr></table></figure>
+
+<p>需求:</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">计算从<span class="hljs-number">1</span>加到<span class="hljs-built_in">n</span>的值<br></code></pre></td></tr></table></figure>
+
+<p>示例  : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql">delimiter $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test8(n <span class="hljs-type">int</span>)<br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">declare</span> total <span class="hljs-type">int</span> <span class="hljs-keyword">default</span> <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">declare</span> num <span class="hljs-type">int</span> <span class="hljs-keyword">default</span> <span class="hljs-number">1</span>;<br>  while num<span class="hljs-operator">&lt;=</span>n do<br>    <span class="hljs-keyword">set</span> total <span class="hljs-operator">=</span> total <span class="hljs-operator">+</span> num;<br>	<span class="hljs-keyword">set</span> num <span class="hljs-operator">=</span> num <span class="hljs-operator">+</span> <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">end</span> while;<br>  <span class="hljs-keyword">select</span> total;<br><span class="hljs-keyword">end</span>$<br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="4-6-6-repeat结构"><a href="#4-6-6-repeat结构" class="headerlink" title="4.6.6 repeat结构"></a>4.6.6 repeat结构</h5><p>有条件的循环控制语句, 当满足条件的时候退出循环 。while 是满足条件才执行，repeat 是满足条件就退出循环。</p>
+<p>语法结构 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs SQL">REPEAT<br><br>  statement_list<br><br>  UNTIL search_condition<br><br><span class="hljs-keyword">END</span> REPEAT;<br></code></pre></td></tr></table></figure>
+
+<p>需求: </p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">计算从<span class="hljs-number">1</span>加到<span class="hljs-built_in">n</span>的值<br></code></pre></td></tr></table></figure>
+
+<p>示例  : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sql">delimiter $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test10(n <span class="hljs-type">int</span>)<br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">declare</span> total <span class="hljs-type">int</span> <span class="hljs-keyword">default</span> <span class="hljs-number">0</span>;<br>  <br>  repeat <br>    <span class="hljs-keyword">set</span> total <span class="hljs-operator">=</span> total <span class="hljs-operator">+</span> n;<br>    <span class="hljs-keyword">set</span> n <span class="hljs-operator">=</span> n <span class="hljs-operator">-</span> <span class="hljs-number">1</span>;<br>    until n<span class="hljs-operator">=</span><span class="hljs-number">0</span>  <br>  <span class="hljs-keyword">end</span> repeat;<br>  <br>  <span class="hljs-keyword">select</span> total ;<br>  <br><span class="hljs-keyword">end</span>$<br><br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="4-6-7-loop语句"><a href="#4-6-7-loop语句" class="headerlink" title="4.6.7 loop语句"></a>4.6.7 loop语句</h5><p>LOOP 实现简单的循环，退出循环的条件需要使用其他的语句定义，通常可以使用 LEAVE 语句实现，具体语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql">[begin_label:] LOOP<br><br>  statement_list<br><br><span class="hljs-keyword">END</span> LOOP [end_label]<br></code></pre></td></tr></table></figure>
+
+<p>如果不在 statement_list 中增加退出循环的语句，那么 LOOP 语句可以用来实现简单的死循环。</p>
+<h5 id="4-6-8-leave语句"><a href="#4-6-8-leave语句" class="headerlink" title="4.6.8 leave语句"></a>4.6.8 leave语句</h5><p>用来从标注的流程构造中退出，通常和 BEGIN … END 或者循环一起使用。下面是一个使用 LOOP 和 LEAVE 的简单例子 , 退出循环：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs SQL">delimiter $<br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">PROCEDURE</span> pro_test11(n <span class="hljs-type">int</span>)<br><span class="hljs-keyword">BEGIN</span><br>  <span class="hljs-keyword">declare</span> total <span class="hljs-type">int</span> <span class="hljs-keyword">default</span> <span class="hljs-number">0</span>;<br>  <br>  ins: LOOP<br>    <br>    IF n <span class="hljs-operator">&lt;=</span> <span class="hljs-number">0</span> <span class="hljs-keyword">then</span><br>      leave ins;<br>    <span class="hljs-keyword">END</span> IF;<br>    <br>    <span class="hljs-keyword">set</span> total <span class="hljs-operator">=</span> total <span class="hljs-operator">+</span> n;<br>    <span class="hljs-keyword">set</span> n <span class="hljs-operator">=</span> n <span class="hljs-operator">-</span> <span class="hljs-number">1</span>;<br>  	<br>  <span class="hljs-keyword">END</span> LOOP ins;<br>  <br>  <span class="hljs-keyword">select</span> total;<br><span class="hljs-keyword">END</span>$<br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="4-6-9-游标-x2F-光标"><a href="#4-6-9-游标-x2F-光标" class="headerlink" title="4.6.9 游标&#x2F;光标"></a>4.6.9 游标&#x2F;光标</h5><p>游标是用来存储查询结果集的数据类型 , 在存储过程和函数中可以使用光标对结果集进行循环的处理。光标的使用包括光标的声明、OPEN、FETCH 和 CLOSE，其语法分别如下。</p>
+<p>声明光标：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">DECLARE</span> cursor_name <span class="hljs-keyword">CURSOR</span> <span class="hljs-keyword">FOR</span> select_statement ;<br></code></pre></td></tr></table></figure>
+
+<p>OPEN 光标：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">OPEN</span> cursor_name ;<br></code></pre></td></tr></table></figure>
+
+<p>FETCH 光标：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">FETCH</span> cursor_name <span class="hljs-keyword">INTO</span> var_name [, var_name] ...<br></code></pre></td></tr></table></figure>
+
+<p>CLOSE 光标：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CLOSE</span> cursor_name ;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>示例 : </p>
+<p>初始化脚本:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> emp(<br>  id <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> auto_increment ,<br>  name <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> comment <span class="hljs-string">&#x27;姓名&#x27;</span>,<br>  age <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) comment <span class="hljs-string">&#x27;年龄&#x27;</span>,<br>  salary <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) comment <span class="hljs-string">&#x27;薪水&#x27;</span>,<br>  <span class="hljs-keyword">primary</span> key(`id`)<br>)engine<span class="hljs-operator">=</span>innodb <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8 ;<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> emp(id,name,age,salary) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;金毛狮王&#x27;</span>,<span class="hljs-number">55</span>,<span class="hljs-number">3800</span>),(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;白眉鹰王&#x27;</span>,<span class="hljs-number">60</span>,<span class="hljs-number">4000</span>),(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;青翼蝠王&#x27;</span>,<span class="hljs-number">38</span>,<span class="hljs-number">2800</span>),(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;紫衫龙王&#x27;</span>,<span class="hljs-number">42</span>,<span class="hljs-number">1800</span>);<br><br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-comment">-- 查询emp表中数据, 并逐行获取进行展示</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test11()<br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">declare</span> e_id <span class="hljs-type">int</span>(<span class="hljs-number">11</span>);<br>  <span class="hljs-keyword">declare</span> e_name <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>);<br>  <span class="hljs-keyword">declare</span> e_age <span class="hljs-type">int</span>(<span class="hljs-number">11</span>);<br>  <span class="hljs-keyword">declare</span> e_salary <span class="hljs-type">int</span>(<span class="hljs-number">11</span>);<br>  <span class="hljs-keyword">declare</span> emp_result <span class="hljs-keyword">cursor</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp;<br>  <br>  <span class="hljs-keyword">open</span> emp_result;<br>  <br>  <span class="hljs-keyword">fetch</span> emp_result <span class="hljs-keyword">into</span> e_id,e_name,e_age,e_salary;<br>  <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;id=&#x27;</span>,e_id , <span class="hljs-string">&#x27;, name=&#x27;</span>,e_name, <span class="hljs-string">&#x27;, age=&#x27;</span>, e_age, <span class="hljs-string">&#x27;, 薪资为: &#x27;</span>,e_salary);<br>  <br>  <span class="hljs-keyword">fetch</span> emp_result <span class="hljs-keyword">into</span> e_id,e_name,e_age,e_salary;<br>  <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;id=&#x27;</span>,e_id , <span class="hljs-string">&#x27;, name=&#x27;</span>,e_name, <span class="hljs-string">&#x27;, age=&#x27;</span>, e_age, <span class="hljs-string">&#x27;, 薪资为: &#x27;</span>,e_salary);<br>  <br>  <span class="hljs-keyword">fetch</span> emp_result <span class="hljs-keyword">into</span> e_id,e_name,e_age,e_salary;<br>  <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;id=&#x27;</span>,e_id , <span class="hljs-string">&#x27;, name=&#x27;</span>,e_name, <span class="hljs-string">&#x27;, age=&#x27;</span>, e_age, <span class="hljs-string">&#x27;, 薪资为: &#x27;</span>,e_salary);<br>  <br>  <span class="hljs-keyword">fetch</span> emp_result <span class="hljs-keyword">into</span> e_id,e_name,e_age,e_salary;<br>  <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;id=&#x27;</span>,e_id , <span class="hljs-string">&#x27;, name=&#x27;</span>,e_name, <span class="hljs-string">&#x27;, age=&#x27;</span>, e_age, <span class="hljs-string">&#x27;, 薪资为: &#x27;</span>,e_salary);<br>  <br>  <span class="hljs-keyword">fetch</span> emp_result <span class="hljs-keyword">into</span> e_id,e_name,e_age,e_salary;<br>  <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;id=&#x27;</span>,e_id , <span class="hljs-string">&#x27;, name=&#x27;</span>,e_name, <span class="hljs-string">&#x27;, age=&#x27;</span>, e_age, <span class="hljs-string">&#x27;, 薪资为: &#x27;</span>,e_salary);<br>  <br>  <span class="hljs-keyword">close</span> emp_result;<br><span class="hljs-keyword">end</span>$<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>通过循环结构 , 获取游标中的数据 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs sql">DELIMITER $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">procedure</span> pro_test12()<br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">DECLARE</span> id <span class="hljs-type">int</span>(<span class="hljs-number">11</span>);<br>  <span class="hljs-keyword">DECLARE</span> name <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>);<br>  <span class="hljs-keyword">DECLARE</span> age <span class="hljs-type">int</span>(<span class="hljs-number">11</span>);<br>  <span class="hljs-keyword">DECLARE</span> salary <span class="hljs-type">int</span>(<span class="hljs-number">11</span>);<br>  <span class="hljs-keyword">DECLARE</span> has_data <span class="hljs-type">int</span> <span class="hljs-keyword">default</span> <span class="hljs-number">1</span>;<br>  <br>  <span class="hljs-keyword">DECLARE</span> emp_result <span class="hljs-keyword">CURSOR</span> <span class="hljs-keyword">FOR</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp;<br>  <span class="hljs-keyword">DECLARE</span> EXIT HANDLER <span class="hljs-keyword">FOR</span> <span class="hljs-keyword">NOT</span> FOUND <span class="hljs-keyword">set</span> has_data <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>  <br>  <span class="hljs-keyword">open</span> emp_result;<br>  <br>  repeat<br>    <span class="hljs-keyword">fetch</span> emp_result <span class="hljs-keyword">into</span> id , name , age , salary;<br>    <span class="hljs-keyword">select</span> concat(<span class="hljs-string">&#x27;id为&#x27;</span>,id, <span class="hljs-string">&#x27;, name 为&#x27;</span> ,name , <span class="hljs-string">&#x27;, age为 &#x27;</span> ,age , <span class="hljs-string">&#x27;, 薪水为: &#x27;</span>, salary);<br>    until has_data <span class="hljs-operator">=</span> <span class="hljs-number">0</span><br>  <span class="hljs-keyword">end</span> repeat;<br>  <br>  <span class="hljs-keyword">close</span> emp_result;<br><span class="hljs-keyword">end</span>$<br><br>DELIMITER ; <br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-7-存储函数"><a href="#4-7-存储函数" class="headerlink" title="4.7 存储函数"></a>4.7 存储函数</h4><p>语法结构:</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">FUNCTION</span> function_name([param <span class="hljs-built_in">type</span> ... ]) <br>RETURNS <span class="hljs-built_in">type</span> <br><span class="hljs-keyword">BEGIN</span><br>	...<br><span class="hljs-keyword">END</span>;<br></code></pre></td></tr></table></figure>
+
+<p>案例 : </p>
+<p>定义一个存储过程, 请求满足条件的总记录数 ;</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><br>delimiter $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">function</span> count_city(countryId <span class="hljs-type">int</span>)<br><span class="hljs-keyword">returns</span> <span class="hljs-type">int</span><br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">declare</span> cnum <span class="hljs-type">int</span> ;<br>  <br>  <span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">into</span> cnum <span class="hljs-keyword">from</span> city <span class="hljs-keyword">where</span> country_id <span class="hljs-operator">=</span> countryId;<br>  <br>  <span class="hljs-keyword">return</span> cnum;<br><span class="hljs-keyword">end</span>$<br><br>delimiter ;<br></code></pre></td></tr></table></figure>
+
+<p>调用: </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">select</span> <span class="hljs-title">count_city</span>(<span class="hljs-params"><span class="hljs-number">1</span></span>)</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">select</span> <span class="hljs-title">count_city</span>(<span class="hljs-params"><span class="hljs-number">2</span></span>)</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-触发器"><a href="#5-触发器" class="headerlink" title="5. 触发器"></a>5. 触发器</h3><h4 id="5-1-介绍"><a href="#5-1-介绍" class="headerlink" title="5.1 介绍"></a>5.1 介绍</h4><p>触发器是与表有关的数据库对象，指在 insert&#x2F;update&#x2F;delete 之前或之后，触发并执行触发器中定义的SQL语句集合。触发器的这种特性可以协助应用在数据库端确保数据的完整性 , 日志记录 , 数据校验等操作 。</p>
+<p>使用别名 OLD 和 NEW 来引用触发器中发生变化的记录内容，这与其他的数据库是相似的。现在触发器还只支持行级触发，不支持语句级触发。</p>
+<table>
+<thead>
+<tr>
+<th>触发器类型</th>
+<th>NEW 和 OLD的使用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>INSERT 型触发器</td>
+<td>NEW 表示将要或者已经新增的数据</td>
+</tr>
+<tr>
+<td>UPDATE 型触发器</td>
+<td>OLD 表示修改之前的数据 , NEW 表示将要或已经修改后的数据</td>
+</tr>
+<tr>
+<td>DELETE 型触发器</td>
+<td>OLD 表示将要或者已经删除的数据</td>
+</tr>
+</tbody></table>
+<h4 id="5-2-创建触发器"><a href="#5-2-创建触发器" class="headerlink" title="5.2 创建触发器"></a>5.2 创建触发器</h4><p>语法结构 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">trigger</span> trigger_name <br><br>before<span class="hljs-operator">/</span>after <span class="hljs-keyword">insert</span><span class="hljs-operator">/</span><span class="hljs-keyword">update</span><span class="hljs-operator">/</span><span class="hljs-keyword">delete</span><br><br><span class="hljs-keyword">on</span> tbl_name <br><br>[ <span class="hljs-keyword">for</span> <span class="hljs-keyword">each</span> <span class="hljs-type">row</span> ]  <span class="hljs-comment">-- 行级触发器</span><br><br><span class="hljs-keyword">begin</span><br><br>	trigger_stmt ;<br><br><span class="hljs-keyword">end</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>示例 </p>
+<p>需求</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">通过触发器记录 emp 表的数据变更日志 , 包含增加, 修改 , 删除 ;<br></code></pre></td></tr></table></figure>
+
+<p>首先创建一张日志表 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> emp_logs(<br>  id <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> auto_increment,<br>  operation <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> comment <span class="hljs-string">&#x27;操作类型, insert/update/delete&#x27;</span>,<br>  operate_time datetime <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> comment <span class="hljs-string">&#x27;操作时间&#x27;</span>,<br>  operate_id <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span> comment <span class="hljs-string">&#x27;操作表的ID&#x27;</span>,<br>  operate_params <span class="hljs-type">varchar</span>(<span class="hljs-number">500</span>) comment <span class="hljs-string">&#x27;操作参数&#x27;</span>,<br>  <span class="hljs-keyword">primary</span> key(`id`)<br>)engine<span class="hljs-operator">=</span>innodb <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8;<br></code></pre></td></tr></table></figure>
+
+<p>创建 insert 型触发器，完成插入数据时的日志记录 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sql">DELIMITER $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">trigger</span> emp_logs_insert_trigger<br>after <span class="hljs-keyword">insert</span> <br><span class="hljs-keyword">on</span> emp <br><span class="hljs-keyword">for</span> <span class="hljs-keyword">each</span> <span class="hljs-type">row</span> <br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> emp_logs (id,operation,operate_time,operate_id,operate_params) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;insert&#x27;</span>,now(),new.id,concat(<span class="hljs-string">&#x27;插入后(id:&#x27;</span>,new.id,<span class="hljs-string">&#x27;, name:&#x27;</span>,new.name,<span class="hljs-string">&#x27;, age:&#x27;</span>,new.age,<span class="hljs-string">&#x27;, salary:&#x27;</span>,new.salary,<span class="hljs-string">&#x27;)&#x27;</span>));	<br><span class="hljs-keyword">end</span> $<br><br>DELIMITER ;<br></code></pre></td></tr></table></figure>
+
+<p>创建 update 型触发器，完成更新数据时的日志记录 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sql">DELIMITER $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">trigger</span> emp_logs_update_trigger<br>after <span class="hljs-keyword">update</span> <br><span class="hljs-keyword">on</span> emp <br><span class="hljs-keyword">for</span> <span class="hljs-keyword">each</span> <span class="hljs-type">row</span> <br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> emp_logs (id,operation,operate_time,operate_id,operate_params) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;update&#x27;</span>,now(),new.id,concat(<span class="hljs-string">&#x27;修改前(id:&#x27;</span>,old.id,<span class="hljs-string">&#x27;, name:&#x27;</span>,old.name,<span class="hljs-string">&#x27;, age:&#x27;</span>,old.age,<span class="hljs-string">&#x27;, salary:&#x27;</span>,old.salary,<span class="hljs-string">&#x27;) , 修改后(id&#x27;</span>,new.id, <span class="hljs-string">&#x27;name:&#x27;</span>,new.name,<span class="hljs-string">&#x27;, age:&#x27;</span>,new.age,<span class="hljs-string">&#x27;, salary:&#x27;</span>,new.salary,<span class="hljs-string">&#x27;)&#x27;</span>));                                                                      <br><span class="hljs-keyword">end</span> $<br><br>DELIMITER ;<br></code></pre></td></tr></table></figure>
+
+<p>创建delete 行的触发器 , 完成删除数据时的日志记录 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sql">DELIMITER $<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">trigger</span> emp_logs_delete_trigger<br>after <span class="hljs-keyword">delete</span> <br><span class="hljs-keyword">on</span> emp <br><span class="hljs-keyword">for</span> <span class="hljs-keyword">each</span> <span class="hljs-type">row</span> <br><span class="hljs-keyword">begin</span><br>  <span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> emp_logs (id,operation,operate_time,operate_id,operate_params) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;delete&#x27;</span>,now(),old.id,concat(<span class="hljs-string">&#x27;删除前(id:&#x27;</span>,old.id,<span class="hljs-string">&#x27;, name:&#x27;</span>,old.name,<span class="hljs-string">&#x27;, age:&#x27;</span>,old.age,<span class="hljs-string">&#x27;, salary:&#x27;</span>,old.salary,<span class="hljs-string">&#x27;)&#x27;</span>));                                                                      <br><span class="hljs-keyword">end</span> $<br><br>DELIMITER ;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>测试：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> emp(id,name,age,salary) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;光明左使&#x27;</span>,<span class="hljs-number">30</span>,<span class="hljs-number">3500</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> emp(id,name,age,salary) <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>, <span class="hljs-string">&#x27;光明右使&#x27;</span>,<span class="hljs-number">33</span>,<span class="hljs-number">3200</span>);<br><br><span class="hljs-keyword">update</span> emp <span class="hljs-keyword">set</span> age <span class="hljs-operator">=</span> <span class="hljs-number">39</span> <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">3</span>;<br><br><span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="5-3-删除触发器"><a href="#5-3-删除触发器" class="headerlink" title="5.3 删除触发器"></a>5.3 删除触发器</h4><p>语法结构 : </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">drop</span> <span class="hljs-keyword">trigger</span> [<span class="hljs-built_in">schema_name</span>.]trigger_name<br></code></pre></td></tr></table></figure>
+
+<p>如果没有指定 schema_name，默认为当前数据库 。</p>
+<h4 id="5-4-查看触发器"><a href="#5-4-查看触发器" class="headerlink" title="5.4 查看触发器"></a>5.4 查看触发器</h4><p>可以通过执行 SHOW TRIGGERS 命令查看触发器的状态、语法等信息。</p>
+<p>语法结构 ： </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-keyword">show</span> triggers ；<br></code></pre></td></tr></table></figure>
+
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/MySQL/" class="category-chain-item">MySQL</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Mysql高级一</div>
+      <div>http://www.muzili.ren/2022/06/11/Mysql高级-day01/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day03/" title="Mysql高级三">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Mysql高级三</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/IoC%20%E4%B9%8B%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8/" title="三十五、IoC 之自定义类型转换器">
+                        <span class="hidden-mobile">三十五、IoC 之自定义类型转换器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

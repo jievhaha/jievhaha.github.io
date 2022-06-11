@@ -1,0 +1,716 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="constructor-arg、property、qualifier三个子元素是如何解析的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十一、解析bean标签子元素二">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/%E8%A7%A3%E6%9E%90bean%E6%A0%87%E7%AD%BE%E5%AD%90%E5%85%83%E7%B4%A0%E4%BA%8C/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="constructor-arg、property、qualifier三个子元素是如何解析的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-11T09:48:09.988Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.988Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>十一、解析bean标签子元素二 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="十一、解析bean标签子元素二"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          99 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">十一、解析bean标签子元素二</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">解析bean标签子元素二</font></div>
+
+<p>其他三个子元素：<code>constructor-arg</code>、<code>property</code>、<code>qualifier</code>。</p>
+<h4 id="constructor-arg子元素"><a href="#constructor-arg子元素" class="headerlink" title="constructor-arg子元素"></a><code>constructor-arg</code>子元素</h4><h5 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Hello</span> &#123;<br>	<span class="hljs-keyword">private</span> Integer age;<br>	<span class="hljs-keyword">private</span> String name;<br>	<span class="hljs-keyword">private</span> String address;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-title function_">Hello</span><span class="hljs-params">(Integer age, String name, String address)</span> &#123;<br>		<span class="hljs-built_in">this</span>.age = age;<br>		<span class="hljs-built_in">this</span>.name = name;<br>		<span class="hljs-built_in">this</span>.address = address;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sayHello</span><span class="hljs-params">()</span> &#123;<br>		System.out.println(<span class="hljs-built_in">this</span>.name + <span class="hljs-string">&quot;今年&quot;</span> + <span class="hljs-built_in">this</span>.age + <span class="hljs-string">&quot;岁，&quot;</span> + <span class="hljs-string">&quot;住在&quot;</span> + <span class="hljs-built_in">this</span>.address);<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">//spring配置文件</span><br>&lt;bean id=<span class="hljs-string">&quot;hello&quot;</span> class=<span class="hljs-string">&quot;com.jievhaha.Hello&quot;</span>&gt;<br>    &lt;constructor-arg type=<span class="hljs-string">&quot;java.lang.Integer&quot;</span> value=<span class="hljs-string">&quot;27&quot;</span>/&gt;<br>    &lt;constructor-arg name=<span class="hljs-string">&quot;name&quot;</span> value=<span class="hljs-string">&quot;jievhaha&quot;</span>/&gt;<br>    &lt;constructor-arg index=<span class="hljs-string">&quot;2&quot;</span> value=<span class="hljs-string">&quot;山西&quot;</span>/&gt;<br>&lt;/bean&gt;<br></code></pre></td></tr></table></figure>
+
+<h5 id="parseConstructorArgElements-方法"><a href="#parseConstructorArgElements-方法" class="headerlink" title="parseConstructorArgElements()方法"></a><code>parseConstructorArgElements()</code>方法</h5><p><code>BeanDefinitionParserDelegate.parseConstructorArgElements()</code>对<code>constructor-arg</code>子元素进行解析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">parseConstructorArgElements</span><span class="hljs-params">(Element beanEle, BeanDefinition bd)</span> &#123;<br>    <span class="hljs-type">NodeList</span> <span class="hljs-variable">nl</span> <span class="hljs-operator">=</span> beanEle.getChildNodes();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;<br>        <span class="hljs-type">Node</span> <span class="hljs-variable">node</span> <span class="hljs-operator">=</span> nl.item(i);<br>        <span class="hljs-keyword">if</span> (isCandidateElement(node) &amp;&amp; nodeNameEquals(node, CONSTRUCTOR_ARG_ELEMENT)) &#123;<br>            parseConstructorArgElement((Element) node, bd);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>遍历所有的子元素，如果为<code>constructor-arg</code>标签，则执行<code>parseConstructorArgElement()</code>方法，和之前其他三个子元素解析不同的是，当匹配了某个标签后，直接在if段执行逻辑，此处单独提取了一个<code>parseConstructorArgElement()</code>方法。</p>
+<h5 id="parseConstructorArgElement-方法"><a href="#parseConstructorArgElement-方法" class="headerlink" title="parseConstructorArgElement()方法"></a><code>parseConstructorArgElement()</code>方法</h5><p>该方法是真正解析constructor-arg的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">parseConstructorArgElement</span><span class="hljs-params">(Element ele, BeanDefinition bd)</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">indexAttr</span> <span class="hljs-operator">=</span> ele.getAttribute(INDEX_ATTRIBUTE);<span class="hljs-comment">//index属性</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">typeAttr</span> <span class="hljs-operator">=</span> ele.getAttribute(TYPE_ATTRIBUTE);<span class="hljs-comment">//type属性</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">nameAttr</span> <span class="hljs-operator">=</span> ele.getAttribute(NAME_ATTRIBUTE);<span class="hljs-comment">//name属性</span><br>    <span class="hljs-comment">//是否设置了index属性</span><br>    <span class="hljs-comment">// index较type、name的区别：</span><br>    <span class="hljs-comment">// 1.构造ConstructorArgumentEntry对象时，index调用了有参构造函数</span><br>    <span class="hljs-comment">// 2.index最后保存到了indexedArgumentValues集合，另外两个保存到了genericArgumentValues集合中。</span><br>    <span class="hljs-keyword">if</span> (StringUtils.hasLength(indexAttr)) &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> Integer.parseInt(indexAttr);<br>            <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span>) &#123;<br>                error(<span class="hljs-string">&quot;&#x27;index&#x27; cannot be lower than 0&quot;</span>, ele);<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">//多上送了index，构造 ConstructorArgumentEntry 对象并将其加入到 ParseState 队列中。</span><br>                    <span class="hljs-built_in">this</span>.parseState.push(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorArgumentEntry</span>(index));<br>                    <span class="hljs-comment">// &lt;2&gt; 解析 ele 对应的属性，返回结果值。</span><br>                    <span class="hljs-type">Object</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> parsePropertyValue(ele, bd, <span class="hljs-literal">null</span>);<br>                    <span class="hljs-comment">// &lt;3&gt; 根据解析的属性元素构造一个 ValueHolder 对象</span><br>                    ConstructorArgumentValues.<span class="hljs-type">ValueHolder</span> <span class="hljs-variable">valueHolder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorArgumentValues</span>.ValueHolder(value);<br>                    <span class="hljs-comment">//将 type、name 设置到 ValueHolder 中</span><br>                    <span class="hljs-keyword">if</span> (StringUtils.hasLength(typeAttr)) &#123;<br>                        valueHolder.setType(typeAttr);<br>                    &#125;<br>                    <span class="hljs-keyword">if</span> (StringUtils.hasLength(nameAttr)) &#123;<br>                        valueHolder.setName(nameAttr);<br>                    &#125;<br>                    valueHolder.setSource(extractSource(ele));<br>                    <span class="hljs-comment">// 不允许重复指定相同参数</span><br>                    <span class="hljs-keyword">if</span> (bd.getConstructorArgumentValues().hasIndexedArgumentValue(index)) &#123;<br>                        error(<span class="hljs-string">&quot;Ambiguous constructor-arg entries for index &quot;</span> + index, ele);<br>                    &#125;<br>                    <span class="hljs-keyword">else</span> &#123;<br>                        <span class="hljs-comment">// &lt;4&gt; 加入到 indexedArgumentValues 中</span><br>                        bd.getConstructorArgumentValues().addIndexedArgumentValue(index, valueHolder);<br>                    &#125;<br>                &#125;<br>                <span class="hljs-keyword">finally</span> &#123;<br>                    <span class="hljs-built_in">this</span>.parseState.pop();<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">catch</span> (NumberFormatException ex) &#123;<br>            error(<span class="hljs-string">&quot;Attribute &#x27;index&#x27; of tag &#x27;constructor-arg&#x27; must be an integer&quot;</span>, ele);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-built_in">this</span>.parseState.push(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorArgumentEntry</span>());<br>            <span class="hljs-type">Object</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> parsePropertyValue(ele, bd, <span class="hljs-literal">null</span>);<br>            ConstructorArgumentValues.<span class="hljs-type">ValueHolder</span> <span class="hljs-variable">valueHolder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorArgumentValues</span>.ValueHolder(value);<br>            <span class="hljs-keyword">if</span> (StringUtils.hasLength(typeAttr)) &#123;<br>                valueHolder.setType(typeAttr);<br>            &#125;<br>            <span class="hljs-keyword">if</span> (StringUtils.hasLength(nameAttr)) &#123;<br>                valueHolder.setName(nameAttr);<br>            &#125;<br>            valueHolder.setSource(extractSource(ele));<br>            <span class="hljs-comment">//加入到genericArgumentValues集合中</span><br>            bd.getConstructorArgumentValues().addGenericArgumentValue(valueHolder);<br>        &#125;<br>        <span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-built_in">this</span>.parseState.pop();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="parsePropertyValue-方法"><a href="#parsePropertyValue-方法" class="headerlink" title="parsePropertyValue()方法"></a><code>parsePropertyValue()</code>方法</h5><p>解析constructor-arg的过程中，调用了<code>parsePropertyValue()</code>方法，返回结果值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">parsePropertyValue</span><span class="hljs-params">(Element ele, BeanDefinition bd, <span class="hljs-meta">@Nullable</span> String propertyName)</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">elementName</span> <span class="hljs-operator">=</span> (propertyName != <span class="hljs-literal">null</span> ?<br>                          <span class="hljs-string">&quot;&lt;property&gt; element for property &#x27;&quot;</span> + propertyName + <span class="hljs-string">&quot;&#x27;&quot;</span> :<br>                          <span class="hljs-string">&quot;&lt;constructor-arg&gt; element&quot;</span>);<br><br>    <span class="hljs-comment">// Should only have one child element: ref, value, list, etc.</span><br>    <span class="hljs-comment">// &lt;1&gt; 查找子节点中，是否有 ref、value、list 等元素</span><br>    <span class="hljs-type">NodeList</span> <span class="hljs-variable">nl</span> <span class="hljs-operator">=</span> ele.getChildNodes();<br>    <span class="hljs-type">Element</span> <span class="hljs-variable">subElement</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;<br>        <span class="hljs-type">Node</span> <span class="hljs-variable">node</span> <span class="hljs-operator">=</span> nl.item(i);<br>        <span class="hljs-comment">// meta 、description 不处理</span><br>        <span class="hljs-keyword">if</span> (node <span class="hljs-keyword">instanceof</span> Element &amp;&amp; !nodeNameEquals(node, DESCRIPTION_ELEMENT) &amp;&amp;<br>            !nodeNameEquals(node, META_ELEMENT)) &#123;<br>            <span class="hljs-comment">// Child element is what we&#x27;re looking for.</span><br>            <span class="hljs-keyword">if</span> (subElement != <span class="hljs-literal">null</span>) &#123;<br>                error(elementName + <span class="hljs-string">&quot; must not contain more than one sub-element&quot;</span>, ele);<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                subElement = (Element) node;<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;1&gt; 是否有 ref 属性</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">hasRefAttribute</span> <span class="hljs-operator">=</span> ele.hasAttribute(REF_ATTRIBUTE);<br>    <span class="hljs-comment">// &lt;1&gt; 是否有 value 属性</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">hasValueAttribute</span> <span class="hljs-operator">=</span> ele.hasAttribute(VALUE_ATTRIBUTE);<br>    <span class="hljs-comment">// &lt;1&gt; 多个元素存在，报错，存在冲突。</span><br>    <span class="hljs-keyword">if</span> ((hasRefAttribute &amp;&amp; hasValueAttribute) ||<span class="hljs-comment">// 1. ref 和 value 都存在</span><br>        ((hasRefAttribute || hasValueAttribute) &amp;&amp; subElement != <span class="hljs-literal">null</span>)) &#123;<span class="hljs-comment">// 2. ref 和 value 存在其一，并且 subElement 存在</span><br>        error(elementName +<br>              <span class="hljs-string">&quot; is only allowed to contain either &#x27;ref&#x27; attribute OR &#x27;value&#x27; attribute OR sub-element&quot;</span>, ele);<br>    &#125;<br><br>    <span class="hljs-comment">// &lt;2&gt; 将 ref 属性值，构造为 RuntimeBeanReference 实例对象</span><br>    <span class="hljs-keyword">if</span> (hasRefAttribute) &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">refName</span> <span class="hljs-operator">=</span> ele.getAttribute(REF_ATTRIBUTE);<br>        <span class="hljs-keyword">if</span> (!StringUtils.hasText(refName)) &#123;<br>            error(elementName + <span class="hljs-string">&quot; contains empty &#x27;ref&#x27; attribute&quot;</span>, ele);<br>        &#125;<br>        <span class="hljs-type">RuntimeBeanReference</span> <span class="hljs-variable">ref</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeBeanReference</span>(refName);<br>        ref.setSource(extractSource(ele));<br>        <span class="hljs-keyword">return</span> ref;<br>    &#125;<br>    <span class="hljs-comment">// &lt;3&gt; 将 value 属性值，构造为 TypedStringValue 实例对象</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (hasValueAttribute) &#123;<br>        <span class="hljs-type">TypedStringValue</span> <span class="hljs-variable">valueHolder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypedStringValue</span>(ele.getAttribute(VALUE_ATTRIBUTE));<br>        valueHolder.setSource(extractSource(ele));<br>        <span class="hljs-keyword">return</span> valueHolder;<br>    &#125;<br>    <span class="hljs-comment">// &lt;4&gt; 解析子元素</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (subElement != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> parsePropertySubElement(subElement, bd);<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// Neither child element nor &quot;ref&quot; or &quot;value&quot; attribute found.</span><br>        error(elementName + <span class="hljs-string">&quot; must specify a ref or value&quot;</span>, ele);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="parsePropertySubElement-方法"><a href="#parsePropertySubElement-方法" class="headerlink" title="parsePropertySubElement()方法"></a><code>parsePropertySubElement()</code>方法</h5><p>在调用<code>parsePropertyValue()</code>返回结果值的时候，假如解析了子元素，会调用<code>parsePropertySubElement()</code>方法，主要是针对各种子标签进行不同的处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Nullable</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">parsePropertySubElement</span><span class="hljs-params">(Element ele, <span class="hljs-meta">@Nullable</span> BeanDefinition bd, <span class="hljs-meta">@Nullable</span> String defaultValueType)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!isDefaultNamespace(ele)) &#123;<br>        <span class="hljs-keyword">return</span> parseNestedCustomElement(ele, bd);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, BEAN_ELEMENT)) &#123;<span class="hljs-comment">// bean 标签</span><br>        <span class="hljs-type">BeanDefinitionHolder</span> <span class="hljs-variable">nestedBd</span> <span class="hljs-operator">=</span> parseBeanDefinitionElement(ele, bd);<br>        <span class="hljs-keyword">if</span> (nestedBd != <span class="hljs-literal">null</span>) &#123;<br>            nestedBd = decorateBeanDefinitionIfRequired(ele, nestedBd, bd);<br>        &#125;<br>        <span class="hljs-keyword">return</span> nestedBd;<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, REF_ELEMENT)) &#123;<span class="hljs-comment">// ref 标签</span><br>        <span class="hljs-comment">// A generic reference to any name of any bean.</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">refName</span> <span class="hljs-operator">=</span> ele.getAttribute(BEAN_REF_ATTRIBUTE);<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">toParent</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">if</span> (!StringUtils.hasLength(refName)) &#123;<br>            <span class="hljs-comment">// A reference to the id of another bean in a parent context.</span><br>            refName = ele.getAttribute(PARENT_REF_ATTRIBUTE);<br>            toParent = <span class="hljs-literal">true</span>;<br>            <span class="hljs-keyword">if</span> (!StringUtils.hasLength(refName)) &#123;<br>                error(<span class="hljs-string">&quot;&#x27;bean&#x27; or &#x27;parent&#x27; is required for &lt;ref&gt; element&quot;</span>, ele);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (!StringUtils.hasText(refName)) &#123;<br>            error(<span class="hljs-string">&quot;&lt;ref&gt; element contains empty target attribute&quot;</span>, ele);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        <span class="hljs-type">RuntimeBeanReference</span> <span class="hljs-variable">ref</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeBeanReference</span>(refName, toParent);<br>        ref.setSource(extractSource(ele));<br>        <span class="hljs-keyword">return</span> ref;<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, IDREF_ELEMENT)) &#123;<span class="hljs-comment">// idref 标签</span><br>        <span class="hljs-keyword">return</span> parseIdRefElement(ele);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, VALUE_ELEMENT)) &#123;<span class="hljs-comment">// value 标签</span><br>        <span class="hljs-keyword">return</span> parseValueElement(ele, defaultValueType);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, NULL_ELEMENT)) &#123;<span class="hljs-comment">// null 标签</span><br>        <span class="hljs-comment">// It&#x27;s a distinguished null value. Let&#x27;s wrap it in a TypedStringValue</span><br>        <span class="hljs-comment">// object in order to preserve the source location.</span><br>        <span class="hljs-type">TypedStringValue</span> <span class="hljs-variable">nullHolder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypedStringValue</span>(<span class="hljs-literal">null</span>);<br>        nullHolder.setSource(extractSource(ele));<br>        <span class="hljs-keyword">return</span> nullHolder;<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, ARRAY_ELEMENT)) &#123;<span class="hljs-comment">// array 标签</span><br>        <span class="hljs-keyword">return</span> parseArrayElement(ele, bd);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, LIST_ELEMENT)) &#123;<span class="hljs-comment">// list 标签</span><br>        <span class="hljs-keyword">return</span> parseListElement(ele, bd);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, SET_ELEMENT)) &#123;<span class="hljs-comment">// set 标签</span><br>        <span class="hljs-keyword">return</span> parseSetElement(ele, bd);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, MAP_ELEMENT)) &#123;<span class="hljs-comment">// map 标签</span><br>        <span class="hljs-keyword">return</span> parseMapElement(ele, bd);<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nodeNameEquals(ele, PROPS_ELEMENT)) &#123;<span class="hljs-comment">// props 标签</span><br>        <span class="hljs-keyword">return</span> parsePropsElement(ele);<span class="hljs-comment">// 未知标签</span><br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        error(<span class="hljs-string">&quot;Unknown property sub-element: [&quot;</span> + ele.getNodeName() + <span class="hljs-string">&quot;]&quot;</span>, ele);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="property子元素"><a href="#property子元素" class="headerlink" title="property子元素"></a><code>property</code>子元素</h4><h5 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//spring配置文件</span><br>&lt;bean id=<span class="hljs-string">&quot;hello&quot;</span> class=<span class="hljs-string">&quot;com.jievhaha.Hello&quot;</span>&gt;<br>    &lt;property name=<span class="hljs-string">&quot;name&quot;</span> value=<span class="hljs-string">&quot;chenssy&quot;</span>/&gt;<br>    &lt;property name=<span class="hljs-string">&quot;age&quot;</span> value=<span class="hljs-string">&quot;18&quot;</span>/&gt;<br>    &lt;property name=<span class="hljs-string">&quot;address&quot;</span> value=<span class="hljs-string">&quot;山西&quot;</span>/&gt;<br>&lt;/bean&gt;<br></code></pre></td></tr></table></figure>
+
+<h5 id="parsePropertyElement-方法"><a href="#parsePropertyElement-方法" class="headerlink" title="parsePropertyElement()方法"></a><code>parsePropertyElement()</code>方法</h5><p>和上边解析<code>constructor-arg</code>一样，遍历所有子元素，匹配到了<code>property</code>子元素，调用相应的逻辑方法<code>parsePropertyElement</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">parsePropertyElement</span><span class="hljs-params">(Element ele, BeanDefinition bd)</span> &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">propertyName</span> <span class="hljs-operator">=</span> ele.getAttribute(NAME_ATTRIBUTE);<span class="hljs-comment">// 获取 name 属性</span><br>    <span class="hljs-keyword">if</span> (!StringUtils.hasLength(propertyName)) &#123;<br>        error(<span class="hljs-string">&quot;Tag &#x27;property&#x27; must have a &#x27;name&#x27; attribute&quot;</span>, ele);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-built_in">this</span>.parseState.push(<span class="hljs-keyword">new</span> <span class="hljs-title class_">PropertyEntry</span>(propertyName));<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 如果存在相同的 name ，报错</span><br>        <span class="hljs-keyword">if</span> (bd.getPropertyValues().contains(propertyName)) &#123;<br>            error(<span class="hljs-string">&quot;Multiple &#x27;property&#x27; definitions for property &#x27;&quot;</span> + propertyName + <span class="hljs-string">&quot;&#x27;&quot;</span>, ele);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">// 解析属性值，解析constructor-arg子元素的时候，已经分析了该方法</span><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">val</span> <span class="hljs-operator">=</span> parsePropertyValue(ele, bd, propertyName);<br>        <span class="hljs-comment">// 创建 PropertyValue 对象</span><br>        <span class="hljs-type">PropertyValue</span> <span class="hljs-variable">pv</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PropertyValue</span>(propertyName, val);<br>        parseMetaElements(ele, pv);<br>        pv.setSource(extractSource(ele));<br>        <span class="hljs-comment">// 添加到 PropertyValue 集合中</span><br>        bd.getPropertyValues().addPropertyValue(pv);<br>    &#125;<br>    <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-built_in">this</span>.parseState.pop();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="qualifier子元素"><a href="#qualifier子元素" class="headerlink" title="qualifier子元素"></a><code>qualifier</code>子元素</h4><h5 id="parseQualifierElements-方法"><a href="#parseQualifierElements-方法" class="headerlink" title="parseQualifierElements()方法"></a><code>parseQualifierElements()</code>方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">parseQualifierElements</span><span class="hljs-params">(Element beanEle, AbstractBeanDefinition bd)</span> &#123;<br>    <span class="hljs-type">NodeList</span> <span class="hljs-variable">nl</span> <span class="hljs-operator">=</span> beanEle.getChildNodes();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;<br>        <span class="hljs-type">Node</span> <span class="hljs-variable">node</span> <span class="hljs-operator">=</span> nl.item(i);<br>        <span class="hljs-keyword">if</span> (isCandidateElement(node) &amp;&amp; nodeNameEquals(node, QUALIFIER_ELEMENT)) &#123;<br>            parseQualifierElement((Element) node, bd);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="parseQualifierElement-方法"><a href="#parseQualifierElement-方法" class="headerlink" title="parseQualifierElement()方法"></a><code>parseQualifierElement()</code>方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">parseQualifierElement</span><span class="hljs-params">(Element ele, AbstractBeanDefinition bd)</span> &#123;<br>   <span class="hljs-type">String</span> <span class="hljs-variable">typeName</span> <span class="hljs-operator">=</span> ele.getAttribute(TYPE_ATTRIBUTE);<span class="hljs-comment">// 解析 type 属性</span><br>   <span class="hljs-keyword">if</span> (!StringUtils.hasLength(typeName)) &#123;<span class="hljs-comment">// 必须有 type</span><br>      error(<span class="hljs-string">&quot;Tag &#x27;qualifier&#x27; must have a &#x27;type&#x27; attribute&quot;</span>, ele);<br>      <span class="hljs-keyword">return</span>;<br>   &#125;<br>   <span class="hljs-built_in">this</span>.parseState.push(<span class="hljs-keyword">new</span> <span class="hljs-title class_">QualifierEntry</span>(typeName));<br>   <span class="hljs-keyword">try</span> &#123;<br>      <span class="hljs-comment">// 创建 AutowireCandidateQualifier 对象</span><br>      <span class="hljs-type">AutowireCandidateQualifier</span> <span class="hljs-variable">qualifier</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AutowireCandidateQualifier</span>(typeName);<br>      qualifier.setSource(extractSource(ele));<br>      <span class="hljs-comment">// 解析 value 属性，并设置到 AutowireCandidateQualifier 中</span><br>      <span class="hljs-type">String</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> ele.getAttribute(VALUE_ATTRIBUTE);<br>      <span class="hljs-keyword">if</span> (StringUtils.hasLength(value)) &#123;<br>         qualifier.setAttribute(AutowireCandidateQualifier.VALUE_KEY, value);<br>      &#125;<br>      <span class="hljs-comment">// 遍历子节点</span><br>      <span class="hljs-type">NodeList</span> <span class="hljs-variable">nl</span> <span class="hljs-operator">=</span> ele.getChildNodes();<br>      <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nl.getLength(); i++) &#123;<br>         <span class="hljs-type">Node</span> <span class="hljs-variable">node</span> <span class="hljs-operator">=</span> nl.item(i);<br>         <span class="hljs-keyword">if</span> (isCandidateElement(node) &amp;&amp; nodeNameEquals(node, QUALIFIER_ATTRIBUTE_ELEMENT)) &#123;<span class="hljs-comment">// attribute 标签</span><br>            <span class="hljs-type">Element</span> <span class="hljs-variable">attributeEle</span> <span class="hljs-operator">=</span> (Element) node;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">attributeName</span> <span class="hljs-operator">=</span> attributeEle.getAttribute(KEY_ATTRIBUTE);<span class="hljs-comment">// attribute 标签的 key 属性</span><br>            <span class="hljs-type">String</span> <span class="hljs-variable">attributeValue</span> <span class="hljs-operator">=</span> attributeEle.getAttribute(VALUE_ATTRIBUTE);<span class="hljs-comment">// attribute 标签的 value 属性</span><br>            <span class="hljs-keyword">if</span> (StringUtils.hasLength(attributeName) &amp;&amp; StringUtils.hasLength(attributeValue)) &#123;<br>               <span class="hljs-comment">// 创建 BeanMetadataAttribute 对象</span><br>               <span class="hljs-type">BeanMetadataAttribute</span> <span class="hljs-variable">attribute</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanMetadataAttribute</span>(attributeName, attributeValue);<br>               attribute.setSource(extractSource(attributeEle));<br>               <span class="hljs-comment">// 添加到 attributes 中</span><br>               qualifier.addMetadataAttribute(attribute);<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>               error(<span class="hljs-string">&quot;Qualifier &#x27;attribute&#x27; tag must have a &#x27;name&#x27; and &#x27;value&#x27;&quot;</span>, attributeEle);<br>               <span class="hljs-keyword">return</span>;<br>            &#125;<br>         &#125;<br>      &#125;<br>      <span class="hljs-comment">// 添加到 qualifiers 中</span><br>      bd.addQualifier(qualifier);<br>   &#125;<br>   <span class="hljs-keyword">finally</span> &#123;<br>      <span class="hljs-built_in">this</span>.parseState.pop();<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/IOC/" class="category-chain-item">IOC</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>十一、解析bean标签子元素二</div>
+      <div>http://www.muzili.ren/2022/06/11/解析bean标签子元素二/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E9%94%81%E7%A7%8D%E7%B1%BB%E5%8F%8A%E5%85%B6%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0/" title="锁种类以及具体实现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">锁种类以及具体实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E8%A7%A3%E6%9E%90import%E6%A0%87%E7%AD%BE/" title="七、解析import标签">
+                        <span class="hidden-mobile">七、解析import标签</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

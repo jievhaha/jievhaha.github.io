@@ -1,0 +1,769 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="redis的应用场景及安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis安装配置">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/redis%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="redis的应用场景及安装">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-11T09:48:09.975Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.975Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>redis安装配置 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="redis安装配置"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          70 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">redis安装配置</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">redis安装配置</font></div>
+
+<h4 id="redis应用场景"><a href="#redis应用场景" class="headerlink" title="redis应用场景"></a>redis应用场景</h4><h5 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h5><p>合理的使用 缓存 能够明显加快访问的速度，同时降低数据源的压力。这也是 Redis 最常用的功能。Redis 提供了 键值过期时间（EXPIRE key seconds）设置，并且也提供了灵活控制 <strong>最大内存</strong> 和 内存溢出 后的 <strong>淘汰策略</strong>。</p>
+<h5 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h5><p>Redis 提供了 <strong>列表（list）</strong>和 <strong>有序集合（zset）</strong>数据结构，合理的使用这些数据结构，可以很方便的构建各种排行榜系统。</p>
+<h5 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h5><p>例如：点赞数加 1，浏览数 加 1。还有常用的 限流操作，限制每个用户每秒 访问系统的次数 等等。Redis 支持 <strong>计数功能（INCR key）</strong>，而且计数的 性能 也非常好，计数的同时也可以设置 超时时间，这样就可以 实现限流。</p>
+<h5 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h5><p>赞&#x2F;踩，粉丝，共同好友&#x2F;喜好，推送，下拉刷新等是社交网站必备的功能。</p>
+<h5 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h5><p>Redis 提供的 发布订阅（PUB&#x2F;SUB）和 阻塞队列 的功能，虽然和专业的消息队列比，还 不够强大，但对于一般的消息队列功能基本满足。</p>
+<h4 id="redis的安装"><a href="#redis的安装" class="headerlink" title="redis的安装"></a>redis的安装</h4><h5 id="下载解压"><a href="#下载解压" class="headerlink" title="下载解压"></a>下载解压</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /usr/local/<br>wget http://download.redis.io/releases/redis-4.0.11.tar.gz<br>tar -zxvf redis-4.0.2.tar.gz<br></code></pre></td></tr></table></figure>
+<h5 id="编译并安装"><a href="#编译并安装" class="headerlink" title="编译并安装"></a>编译并安装</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /usr/local/redis-4.0.11<br>make install PREFIX=/usr/local/redis<br></code></pre></td></tr></table></figure>
+<p>安装完成时，&#x2F;usr&#x2F;local&#x2F;redis&#x2F;bin 目录下会生成的几个可执行的文件。</p>
+<pre><code class="hljs">    | 可执行文件 | 作用 |
+    |-----------|-------|
+    | redis-server | 启动 redis 服务 |
+    | redis-cli redis | 命令行客户端 |
+    | redis-benchmark | redis 基准测试工具 |
+    | redis-check-aof | redis AOF 持久化文件检测和修复工具 |
+    | redis-check-dump | redis RDB 持久化文件检测和修复工具 |
+    | redis-sentinel | 启动 redis sentinel |
+</code></pre>
+<p>复制 Redis 相关命令到 &#x2F;usr&#x2F;local&#x2F;bin 目录下，这样就可以直接执行这些命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd /usr/local/redis/bin/<br>sudo cp redis-cli redis-server redis-sentinel /usr/local/bin<br></code></pre></td></tr></table></figure>
+<h5 id="修改Redis配置文件"><a href="#修改Redis配置文件" class="headerlink" title="修改Redis配置文件"></a>修改Redis配置文件</h5><p>安装完成之后将 Redis 配置文件拷贝到 &#x2F;usr&#x2F;local 下，redis.conf 是 Redis 的配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo cp /usr/local/redis-4.0.11/redis.conf /usr/local/<br></code></pre></td></tr></table></figure>
+<p>redis 配置文件主要参数解析参考：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">redis进程是否以守护进程的方式运行，<span class="hljs-built_in">yes</span>为是，no为否(不以守护进程的方式运行会占用一个终端)。</span><br>daemonize no<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定redis进程的PID文件存放位置</span><br>pidfile /var/run/redis.pid<br><span class="hljs-meta prompt_"># </span><span class="language-bash">redis进程的端口号</span><br>port 6379<br><span class="hljs-meta prompt_"># </span><span class="language-bash">绑定的主机地址</span><br>bind 127.0.0.1<br><span class="hljs-meta prompt_"># </span><span class="language-bash">客户端闲置多长时间后关闭连接，默认此参数为0即关闭此功能</span><br>timeout 300<br><span class="hljs-meta prompt_"># </span><span class="language-bash">redis日志级别，可用的级别有debug.verbose.notice.warning</span><br>loglevel verbose<br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">log</span>文件输出位置，如果进程以守护进程的方式运行，此处又将输出文件设置为stdout的话，就会将日志信息输出到/dev/null里面去了</span><br>logfile stdout<br><span class="hljs-meta prompt_"># </span><span class="language-bash">设置数据库的数量，默认为0可以使用select &lt;dbid&gt;命令在连接上指定数据库<span class="hljs-built_in">id</span></span><br>databases 16<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定在多少时间内刷新次数达到多少的时候会将数据同步到数据文件</span><br>save &lt;seconds&gt; &lt;changes&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定存储至本地数据库时是否压缩文件，默认为<span class="hljs-built_in">yes</span>即启用存储</span><br>rdbcompression yes<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定本地数据库文件名</span><br>dbfilename dump.db<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定本地数据问就按存放位置</span><br>dir ./<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定当本机为slave服务时，设置master服务的IP地址及端口，在redis启动的时候他会自动跟master进行数据同步</span><br>slaveof &lt;masterip&gt; &lt;masterport&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">当master设置了密码保护时，slave服务连接master的密码</span><br>masterauth &lt;master-password&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">设置redis连接密码，如果配置了连接密码，客户端在连接redis是需要通过AUTH&lt;password&gt;命令提供密码，默认关闭</span><br>requirepass footbared<br><span class="hljs-meta prompt_"># </span><span class="language-bash">设置同一时间最大客户连接数，默认无限制。redis可以同时连接的客户端数为redis程序可以打开的最大文件描述符，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis会关闭新的连接并向客户端返回 max number of clients reached 错误信息</span><br>maxclients 128<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定Redis最大内存限制，Redis在启动时会把数据加载到内存中，达到最大内存后，Redis会先尝试清除已到期或即将到期的Key。当此方法处理后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis新的vm机制，会把Key存放内存，Value会存放在swap区</span><br>maxmemory&lt;bytes&gt;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为no。</span><br>appendonly no<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定跟新日志文件名默认为appendonly.aof</span><br>appendfilename appendonly.aof<br><span class="hljs-meta prompt_"># </span><span class="language-bash">指定更新日志的条件，有三个可选参数 - no：表示等操作系统进行数据缓存同步到磁盘(快)，always：表示每次更新操作后手动调用fsync()将数据写到磁盘(慢，安全)， everysec：表示每秒同步一次(折衷，默认值)；</span><br>appendfsync everysec<br></code></pre></td></tr></table></figure>
+<p>设置后台启动<br>由于 Redis 默认是 前台启动，不建议使用。修改 Redis 配置文件，把 daemonize no 改为 daemonize yes。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">daemonize yes<br></code></pre></td></tr></table></figure>
+<p>设置远程访问<br>Redis 默认只允许 本机访问，把 bind 修改为 bind 0.0.0.0 此设置会变成 允许所有远程访问。如果想指定限制访问，可设置对应的 IP。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">bind 0.0.0.0<br></code></pre></td></tr></table></figure>
+<p>配置 Redis 日志记录<br>默认是：logfile “”，改为自定义日志文件路径。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">logfile /var/log/redis_6379.log<br></code></pre></td></tr></table></figure>
+<p>设置 Redis 请求密码，修改后重启服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">requirepass &quot;123456&quot;<br></code></pre></td></tr></table></figure>
+<p>有了密码之后，进入客户端，就得这样访问：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">redis-cli -h 127.0.0.1 -p 6379 -a 123456<br></code></pre></td></tr></table></figure>
+<h5 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h5><p>新建一个 redis 环境变量文件并写入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/profile.d/redis.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加如下内容</span><br>PATH=$PATH:/usr/local/redis/bin<br>export PATH<br></code></pre></td></tr></table></figure>
+<p>使配置文件生效</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">source /etc/profile<br></code></pre></td></tr></table></figure>
+<p>然后可以运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">redis-server -v<br><span class="hljs-meta prompt_">#</span><span class="language-bash">输出可看到</span><br>Redis server v=4.0.11 sha=00000000:0 malloc=jemalloc-4.0.3 bits=64 build=243d9be1bcedcd4b<br></code></pre></td></tr></table></figure>
+<h5 id="注册Redis为系统服务"><a href="#注册Redis为系统服务" class="headerlink" title="注册Redis为系统服务"></a>注册Redis为系统服务</h5><p>新建redis服务文件并编辑</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">新建并编辑</span><br>vim /usr/lib/systemd/system/redis.service<br></code></pre></td></tr></table></figure>
+<p>添加内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">[Unit]<br>Description=Redis persistent key-value database<br>After=network.target<br>[Service]<br><span class="hljs-meta prompt_">#</span><span class="language-bash">注意自己redis-server和redis.conf的存放路径</span><br>ExecStart=/usr/local/redis/bin/redis-server /usr/local/redis.conf --supervised systemd<br><span class="hljs-meta prompt_">#</span><span class="language-bash">下边会创建redis-shutdown</span><br>ExecStop=/usr/local/redis/libexec/redis-shutdown<br>Type=notify<br>User=muzili<br>Group=muzili<br>RuntimeDirectory=redis<br>RuntimeDirectoryMode=0755<br>LimitNOFILE=65536<br>[Install]<br>WantedBy=multi-user.target<br></code></pre></td></tr></table></figure>
+<p><em><strong>注</strong></em>：不添加<code>LimitNOFILE=65536</code>启动可能会提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">1894:M 17 Nov 14:16:46.645 # You requested maxclients of 10000 requiring at least 10032 max file descriptors.<br>1894:M 17 Nov 14:16:46.645 # Server can&#x27;t set maximum open files to 10032 because of OS error: Operation not permitted.<br>1894:M 17 Nov 14:16:46.645 # Current maximum open files is 4096. maxclients has been reduced to 4064 to compensate for low ulimit. If you need higher maxclients increase &#x27;ulimit -n&#x27;.<br></code></pre></td></tr></table></figure>
+<p>重新加载systemctll配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl daemon-reload<br></code></pre></td></tr></table></figure>
+<p>新建redis关闭文件并编辑</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">mkdir /usr/local/redis/libexec<br>touch /usr/local/redis/libexec/redis-shutdown<br>chmod 755 /usr/local/redis/libexec/redis-shutdown<br>vim /usr/local/redis/libexec/redis-shutdown<br></code></pre></td></tr></table></figure>
+<p>添加内容，# 去掉[[:\blank:]]中的\</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash"><span class="hljs-comment"># Wrapper to close properly redis and sentinel</span></span><br>test x&quot;$REDIS_DEBUG&quot; != x &amp;&amp; set -x<br><span class="hljs-meta prompt_"># </span><span class="language-bash">确定好自己redic-cli的目录</span><br>REDIS_CLI=/usr/local/bin/redis-cli<br><span class="hljs-meta prompt_"># </span><span class="language-bash">redis.conf的名字</span><br>SERVICE_NAME=&quot;$1&quot;<br>if [ -z &quot;$SERVICE_NAME&quot; ]; then<br>   SERVICE_NAME=redis<br>fi<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Get the proper config file based on service name</span><br>CONFIG_FILE=&quot;/usr/local/$SERVICE_NAME.conf&quot;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Use awk to retrieve host, port from config file</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">去掉[[:\blank:]]中的\</span><br><span class="language-bash">HOST=`awk <span class="hljs-string">&#x27;/^[[:\blank:]]*bind/ &#123; print $2 &#125;&#x27;</span> <span class="hljs-variable">$CONFIG_FILE</span> | <span class="hljs-built_in">tail</span> -n1`</span><br>PORT=`awk &#x27;/^[[:\blank:]]*port/ &#123; print $2 &#125;&#x27; $CONFIG_FILE | tail -n1`<br>PASS=`awk &#x27;/^[[:\blank:]]*requirepass/ &#123; print $2 &#125;&#x27; $CONFIG_FILE | tail -n1`<br>SOCK=`awk &#x27;/^[[:\blank:]]*unixsocket\s/ &#123; print $2 &#125;&#x27; $CONFIG_FILE | tail -n1`<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Just <span class="hljs-keyword">in</span> <span class="hljs-keyword">case</span>, use default host, port</span><br>HOST=$&#123;HOST:-0.0.0.0&#125;<br>if [ &quot;$SERVICE_NAME&quot; = redis ]; then<br>    PORT=$&#123;PORT:-6379&#125;<br>else<br>    PORT=$&#123;PORT:-26739&#125;<br>fi<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Setup additional parameters</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">e.g password-protected redis instances</span><br>[ -z &quot;$PASS&quot;  ] || ADDITIONAL_PARAMS=&quot;-a $PASS&quot;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">shutdown the service properly</span><br>if [ -e &quot;$SOCK&quot; ] ; then<br>        $REDIS_CLI -s $SOCK $ADDITIONAL_PARAMS shutdown<br>else<br>        $REDIS_CLI -h $HOST -p $PORT $ADDITIONAL_PARAMS shutdown<br>fi<br></code></pre></td></tr></table></figure>
+<h5 id="可以启动关闭服务查看新加脚本是否成功"><a href="#可以启动关闭服务查看新加脚本是否成功" class="headerlink" title="可以启动关闭服务查看新加脚本是否成功"></a>可以启动关闭服务查看新加脚本是否成功</h5><p>启动服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl start redis  或者 service redis start<br></code></pre></td></tr></table></figure>
+<p>关闭服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl stop redis  或者 service redis stop<br></code></pre></td></tr></table></figure>
+<p>服务状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl status redis  或者 service redis status<br></code></pre></td></tr></table></figure>
+<h5 id="启动问题"><a href="#启动问题" class="headerlink" title="启动问题"></a>启动问题</h5><p>a.提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.<br></code></pre></td></tr></table></figure>
+<p>解决办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">执行如下命令</span><br>echo &quot;net.core.somaxconn = 1024&quot; &gt;&gt; /etc/sysctl.d/99-sysctl.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">接着执行如下命令使其生效</span><br>sysctl -p<br></code></pre></td></tr></table></figure>
+<p>b.提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add &#x27;vm.overcommit_memory = 1&#x27; to /etc/sysctl.conf and then reboot or run the command &#x27;sysctl vm.overcommit_memory=1&#x27; for this to take effect.<br></code></pre></td></tr></table></figure>
+<p>解决办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">执行如下命令</span><br>echo &quot;vm.overcommit_memory = 1&quot;  &gt;&gt; /etc/sysctl.d/99-sysctl.conf<br><span class="hljs-meta prompt_">#</span><span class="language-bash">接着执行如下命令使其生效</span><br>sysctl -p<br></code></pre></td></tr></table></figure>
+<p>c.提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command &#x27;echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled&#x27; as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.<br></code></pre></td></tr></table></figure>
+<p>解决办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在/etc/rc.d/rc.local 文件里添加</span><br>if test -f /sys/kernel/mm/transparent_hugepage/enabled; then<br>    echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled<br>fi<br><span class="hljs-meta prompt_">#</span><span class="language-bash">保存执行</span><br>chmod +x /etc/rc.d/rc.local<br></code></pre></td></tr></table></figure>
+
+<h4 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h4><p><em><strong>注意：</strong></em>配从不配主</p>
+<h5 id="先查看防火墙设置，假如防火墙开启，开放redis端口"><a href="#先查看防火墙设置，假如防火墙开启，开放redis端口" class="headerlink" title="先查看防火墙设置，假如防火墙开启，开放redis端口"></a>先查看防火墙设置，假如防火墙开启，开放redis端口</h5><p>查看开放的端口</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo firewall-cmd --list-ports<br></code></pre></td></tr></table></figure>
+<p>开放自己想开放的端口</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo firewall-cmd --zone=public --add-port=6379/tcp --permanent<br></code></pre></td></tr></table></figure>
+<h5 id="进入从服务器-的-redis-cli-模式"><a href="#进入从服务器-的-redis-cli-模式" class="headerlink" title="进入从服务器 的 redis-cli 模式"></a>进入从服务器 的 redis-cli 模式</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">redis-cli -p 6379<br></code></pre></td></tr></table></figure>
+<p>从服务器配置主服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">slaveof 192.168.31.44 6379<br></code></pre></td></tr></table></figure>
+<p>分别查看主、从服务器的配置情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">命令</span><br>info replication<br><span class="hljs-meta prompt_">#</span><span class="language-bash">主服务器返回信息</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Replication</span><br>role:master<br>connected_slaves:1<br>slave0:ip=192.168.31.134,port=6379,state=online,offset=1862,lag=0<br>master_replid:a45b5866dd55b1551ddbaa9d6741af1f2d4e6979<br>master_replid2:0000000000000000000000000000000000000000<br>master_repl_offset:1862<br>second_repl_offset:-1<br>repl_backlog_active:1<br>repl_backlog_size:1048576<br>repl_backlog_first_byte_offset:1<br>repl_backlog_histlen:1862<br><span class="hljs-meta prompt_">#</span><span class="language-bash">从服务器返回信息</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Replication</span><br>role:slave<br>master_host:192.168.31.44<br>master_port:6379<br>master_link_status:up###如果为down，1.查看防火墙状态，是否开放了端口。2.主服务器是否有密码，从服务器配置了主服务器的密码吗<br>master_last_io_seconds_ago:10<br>master_sync_in_progress:0<br>slave_repl_offset:966<br>slave_priority:100<br>slave_read_only:1<br>connected_slaves:0<br>master_replid:a45b5866dd55b1551ddbaa9d6741af1f2d4e6979<br>master_replid2:0000000000000000000000000000000000000000<br>master_repl_offset:966<br>second_repl_offset:-1<br>repl_backlog_active:1<br>repl_backlog_size:1048576<br>repl_backlog_first_byte_offset:953<br>repl_backlog_histlen:14<br></code></pre></td></tr></table></figure>
+<p>以上配置缺点：<br>假如从机挂了，就需要重新配置连接，主机挂了，从机待机，主机恢复自动连接<br>假如从机挂了不想再配置，那就直接配置redis.conf配置文件（配从不配主）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">找到slaveof &lt;masterip&gt; &lt;masterport&gt;去掉注释</span><br>slaveof 192.168.31.44 6379<br><span class="hljs-meta prompt_">#</span><span class="language-bash">主机配置了密码，从机配置主机设置的密码，找到masterauth &lt;master-password&gt;去掉注释</span><br>masterauth 123456<br></code></pre></td></tr></table></figure>
+<p>配置完重启。<br>从机变为主机</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">slaveof no one<br></code></pre></td></tr></table></figure>
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/redis/" class="category-chain-item">redis</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/redis/">#redis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>redis安装配置</div>
+      <div>http://www.muzili.ren/2022/06/11/redis安装/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E4%BC%AA%E9%9B%86%E7%BE%A4%E7%89%88Zookeeper%E6%90%AD%E5%BB%BA/" title="zookeeper集群">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">zookeeper集群</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/springcloud%E4%BD%BF%E7%94%A8nacos%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E6%9C%AA%E4%BB%8Enacos%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE/" title="springcloud使用nacos配置中心未从nacos读取配置">
+                        <span class="hidden-mobile">springcloud使用nacos配置中心未从nacos读取配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

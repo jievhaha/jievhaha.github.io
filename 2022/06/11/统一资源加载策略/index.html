@@ -1,0 +1,829 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="统一资源：Resource和统一资源定位：ResourceLoader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二、spring统一资源加载策略">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="统一资源：Resource和统一资源定位：ResourceLoader">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/spring_IOC/Resource.png">
+<meta property="og:image" content="http://www.muzili.ren/images/spring_IOC/ResourceLoader.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.985Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.985Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/spring_IOC/Resource.png">
+  
+  
+  
+  <title>二、spring统一资源加载策略 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="二、spring统一资源加载策略"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          127 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">二、spring统一资源加载策略</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">spring统一资源加载策略</font></div>
+
+<blockquote>
+<table><tr><td bgcolor="#6495ED"><font color="#FFF">org.springframework.core.io.Resource 为 Spring 框架所有资源的抽象和访问接口，它继承 org.springframework.core.io.InputStreamSource接口。作为所有资源的统一抽象，Source 定义了一些通用的方法，由子类 AbstractResource 提供统一的默认实现。</font></td></tr></table>
+</blockquote>
+<h4 id="统一资源：Resource"><a href="#统一资源：Resource" class="headerlink" title="统一资源：Resource"></a>统一资源：Resource</h4><p><code>org.springframework.core.io.Resource</code>为Spring所有资源的抽象和访问接口，继承自<code>org.springframework.core.io.InputStreamSource</code>，<code>Resource</code>定义的统一方法由其子类<code>AbstractResource</code>提供默认实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Resource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">InputStreamSource</span> &#123;<br>    <span class="hljs-comment">//资源是否存在</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">exists</span><span class="hljs-params">()</span>;<br>    <span class="hljs-comment">//资源是否可读</span><br>    <span class="hljs-keyword">default</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isReadable</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-comment">//资源所代表的句柄是否被一个stream打开了</span><br>    <span class="hljs-keyword">default</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isOpen</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-comment">//是否为 File</span><br>    <span class="hljs-keyword">default</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isFile</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-comment">//返回资源的URL的句柄</span><br>    URL <span class="hljs-title function_">getURL</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException;<br>    <span class="hljs-comment">//返回资源的URI的句柄</span><br>    URI <span class="hljs-title function_">getURI</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException;<br>    <span class="hljs-comment">//返回资源的File的句柄</span><br>    File <span class="hljs-title function_">getFile</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException;<br>    <span class="hljs-comment">//返回 ReadableByteChannel</span><br>    <span class="hljs-keyword">default</span> ReadableByteChannel <span class="hljs-title function_">readableChannel</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-keyword">return</span> Channels.newChannel(getInputStream());<br>    &#125;<br>    <span class="hljs-comment">//资源内容的长度</span><br>    <span class="hljs-type">long</span> <span class="hljs-title function_">contentLength</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException;<br>    <span class="hljs-comment">//资源最后的修改时间</span><br>    <span class="hljs-type">long</span> <span class="hljs-title function_">lastModified</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException;<br>    <span class="hljs-comment">//根据资源的相对路径创建新资源</span><br>    Resource <span class="hljs-title function_">createRelative</span><span class="hljs-params">(String relativePath)</span> <span class="hljs-keyword">throws</span> IOException;<br>    <span class="hljs-comment">//资源的文件名</span><br>    <span class="hljs-meta">@Nullable</span><br>    String <span class="hljs-title function_">getFilename</span><span class="hljs-params">()</span>;<br>    <span class="hljs-comment">//资源的描述</span><br>    String <span class="hljs-title function_">getDescription</span><span class="hljs-params">()</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/spring_IOC/Resource.png" srcset="/img/loading.gif" lazyload alt="Resource"></p>
+<ol>
+<li>FileSystemResource：对 <code>java.io.File</code> 类型资源的封装，只要是跟 File 打交道的，基本上与 FileSystemResource 也可以打交道。支持文件和 URL 的形式，实现 WritableResource 接口。</li>
+<li>ByteArrayResource：对字节数组提供的数据的封装。如果通过 InputStream 形式访问该类型的资源，该实现会根据字节数组的数据构造一个相应的 ByteArrayInputStream。</li>
+<li>UrlResource：对 <code>java.net.URL</code>类型资源的封装。内部委派 URL 进行具体的资源操作。</li>
+<li>ClassPathResource：class path 类型资源的实现。使用给定的 ClassLoader 或者给定的 Class 来加载资源。</li>
+<li>InputStreamResource：将给定的 InputStream 作为一种资源的 Resource 的实现类。</li>
+</ol>
+<p><code>AbstractResource </code>为 Resource 接口的默认实现，它实现了 Resource 接口的大部分的公共实现。</p>
+<p>如果想要实现自定义的 Resource，记住不要实现 Resource 接口，而应该继承 AbstractResource 抽象类，然后根据当前的具体资源特性覆盖相应的方法即可。</p>
+<h4 id="统一资源定位：ResourceLoader"><a href="#统一资源定位：ResourceLoader" class="headerlink" title="统一资源定位：ResourceLoader"></a>统一资源定位：ResourceLoader</h4><h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><p><code>org.springframework.core.io.ResourceLoader</code> 为 Spring 资源加载的统一抽象，具体的资源加载则由相应的实现类来完成，所以我们可以将 ResourceLoader 称作为统一资源定位器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ResourceLoader</span> &#123;<br>    <span class="hljs-comment">//只定义了两个方法</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">CLASSPATH_URL_PREFIX</span> <span class="hljs-operator">=</span> ResourceUtils.CLASSPATH_URL_PREFIX;<span class="hljs-comment">//ResourceUtils.CLASSPATH_URL_PREFIX=&quot;classpath:&quot;</span><br>    Resource <span class="hljs-title function_">getResource</span><span class="hljs-params">(String var1)</span>;<br>    ClassLoader <span class="hljs-title function_">getClassLoader</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>getResource</code>根据所提供资源的路径 location 返回 Resource 实例，但是它不确保该 Resource 一定存在，需要调用 <code>Resource.exist()</code>方法判断。该方法的主要实现是在其子类 DefaultResourceLoader 中实现，支持以下模式的资源加载：</p>
+<ol>
+<li>URL位置资源，如”file:C:&#x2F;test.dat”。</li>
+<li>ClassPath位置资源，如”classpath:test.dat”。</li>
+<li>相对路径资源，如”WEB-INF&#x2F;test.dat”，此时返回的Resource实例根据实现不同而不同。</li>
+</ol>
+<p><code>getClassLoader</code> 返回 ClassLoader 实例，对于想要获取 ResourceLoader 使用的 ClassLoader 用户来说，可以直接调用该方法来获取。</p>
+<p><img src="/images/spring_IOC/ResourceLoader.png" srcset="/img/loading.gif" lazyload alt="ResourceLoader"></p>
+<h5 id="DefaultResourceLoader"><a href="#DefaultResourceLoader" class="headerlink" title="DefaultResourceLoader"></a>DefaultResourceLoader</h5><p><code>org.springframework.core.io.DefaultResourceLoader</code> 是 ResourceLoader 的默认实现。</p>
+<h6 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/*</span><br><span class="hljs-comment">* 在访问资源时，使用当前线程的，一般 Thread.currentThread().getContextClassLoader()</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">DefaultResourceLoader</span><span class="hljs-params">()</span> &#123;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">DefaultResourceLoader</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> ClassLoader classLoader)</span> &#123;<br>    <span class="hljs-built_in">this</span>.classLoader = classLoader;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>当然，后续也可以使用<code>setClassLoader</code>进行设置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setClassLoader</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> ClassLoader classLoader)</span> &#123;<br>    <span class="hljs-built_in">this</span>.classLoader = classLoader;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="getResource-方法"><a href="#getResource-方法" class="headerlink" title="getResource()方法"></a>getResource()方法</h6><p>ResourceLoader 中最核心的方法为<code>public Resource getResource(String location)</code>，<code>DefaultResourceLoader</code>提供了具体实现，他的两个子类并未覆盖此方法，所以ResourceLoader的资源加载策略就封装在 DefaultResourceLoader 中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Resource <span class="hljs-title function_">getResource</span><span class="hljs-params">(String location)</span> &#123;<br>    Assert.notNull(location, <span class="hljs-string">&quot;Location must not be null&quot;</span>);<br><br>    <span class="hljs-comment">// 首先，通过 ProtocolResolver 来加载资源</span><br>    <span class="hljs-keyword">for</span> (ProtocolResolver protocolResolver : getProtocolResolvers()) &#123;<br>        <span class="hljs-type">Resource</span> <span class="hljs-variable">resource</span> <span class="hljs-operator">=</span> protocolResolver.resolve(location, <span class="hljs-built_in">this</span>);<br>        <span class="hljs-keyword">if</span> (resource != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> resource;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">//以 / 开头，返回 ClassPathContextResource 类型的资源</span><br>    <span class="hljs-keyword">if</span> (location.startsWith(<span class="hljs-string">&quot;/&quot;</span>)) &#123;<br>        <span class="hljs-keyword">return</span> getResourceByPath(location);<br>    &#125;<br>    <span class="hljs-comment">//以 classpath: 开头，返回 ClassPathResource 类型的资源</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (location.startsWith(CLASSPATH_URL_PREFIX)) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathResource</span>(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());<br>    &#125;<br>    <span class="hljs-comment">//根据是否为文件 URL ，是则返回 FileUrlResource 类型的资源，否则返回 UrlResource 类型的资源</span><br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// Try to parse the location as a URL...</span><br>            <span class="hljs-type">URL</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">URL</span>(location);<br>            <span class="hljs-keyword">return</span> (ResourceUtils.isFileURL(url) ? <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileUrlResource</span>(url) : <span class="hljs-keyword">new</span> <span class="hljs-title class_">UrlResource</span>(url));<br>        &#125;<br>        <span class="hljs-comment">//格式错误异常</span><br>        <span class="hljs-keyword">catch</span> (MalformedURLException ex) &#123;<br>            <span class="hljs-comment">// 返回 ClassPathContextResource 类型的资源</span><br>            <span class="hljs-comment">// No URL -&gt; resolve as resource path.</span><br>            <span class="hljs-keyword">return</span> getResourceByPath(location);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>首先，通过 ProtocolResolver 来加载资源，成功返回 <strong>Resource</strong> 。</p>
+</li>
+<li><p>否则，若 <code>location</code> 以 <code>&quot;/&quot;</code> 开头，则调用 <code>#getResourceByPath()</code> 方法，构造 <strong>ClassPathContextResource</strong> 类型资源并返回。代码如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">protected Resource get<span class="hljs-constructor">ResourceByPath(String <span class="hljs-params">path</span>)</span> &#123;<br>	return <span class="hljs-keyword">new</span> <span class="hljs-constructor">ClassPathContextResource(<span class="hljs-params">path</span>, <span class="hljs-params">getClassLoader</span>()</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>再否则，若 <code>location</code> 以 <code>&quot;classpath:&quot;</code> 开头，则构造 <strong>ClassPathResource</strong> 类型资源并返回。在构造该资源时，通过 <code>#getClassLoader()</code> 获取当前的 ClassLoader。</p>
+</li>
+<li><p>再否则，构造 URL ，尝试通过它进行资源定位，若没有抛出 <strong>MalformedURLException</strong> 异常，则判断是否为 FileURL , 如果是则构造 <strong>FileUrlResource</strong> 类型的资源，否则构造 <strong>UrlResource</strong> 类型的资源。</p>
+</li>
+<li><p>最后，若在加载过程中抛出 MalformedURLException 异常，则委派 <code>#getResourceByPath()</code> 方法，实现资源定位加载。该过程和第二步 <code>location</code> 以 <code>&quot;/&quot;</code> 开头相同。</p>
+</li>
+</ul>
+<p><strong>其子类可以通过重写getResourceByPath(String path)来返回和自身相关的资源类型</strong>。</p>
+<h6 id="ProtocolResolver"><a href="#ProtocolResolver" class="headerlink" title="ProtocolResolver"></a>ProtocolResolver</h6><p><code>org.springframework.core.io.ProtocolResolver</code>（是个函数式接口），用户自定义协议资源解决策略，如上介绍Resource所说：如果想要实现自定义的 Resource，应该继承 AbstractResource 抽象类，但是有了 ProtocolResolver 后，不需要直接继承 DefaultResourceLoader，改为实现 ProtocolResolver 接口也可以实现自定义的 ResourceLoader。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ProtocolResolver</span> &#123;<br>    <span class="hljs-comment">//需要用户自定义实现</span><br>	<span class="hljs-meta">@Nullable</span><br>	Resource <span class="hljs-title function_">resolve</span><span class="hljs-params">(String location, ResourceLoader resourceLoader)</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>自定义的resolve添加到spring中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//在此资源加载器中注册给定的解析器，从而允许处理其他协议，它也可以覆盖任何默认规则。</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addProtocolResolver</span><span class="hljs-params">(ProtocolResolver resolver)</span> &#123;<br>    Assert.notNull(resolver, <span class="hljs-string">&quot;ProtocolResolver must not be null&quot;</span>);<br>    <span class="hljs-built_in">this</span>.protocolResolvers.add(resolver);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="FileSystemResourceLoader"><a href="#FileSystemResourceLoader" class="headerlink" title="FileSystemResourceLoader"></a>FileSystemResourceLoader</h5><p><code>org.springframework.core.io.FileSystemResourceLoader</code>重写了<code>getResourceByPath</code>，使之从文件系统加载资源并以 FileSystemResource 类型返回：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Resource <span class="hljs-title function_">getResourceByPath</span><span class="hljs-params">(String path)</span> &#123;<br>    <span class="hljs-keyword">if</span> (path.startsWith(<span class="hljs-string">&quot;/&quot;</span>)) &#123;<br>        path = path.substring(<span class="hljs-number">1</span>);<br>    &#125;<br>    <span class="hljs-comment">//创建 FileSystemContextResource 类型的资源，FileSystemContextResource为内部类。</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileSystemContextResource</span>(path);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="FileSystemContextResource"><a href="#FileSystemContextResource" class="headerlink" title="FileSystemContextResource"></a>FileSystemContextResource</h6><p>为 FileSystemResourceLoader 的内部类，它继承 FileSystemResource 类，实现 ContextResource 接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FileSystemContextResource</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">FileSystemResource</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ContextResource</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">FileSystemContextResource</span><span class="hljs-params">(String path)</span> &#123;<br>        <span class="hljs-built_in">super</span>(path);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getPathWithinContext</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> getPath();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="ClassRelativeResourceLoader"><a href="#ClassRelativeResourceLoader" class="headerlink" title="ClassRelativeResourceLoader"></a>ClassRelativeResourceLoader</h5><p><code>org.springframework.core.io.ClassRelativeResourceLoader</code>是DefaultResourceLoader的另一个子类，和<code>FileSystemResourceLoader</code>一样，都是重新写了getResourceByPath()方法，然后有个内部类<code>ClassRelativeContextResource</code>。</p>
+<p>ClassRelativeResourceLoader扩展的功能是可以根据给定的class所在包或者所在包的子包下加载资源。</p>
+<h5 id="ResourcePatternResolver"><a href="#ResourcePatternResolver" class="headerlink" title="ResourcePatternResolver"></a>ResourcePatternResolver</h5><p>ResourceLoader 的 <code>Resource getResource(String location)</code> 方法，每次只能根据 location 返回<strong>一个</strong> Resource 。当需要加载多个资源时，我们除了多次调用 <code>getResource(String location)</code> 方法外，别无他法。<code>org.springframework.core.io.support.ResourcePatternResolver</code> 是 ResourceLoader 的扩展，它支持根据指定的资源路径匹配模式每次返回<strong>多个</strong> Resource 实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ResourcePatternResolver</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ResourceLoader</span> &#123;<br>    <span class="hljs-comment">//注：默认是&quot;classpath:&quot;;</span><br>	<span class="hljs-type">String</span> <span class="hljs-variable">CLASSPATH_ALL_URL_PREFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;classpath*:&quot;</span>;<br>	Resource[] getResources(String locationPattern) <span class="hljs-keyword">throws</span> IOException;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>ResourcePatternResolver</code>在<code>ResourceLoader</code>的基础上增加了<code>getResources</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//注：父类是getResource</span><br>Resource[] getResources(String locationPattern) <span class="hljs-keyword">throws</span> IOException;<br></code></pre></td></tr></table></figure>
+
+<h5 id="PathMatchingResourcePatternResolver"><a href="#PathMatchingResourcePatternResolver" class="headerlink" title="PathMatchingResourcePatternResolver"></a>PathMatchingResourcePatternResolver</h5><p>是<code>ResourcePatternResolver</code>的子类，在父类的基础上额外还支持 Ant 风格的路径匹配模式（类似于 <code>&quot;/*.xml&quot;</code>）。</p>
+<h6 id="构造函数-1"><a href="#构造函数-1" class="headerlink" title="构造函数"></a>构造函数</h6><p>提供了三个构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//内置的 ResourceLoader 资源定位器</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ResourceLoader resourceLoader;<br><br><span class="hljs-comment">//Ant 路径匹配器，默认为 AntPathMatcher 对象，用于支持 Ant 类型的路径匹配。</span><br><span class="hljs-keyword">private</span> <span class="hljs-type">PathMatcher</span> <span class="hljs-variable">pathMatcher</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AntPathMatcher</span>();<br><span class="hljs-keyword">public</span> <span class="hljs-title function_">PathMatchingResourcePatternResolver</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-built_in">this</span>.resourceLoader = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultResourceLoader</span>();<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">PathMatchingResourcePatternResolver</span><span class="hljs-params">(ResourceLoader resourceLoader)</span> &#123;<br>    Assert.notNull(resourceLoader, <span class="hljs-string">&quot;ResourceLoader must not be null&quot;</span>);<br>    <span class="hljs-built_in">this</span>.resourceLoader = resourceLoader;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">PathMatchingResourcePatternResolver</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> ClassLoader classLoader)</span> &#123;<br>    <span class="hljs-built_in">this</span>.resourceLoader = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultResourceLoader</span>(classLoader);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="getResource"><a href="#getResource" class="headerlink" title="getResource"></a>getResource</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Resource <span class="hljs-title function_">getResource</span><span class="hljs-params">(String location)</span> &#123;<br>    <span class="hljs-keyword">return</span> getResourceLoader().getResource(location);<br>&#125;<br><br><span class="hljs-keyword">public</span> ResourceLoader <span class="hljs-title function_">getResourceLoader</span><span class="hljs-params">()</span> &#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.resourceLoader;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>该方法，直接委托给相应的 ResourceLoader 来实现。如果我们在实例化的 PathMatchingResourcePatternResolver 的时候，如果未指定 ResourceLoader 参数的情况下，那么在加载资源时，其实就是 DefaultResourceLoader 的过程。</p>
+<h6 id="getResources"><a href="#getResources" class="headerlink" title="getResources"></a>getResources</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Resource[] getResources(String locationPattern) <span class="hljs-keyword">throws</span> IOException &#123;<br>    Assert.notNull(locationPattern, <span class="hljs-string">&quot;Location pattern must not be null&quot;</span>);<br>    <span class="hljs-comment">// 以 &quot;classpath*:&quot; 开头</span><br>    <span class="hljs-keyword">if</span> (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) &#123;<br>        <span class="hljs-comment">// 路径包含通配符</span><br>        <span class="hljs-comment">// a class path resource (multiple resources for same name possible)</span><br>        <span class="hljs-keyword">if</span> (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) &#123;<br>            <span class="hljs-comment">// a class path resource pattern</span><br>            <span class="hljs-keyword">return</span> findPathMatchingResources(locationPattern);<br>        &#125;<br>        <span class="hljs-comment">// 路径不包含通配符</span><br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// all class path resources with the given name</span><br>            <span class="hljs-keyword">return</span> findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// Generally only look for a pattern after a prefix here,</span><br>        <span class="hljs-comment">// and on Tomcat only after the &quot;*/&quot; separator for its &quot;war:&quot; protocol.</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">prefixEnd</span> <span class="hljs-operator">=</span> (locationPattern.startsWith(<span class="hljs-string">&quot;war:&quot;</span>) ? locationPattern.indexOf(<span class="hljs-string">&quot;*/&quot;</span>) + <span class="hljs-number">1</span> :<br>                         locationPattern.indexOf(<span class="hljs-string">&#x27;:&#x27;</span>) + <span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 路径包含通配符</span><br>        <span class="hljs-keyword">if</span> (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) &#123;<br>            <span class="hljs-comment">// a file pattern</span><br>            <span class="hljs-keyword">return</span> findPathMatchingResources(locationPattern);<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// a single resource with the given name</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Resource</span>[] &#123;getResourceLoader().getResource(locationPattern)&#125;;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>非</strong> <code>&quot;classpath*:&quot;</code> 开头，且路径<strong>不包含</strong>通配符，直接委托给相应的 ResourceLoader 来实现。</li>
+<li>其他情况，调用 <code>#findAllClassPathResources(...)</code>、或 <code>#findPathMatchingResources(...)</code> 方法，返回多个 Resource 。</li>
+</ul>
+<h6 id="findAllClassPathResources"><a href="#findAllClassPathResources" class="headerlink" title="findAllClassPathResources"></a>findAllClassPathResources</h6><p>当 <code>locationPattern</code> 以 <code>&quot;classpath*:&quot;</code> 开头但是不包含通配符，则调用 <code>findAllClassPathResources(...)</code> 方法加载资源。该方法返回 classes 路径下和所有 jar 包中的所有相匹配的资源。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Resource[] findAllClassPathResources(String location) <span class="hljs-keyword">throws</span> IOException &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">path</span> <span class="hljs-operator">=</span> location;<br>    <span class="hljs-keyword">if</span> (path.startsWith(<span class="hljs-string">&quot;/&quot;</span>)) &#123;<br>        path = path.substring(<span class="hljs-number">1</span>);<br>    &#125;<br>    <span class="hljs-comment">// 真正执行加载所有 classpath 资源</span><br>    Set&lt;Resource&gt; result = doFindAllClassPathResources(path);<br>    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;<br>        logger.trace(<span class="hljs-string">&quot;Resolved classpath location [&quot;</span> + location + <span class="hljs-string">&quot;] to resources &quot;</span> + result);<br>    &#125;<br>    <span class="hljs-comment">//转换成 Resource 数组返回</span><br>    <span class="hljs-keyword">return</span> result.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Resource</span>[<span class="hljs-number">0</span>]);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>真正执行加载的是在 <code>doFindAllClassPathResources(...)</code> 方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Set&lt;Resource&gt; <span class="hljs-title function_">doFindAllClassPathResources</span><span class="hljs-params">(String path)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>    Set&lt;Resource&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashSet</span>&lt;&gt;(<span class="hljs-number">16</span>);<br>    <span class="hljs-type">ClassLoader</span> <span class="hljs-variable">cl</span> <span class="hljs-operator">=</span> getClassLoader();<br>    <span class="hljs-comment">// &lt;1&gt; 根据 ClassLoader 加载路径下的所有资源</span><br>    Enumeration&lt;URL&gt; resourceUrls = (cl != <span class="hljs-literal">null</span> ? cl.getResources(path) : ClassLoader.getSystemResources(path));<br>    <span class="hljs-keyword">while</span> (resourceUrls.hasMoreElements()) &#123;<br>        <span class="hljs-comment">//&lt;2&gt; 将 URL 转换成 UrlResource</span><br>        <span class="hljs-type">URL</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> resourceUrls.nextElement();<br>        result.add(convertClassLoaderURL(url));<br>    &#125;<br>    <span class="hljs-comment">// &lt;3&gt; 加载路径下得所有 jar 包</span><br>    <span class="hljs-keyword">if</span> (!StringUtils.hasLength(path)) &#123;<br>        <span class="hljs-comment">// The above result is likely to be incomplete, i.e. only containing file system references.</span><br>        <span class="hljs-comment">// We need to have pointers to each of the jar files on the classpath as well...</span><br>        addAllClassLoaderJarRoots(cl, result);<br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&lt;1&gt;处根据 ClassLoader 加载路径下的所有资源。在加载资源过程时，如果在构造 PathMatchingResourcePatternResolver 实例的时候如果传入了 ClassLoader，则调用该 ClassLoader 的 <code>getResources()</code> 方法，否则调用 <code>ClassLoader.getSystemResources(path)</code> 方法。另外，<code>ClassLoader.getResources()</code> 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Enumeration&lt;URL&gt; <span class="hljs-title function_">getResources</span><span class="hljs-params">(String name)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>    Objects.requireNonNull(name);<br>    <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span><br>    Enumeration&lt;URL&gt;[] tmp = (Enumeration&lt;URL&gt;[]) <span class="hljs-keyword">new</span> <span class="hljs-title class_">Enumeration</span>&lt;?&gt;[<span class="hljs-number">2</span>];<br>    <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span>) &#123;<br>        tmp[<span class="hljs-number">0</span>] = parent.getResources(name);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        tmp[<span class="hljs-number">0</span>] = BootLoader.findResources(name);<br>    &#125;<br>    tmp[<span class="hljs-number">1</span>] = findResources(name);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CompoundEnumeration</span>&lt;&gt;(tmp);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果当前父类加载器不为 <code>null</code> ，则通过父类向上迭代获取资源，否则调用<code>BootLoader.findResources(name);</code></p>
+<p><code>&lt;2&gt;</code> 处，遍历 URL 集合，调用 <code>convertClassLoaderURL(URL url)</code> 方法，将 URL 转换成 UrlResource 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Resource <span class="hljs-title function_">convertClassLoaderURL</span><span class="hljs-params">(URL url)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UrlResource</span>(url);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>&lt;3&gt;</code> 处，若 <code>path</code> 为空（<code>“”</code>）时，则调用 <code>addAllClassLoaderJarRoots(...)</code>方法。该方法主要是加载路径下得所有 jar 包。</p>
+<p>由上可以看出，<code>#findAllClassPathResources(...)</code> 方法，其实就是利用 ClassLoader 来加载指定路径下的资源，不论它是在 class 路径下还是在 jar 包中。如果我们传入的路径为空或者 <code>/</code>，则会调用 <code>addAllClassLoaderJarRoots(...)</code> 方法，加载所有的 jar 包。</p>
+<h6 id="findPathMatchingResources"><a href="#findPathMatchingResources" class="headerlink" title="findPathMatchingResources"></a>findPathMatchingResources</h6><p>当 <code>locationPattern</code> 中包含了<strong>通配符</strong>，则调用该方法进行资源加载。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Resource[] findPathMatchingResources(String locationPattern) <span class="hljs-keyword">throws</span> IOException &#123;<br>    <span class="hljs-comment">// 确定根路径、子路径</span><br>    <span class="hljs-type">String</span> <span class="hljs-variable">rootDirPath</span> <span class="hljs-operator">=</span> determineRootDir(locationPattern);<br>    <span class="hljs-type">String</span> <span class="hljs-variable">subPattern</span> <span class="hljs-operator">=</span> locationPattern.substring(rootDirPath.length());<br>    <span class="hljs-comment">// 获取根据路径下的资源</span><br>    Resource[] rootDirResources = getResources(rootDirPath);<br>    <span class="hljs-comment">// 遍历，迭代</span><br>    Set&lt;Resource&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashSet</span>&lt;&gt;(<span class="hljs-number">16</span>);<br>    <span class="hljs-keyword">for</span> (Resource rootDirResource : rootDirResources) &#123;<br>        rootDirResource = resolveRootDirResource(rootDirResource);<br>        <span class="hljs-type">URL</span> <span class="hljs-variable">rootDirUrl</span> <span class="hljs-operator">=</span> rootDirResource.getURL();<br>        <span class="hljs-comment">// bundle 资源类型</span><br>        <span class="hljs-keyword">if</span> (equinoxResolveMethod != <span class="hljs-literal">null</span> &amp;&amp; rootDirUrl.getProtocol().startsWith(<span class="hljs-string">&quot;bundle&quot;</span>)) &#123;<br>            <span class="hljs-type">URL</span> <span class="hljs-variable">resolvedUrl</span> <span class="hljs-operator">=</span> (URL) ReflectionUtils.invokeMethod(equinoxResolveMethod, <span class="hljs-literal">null</span>, rootDirUrl);<br>            <span class="hljs-keyword">if</span> (resolvedUrl != <span class="hljs-literal">null</span>) &#123;<br>                rootDirUrl = resolvedUrl;<br>            &#125;<br>            rootDirResource = <span class="hljs-keyword">new</span> <span class="hljs-title class_">UrlResource</span>(rootDirUrl);<br>        &#125;<br>        <span class="hljs-comment">// vfs 资源类型</span><br>        <span class="hljs-keyword">if</span> (rootDirUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) &#123;<br>            result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirUrl, subPattern, getPathMatcher()));<br>        &#125;<br>        <span class="hljs-comment">// jar 资源类型</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ResourceUtils.isJarURL(rootDirUrl) || isJarResource(rootDirResource)) &#123;<br>            result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern));<br>        &#125;<br>        <span class="hljs-comment">// 其它资源类型</span><br>        <span class="hljs-keyword">else</span> &#123;<br>            result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;<br>        logger.trace(<span class="hljs-string">&quot;Resolved location pattern [&quot;</span> + locationPattern + <span class="hljs-string">&quot;] to resources &quot;</span> + result);<br>    &#125;<br>    <span class="hljs-comment">// 转换成 Resource 数组返回</span><br>    <span class="hljs-keyword">return</span> result.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Resource</span>[<span class="hljs-number">0</span>]);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>确定目录，获取该目录下得所有资源。</li>
+<li>在所获得的所有资源后，进行迭代匹配获取我们想要的资源。</li>
+</ol>
+<p>在这个方法里面，我们要关注两个方法，一个是 <code>#determineRootDir(String location)</code> 方法，一个是 <code>doFindPathMatchingXXXResources(...)</code> 等方法。</p>
+<p><code>determineRootDir(String location)</code> 方法，主要是用于确定根路径。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> String <span class="hljs-title function_">determineRootDir</span><span class="hljs-params">(String location)</span> &#123;<br>    <span class="hljs-comment">// 找到冒号的后一位</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">prefixEnd</span> <span class="hljs-operator">=</span> location.indexOf(<span class="hljs-string">&#x27;:&#x27;</span>) + <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">// 根目录结束位置</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">rootDirEnd</span> <span class="hljs-operator">=</span> location.length();<br>    <span class="hljs-comment">// 在从冒号开始到最后的字符串中，循环判断是否包含通配符，如果包含，则截断最后一个由”/”分割的部分。</span><br>    <span class="hljs-comment">// 例如：在我们路径中，就是最后的ap?-context.xml这一段。再循环判断剩下的部分，直到剩下的路径中都不包含通配符。</span><br>    <span class="hljs-keyword">while</span> (rootDirEnd &gt; prefixEnd &amp;&amp; getPathMatcher().isPattern(location.substring(prefixEnd, rootDirEnd))) &#123;<br>        rootDirEnd = location.lastIndexOf(<span class="hljs-string">&#x27;/&#x27;</span>, rootDirEnd - <span class="hljs-number">2</span>) + <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-comment">// 如果查找完成后，rootDirEnd = 0 了，则将之前赋值的 prefixEnd 的值赋给 rootDirEnd ，也就是冒号的后一位</span><br>    <span class="hljs-keyword">if</span> (rootDirEnd == <span class="hljs-number">0</span>) &#123;<br>        rootDirEnd = prefixEnd;<br>    &#125;<br>    <span class="hljs-comment">// 截取根目录</span><br>    <span class="hljs-keyword">return</span> location.substring(<span class="hljs-number">0</span>, rootDirEnd);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>例：</p>
+<table>
+<thead>
+<tr>
+<th>原路径</th>
+<th>确定根路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>classpath*:test&#x2F;cc*&#x2F;spring-*.xml</td>
+<td>classpath*:test&#x2F;</td>
+</tr>
+<tr>
+<td>classpath*:test&#x2F;aa&#x2F;spring-*.xml</td>
+<td>classpath*:test&#x2F;aa&#x2F;</td>
+</tr>
+</tbody></table>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p>Spring资源加载过程如下：</p>
+<ul>
+<li>Spring 提供了 Resource 和 ResourceLoader 来统一抽象整个资源及其定位。使得资源与资源的定位有了一个更加清晰的界限，并且提供了合适的 Default 类，使得自定义实现更加方便和清晰。</li>
+<li>AbstractResource 为 Resource 的默认抽象实现，它对 Resource 接口做了一个统一的实现，子类继承该类后只需要覆盖相应的方法即可，同时对于自定义的 Resource 我们也是继承该类。</li>
+<li>DefaultResourceLoader 同样也是 ResourceLoader 的默认实现，在自定 ResourceLoader 的时候我们除了可以继承该类外还可以实现 ProtocolResolver 接口来实现自定资源加载协议。</li>
+<li>DefaultResourceLoader 每次只能返回单一的资源，所以 Spring 针对这个提供了另外一个接口 ResourcePatternResolver ，该接口提供了根据指定的 locationPattern 返回多个资源的策略。其子类 PathMatchingResourcePatternResolver 是一个集大成者的 ResourceLoader ，因为它即实现了 <code>Resource getResource(String location)</code> 方法，也实现了 <code>Resource[] getResources(String locationPattern)</code> 方法。</li>
+</ul>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/IOC/" class="category-chain-item">IOC</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>二、spring统一资源加载策略</div>
+      <div>http://www.muzili.ren/2022/06/11/统一资源加载策略/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E8%A3%85%E8%BD%BDBeanDefinition%E6%80%BB%E7%BB%93/" title="十五、装载BeanDefinition总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">十五、装载BeanDefinition总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E8%8E%B7%E5%8F%96Document%E5%AF%B9%E8%B1%A1/" title="五、获取Document对象">
+                        <span class="hidden-mobile">五、获取Document对象</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

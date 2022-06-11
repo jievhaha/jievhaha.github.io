@@ -1,0 +1,1531 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="MySQL体系架构，SQL优化等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql高级二">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day02/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="MySQL体系架构，SQL优化等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/000001.jpg">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551186043529.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556086372754.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556075130115.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556087540767.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556087611295.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556087719145.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556087759615.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556087793738.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556075336630.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551347590309.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556075073836.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556076359503.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551408083254.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551408133323.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551408216185.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1551408519889.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552487172501.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552487245859.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556098544349.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552487489859.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552487526919.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556122799330.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556102471304.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556103009534.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556103294182.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552488401999.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552488372405.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552489017940.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552489053763.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552489671119.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553261992653.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553262044466.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553262215900.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553262469785.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553263229523.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553263302706.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1553263355262.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556170997921.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556171348995.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556171428140.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556171662203.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556172256791.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556172813715.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556172967493.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556173928299.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556173986068.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556174994440.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556175114369.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556247686483.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556175445210.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556180634889.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556249602732.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1552885364563.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556269346488.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555771750567.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555771959734.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555772132736.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1555772351208.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556335817763.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556335866539.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556336352061.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556338367593.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556339573979.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556339633161.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556339688158.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556359399199.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556359482142.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556354464657.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556354887509.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556354920964.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556355027728.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556361314783.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556416102800.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556363928151.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556370971576.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556371004594.png">
+<meta property="og:image" content="http://www.muzili.ren/images/mysql/1556371355788.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.965Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.965Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/mysql/000001.jpg">
+  
+  
+  
+  <title>Mysql高级二 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Mysql高级二"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          34k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          280 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Mysql高级二</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">Mysql高级二</font></div>
+**注：导入1000万条数据别忘了自己在B站视频的评论里有记录。**
+
+<h3 id="1-Mysql的体系结构概览"><a href="#1-Mysql的体系结构概览" class="headerlink" title="1. Mysql的体系结构概览"></a>1. Mysql的体系结构概览</h3><p><img src="/images/mysql/000001.jpg" srcset="/img/loading.gif" lazyload alt="171214401286615"> </p>
+<p>整个MySQL Server由以下组成</p>
+<ul>
+<li>Connection Pool : 连接池组件</li>
+<li>Management Services &amp; Utilities : 管理服务和工具组件</li>
+<li>SQL Interface组件</li>
+<li>Parser : 查询分析器组件</li>
+<li>Optimizer : 优化器组件</li>
+<li>Caches &amp; Buffers : 缓冲池组件</li>
+<li>Pluggable Storage Engines : 存储引擎</li>
+<li>File System : 文件系统</li>
+</ul>
+<p>1） 连接层</p>
+<p>最上层是一些客户端和链接服务，包含本地sock 通信和大多数基于客户端&#x2F;服务端工具实现的类似于 TCP&#x2F;IP的通信。主要完成一些类似于连接处理、授权认证、及相关的安全方案。在该层上引入了线程池的概念，为通过认证安全接入的客户端提供线程。同样在该层上可以实现基于SSL的安全链接。服务器也会为安全接入的每个客户端验证它所具有的操作权限。</p>
+<p>2） 服务层</p>
+<p>第二层架构主要完成大多数的核心服务功能，如SQL接口，并完成缓存的查询，SQL的分析和优化，部分内置函数的执行。所有跨存储引擎的功能也在这一层实现，如 过程、函数等。在该层，服务器会解析查询并创建相应的内部解析树，并对其完成相应的优化如确定表的查询的顺序，是否利用索引等， 最后生成相应的执行操作。如果是select语句，服务器还会查询内部的缓存，如果缓存空间足够大，这样在解决大量读操作的环境中能够很好的提升系统的性能。</p>
+<p>3） 引擎层</p>
+<p>存储引擎层， 存储引擎真正的负责了MySQL中数据的存储和提取，服务器通过API和存储引擎进行通信。不同的存储引擎具有不同的功能，这样我们可以根据自己的需要，来选取合适的存储引擎。</p>
+<p>4）存储层</p>
+<p>数据存储层， 主要是将数据存储在文件系统之上，并完成与存储引擎的交互。</p>
+<p>和其他数据库相比，MySQL有点与众不同，它的架构可以在多种不同场景中应用并发挥良好作用。主要体现在存储引擎上，插件式的存储引擎架构，将查询处理和其他的系统任务以及数据的存储提取分离。这种架构可以根据业务的需求和实际需要选择合适的存储引擎。</p>
+<h3 id="2-存储引擎"><a href="#2-存储引擎" class="headerlink" title="2. 存储引擎"></a>2. 存储引擎</h3><h4 id="2-1-存储引擎概述"><a href="#2-1-存储引擎概述" class="headerlink" title="2.1 存储引擎概述"></a>2.1 存储引擎概述</h4><p>​	和大多数的数据库不同, MySQL中有一个存储引擎的概念, 针对不同的存储需求可以选择最优的存储引擎。</p>
+<p>​	存储引擎就是存储数据，建立索引，更新查询数据等等技术的实现方式 。存储引擎是基于表的，而不是基于库的。所以存储引擎也可被称为表类型。</p>
+<p>​	Oracle，SqlServer等数据库只有一种存储引擎。MySQL提供了插件式的存储引擎架构。所以MySQL存在多种存储引擎，可以根据需要使用相应引擎，或者编写存储引擎。</p>
+<p>​	MySQL5.0支持的存储引擎包含 ： InnoDB 、MyISAM 、BDB、MEMORY、MERGE、EXAMPLE、NDB Cluster、ARCHIVE、CSV、BLACKHOLE、FEDERATED等，其中InnoDB和BDB提供事务安全表，其他存储引擎是非事务安全表。</p>
+<p>可以通过指定 show engines ， 来查询当前数据库支持的存储引擎 ： </p>
+<p><img src="/images/mysql/1551186043529.png" srcset="/img/loading.gif" lazyload alt="1551186043529"> </p>
+<p>创建新表时如果不指定存储引擎，那么系统就会使用默认的存储引擎，MySQL5.5之前的默认存储引擎是MyISAM，5.5之后就改为了InnoDB。</p>
+<p>查看Mysql数据库默认的存储引擎 ， 指令 ：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams">show <span class="hljs-keyword">variables</span> like <span class="hljs-comment">&#x27;%storage_engine%&#x27;</span> ； <br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556086372754.png" srcset="/img/loading.gif" lazyload alt="1556086372754">  	 </p>
+<h4 id="2-2-各种存储引擎特性"><a href="#2-2-各种存储引擎特性" class="headerlink" title="2.2 各种存储引擎特性"></a>2.2 各种存储引擎特性</h4><p>下面重点介绍几种常用的存储引擎， 并对比各个存储引擎之间的区别， 如下表所示 ： </p>
+<table>
+<thead>
+<tr>
+<th>特点</th>
+<th>InnoDB</th>
+<th>MyISAM</th>
+<th>MEMORY</th>
+<th>MERGE</th>
+<th>NDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储限制</td>
+<td>64TB</td>
+<td>有</td>
+<td>有</td>
+<td>没有</td>
+<td>有</td>
+</tr>
+<tr>
+<td>事务安全</td>
+<td>&#x3D;&#x3D;支持&#x3D;&#x3D;</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>锁机制</td>
+<td>&#x3D;&#x3D;行锁(适合高并发)&#x3D;&#x3D;</td>
+<td>&#x3D;&#x3D;表锁&#x3D;&#x3D;</td>
+<td>表锁</td>
+<td>表锁</td>
+<td>行锁</td>
+</tr>
+<tr>
+<td>B树索引</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>哈希索引</td>
+<td></td>
+<td></td>
+<td>支持</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>全文索引</td>
+<td>支持(5.6版本之后)</td>
+<td>支持</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>集群索引</td>
+<td>支持</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>数据索引</td>
+<td>支持</td>
+<td></td>
+<td>支持</td>
+<td></td>
+<td>支持</td>
+</tr>
+<tr>
+<td>索引缓存</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>数据可压缩</td>
+<td></td>
+<td>支持</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>空间使用</td>
+<td>高</td>
+<td>低</td>
+<td>N&#x2F;A</td>
+<td>低</td>
+<td>低</td>
+</tr>
+<tr>
+<td>内存使用</td>
+<td>高</td>
+<td>低</td>
+<td>中等</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>批量插入速度</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td>支持外键</td>
+<td>&#x3D;&#x3D;支持&#x3D;&#x3D;</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>下面我们将重点介绍最长使用的两种存储引擎： InnoDB、MyISAM ， 另外两种 MEMORY、MERGE ， 了解即可。</p>
+<h5 id="2-2-1-InnoDB"><a href="#2-2-1-InnoDB" class="headerlink" title="2.2.1 InnoDB"></a>2.2.1 InnoDB</h5><p>​	InnoDB存储引擎是Mysql的默认存储引擎。InnoDB存储引擎提供了具有提交、回滚、崩溃恢复能力的事务安全。但是对比MyISAM的存储引擎，InnoDB写的处理效率差一些，并且会占用更多的磁盘空间以保留数据和索引。</p>
+<p>InnoDB存储引擎不同于其他存储引擎的特点 ： </p>
+<p><strong>事务控制</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> goods_innodb(<br>	id <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>	<span class="hljs-type">name</span> <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    <span class="hljs-keyword">primary key</span>(id)<br>)ENGINE=innodb <span class="hljs-keyword">DEFAULT</span> CHARSET=utf8;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">start</span> <span class="hljs-keyword">transaction</span>;<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> goods_innodb(id,<span class="hljs-type">name</span>)<span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;Meta20&#x27;</span>);<br><br><span class="hljs-keyword">commit</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556075130115.png" srcset="/img/loading.gif" lazyload alt="1556075130115"> </p>
+<p>测试，发现在InnoDB中是存在事务的 ；</p>
+<p><strong>外键约束</strong></p>
+<p>​	MySQL支持外键的存储引擎只有InnoDB ， 在创建外键的时候， 要求父表必须有对应的索引 ， 子表在创建外键的时候， 也会自动的创建对应的索引。</p>
+<p>​	下面两张表中 ， country_innodb是父表 ， country_id为主键索引，city_innodb表是子表，country_id字段为外键，对应于country_innodb表的主键country_id 。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> country_innodb(<br>	country_id <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>    country_name <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    <span class="hljs-keyword">primary</span> key(country_id)<br>)ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> city_innodb(<br>	city_id <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>    city_name <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    country_id <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>    <span class="hljs-keyword">primary</span> key(city_id),<br>    key idx_fk_country_id(country_id),<br>    <span class="hljs-keyword">CONSTRAINT</span> `fk_city_country` <span class="hljs-keyword">FOREIGN</span> KEY(country_id) <span class="hljs-keyword">REFERENCES</span> country_innodb(country_id) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> RESTRICT <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> CASCADE<br>)ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> country_innodb <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;China&#x27;</span>),(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;America&#x27;</span>),(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;Japan&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> city_innodb <span class="hljs-keyword">values</span>(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;Xian&#x27;</span>,<span class="hljs-number">1</span>),(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;NewYork&#x27;</span>,<span class="hljs-number">2</span>),(<span class="hljs-keyword">null</span>,<span class="hljs-string">&#x27;BeiJing&#x27;</span>,<span class="hljs-number">1</span>);<br><br></code></pre></td></tr></table></figure>
+
+<p>在创建索引时， 可以指定在删除、更新父表时，对子表进行的相应操作，包括 RESTRICT、CASCADE、SET NULL 和 NO ACTION。</p>
+<p>RESTRICT和NO ACTION相同， 是指限制在子表有关联记录的情况下， 父表不能更新；</p>
+<p>CASCADE表示父表在更新或者删除时，更新或者删除子表对 应的记录；</p>
+<p>SET NULL 则表示父表在更新或者删除的时候，子表的对应字段被SET NULL 。</p>
+<p>针对上面创建的两个表， 子表的外键指定是ON DELETE RESTRICT ON UPDATE CASCADE 方式的， 那么在主表删除记录的时候， 如果子表有对应记录， 则不允许删除， 主表在更新记录的时候， 如果子表有对应记录， 则子表对应更新 。</p>
+<p>表中数据如下图所示 ： </p>
+<p><img src="/images/mysql/1556087540767.png" srcset="/img/loading.gif" lazyload alt="1556087540767"> </p>
+<p>外键信息可以使用如下两种方式查看 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> city_innodb ;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556087611295.png" srcset="/img/loading.gif" lazyload alt="1556087611295"> 	</p>
+<p>删除country_id为1 的country数据： </p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> country_innodb <span class="hljs-keyword">where</span> country_id = <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556087719145.png" srcset="/img/loading.gif" lazyload alt="1556087719145"> </p>
+<p>更新主表country表的字段 country_id : </p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf">update country_innodb set country_id <span class="hljs-operator">=</span> <span class="hljs-number">100</span> where country_id <span class="hljs-operator">=</span> <span class="hljs-number">1</span><span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556087759615.png" srcset="/img/loading.gif" lazyload alt="1556087759615">  </p>
+<p>更新后， 子表的数据信息为 ： </p>
+<p><img src="/images/mysql/1556087793738.png" srcset="/img/loading.gif" lazyload alt="1556087793738">  </p>
+<p><strong>存储方式</strong>	</p>
+<p>InnoDB 存储表和索引有以下两种方式 ： </p>
+<p>①. 使用共享表空间存储， 这种方式创建的表的表结构保存在.frm文件中， 数据和索引保存在 innodb_data_home_dir 和 innodb_data_file_path定义的表空间中，可以是多个文件。</p>
+<p>②. 使用多表空间存储， 这种方式创建的表的表结构仍然存在 .frm 文件中，但是每个表的数据和索引单独保存在 .ibd 中。</p>
+<p><img src="/images/mysql/1556075336630.png" srcset="/img/loading.gif" lazyload alt="1556075336630"> </p>
+<h5 id="2-2-2-MyISAM"><a href="#2-2-2-MyISAM" class="headerlink" title="2.2.2 MyISAM"></a>2.2.2 MyISAM</h5><p>​	MyISAM 不支持事务、也不支持外键，其优势是访问的速度快，对事务的完整性没有要求或者以SELECT、INSERT为主的应用基本上都可以使用这个引擎来创建表 。有以下两个比较重要的特点： </p>
+<p><strong>不支持事务</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> goods_myisam(<br>	id <span class="hljs-type">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>	name <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, <br>    <span class="hljs-keyword">primary</span> key(id)<br>)ENGINE<span class="hljs-operator">=</span>myisam <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1551347590309.png" srcset="/img/loading.gif" lazyload alt="1551347590309"> </p>
+<p>通过测试，我们发现，在MyISAM存储引擎中，是没有事务控制的 ；</p>
+<p><strong>文件存储方式</strong></p>
+<p>每个MyISAM在磁盘上存储成3个文件，其文件名都和表名相同，但拓展名分别是 ： </p>
+<p>.frm (存储表定义)；</p>
+<p>.MYD(MYData , 存储数据)；</p>
+<p>.MYI(MYIndex , 存储索引)；</p>
+<p><img src="/images/mysql/1556075073836.png" srcset="/img/loading.gif" lazyload alt="1556075073836"> </p>
+<h5 id="2-2-3-MEMORY"><a href="#2-2-3-MEMORY" class="headerlink" title="2.2.3 MEMORY"></a>2.2.3 MEMORY</h5><p>​	Memory存储引擎将表的数据存放在内存中。每个MEMORY表实际对应一个磁盘文件，格式是.frm ，该文件中只存储表的结构，而其数据文件，都是存储在内存中，这样有利于数据的快速处理，提高整个表的效率。MEMORY 类型的表访问非常地快，因为他的数据是存放在内存中的，并且默认使用HASH索引 ， 但是服务一旦关闭，表中的数据就会丢失。</p>
+<h5 id="2-2-4-MERGE"><a href="#2-2-4-MERGE" class="headerlink" title="2.2.4 MERGE"></a>2.2.4 MERGE</h5><p>​	MERGE存储引擎是一组MyISAM表的组合，这些MyISAM表必须结构完全相同，MERGE表本身并没有存储数据，对MERGE类型的表可以进行查询、更新、删除操作，这些操作实际上是对内部的MyISAM表进行的。</p>
+<p>​	对于MERGE类型表的插入操作，是通过INSERT_METHOD子句定义插入的表，可以有3个不同的值，使用FIRST 或 LAST 值使得插入操作被相应地作用在第一或者最后一个表上，不定义这个子句或者定义为NO，表示不能对这个MERGE表执行插入操作。</p>
+<p>​	可以对MERGE表进行DROP操作，但是这个操作只是删除MERGE表的定义，对内部的表是没有任何影响的。</p>
+<p><img src="/images/mysql/1556076359503.png" srcset="/img/loading.gif" lazyload alt="1556076359503"> </p>
+<p>下面是一个创建和使用MERGE表的示例 ： </p>
+<p>1）. 创建3个测试表 order_1990, order_1991, order_all , 其中order_all是前两个表的MERGE表 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> order_1990(<br>	order_id <span class="hljs-type">int</span> ,<br>	order_money <span class="hljs-keyword">double</span>(<span class="hljs-number">10</span>,<span class="hljs-number">2</span>),<br>	order_address <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>),<br>	<span class="hljs-keyword">primary</span> key (order_id)<br>)engine <span class="hljs-operator">=</span> myisam <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8;<br><br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> order_1991(<br>	order_id <span class="hljs-type">int</span> ,<br>	order_money <span class="hljs-keyword">double</span>(<span class="hljs-number">10</span>,<span class="hljs-number">2</span>),<br>	order_address <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>),<br>	<span class="hljs-keyword">primary</span> key (order_id)<br>)engine <span class="hljs-operator">=</span> myisam <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8;<br><br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> order_all(<br>	order_id <span class="hljs-type">int</span> ,<br>	order_money <span class="hljs-keyword">double</span>(<span class="hljs-number">10</span>,<span class="hljs-number">2</span>),<br>	order_address <span class="hljs-type">varchar</span>(<span class="hljs-number">50</span>),<br>	<span class="hljs-keyword">primary</span> key (order_id)<br>)engine <span class="hljs-operator">=</span> <span class="hljs-keyword">merge</span> <span class="hljs-keyword">union</span> <span class="hljs-operator">=</span> (order_1990,order_1991) INSERT_METHOD<span class="hljs-operator">=</span><span class="hljs-keyword">LAST</span> <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8;<br><br><br></code></pre></td></tr></table></figure>
+
+<p>2）. 分别向两张表中插入记录 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> order_1990 <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-number">100.0</span>,<span class="hljs-string">&#x27;北京&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> order_1990 <span class="hljs-keyword">values</span>(<span class="hljs-number">2</span>,<span class="hljs-number">100.0</span>,<span class="hljs-string">&#x27;上海&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> order_1991 <span class="hljs-keyword">values</span>(<span class="hljs-number">10</span>,<span class="hljs-number">200.0</span>,<span class="hljs-string">&#x27;北京&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> order_1991 <span class="hljs-keyword">values</span>(<span class="hljs-number">11</span>,<span class="hljs-number">200.0</span>,<span class="hljs-string">&#x27;上海&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>3）. 查询3张表中的数据。</p>
+<p>order_1990中的数据 ： </p>
+<p><img src="/images/mysql/1551408083254.png" srcset="/img/loading.gif" lazyload alt="1551408083254"> </p>
+<p>order_1991中的数据 ： </p>
+<p><img src="/images/mysql/1551408133323.png" srcset="/img/loading.gif" lazyload alt="1551408133323">  </p>
+<p>order_all中的数据 ：</p>
+<p><img src="/images/mysql/1551408216185.png" srcset="/img/loading.gif" lazyload alt="1551408216185"> </p>
+<p>​	 </p>
+<p>4）. 往order_all中插入一条记录 ，由于在MERGE表定义时，INSERT_METHOD 选择的是LAST，那么插入的数据会想最后一张表中插入。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> order_all <span class="hljs-keyword">values</span>(<span class="hljs-number">100</span>,<span class="hljs-number">10000.0</span>,<span class="hljs-string">&#x27;西安&#x27;</span>)；<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1551408519889.png" srcset="/img/loading.gif" lazyload alt="1551408519889"> 	 	</p>
+<h4 id="2-3-存储引擎的选择"><a href="#2-3-存储引擎的选择" class="headerlink" title="2.3 存储引擎的选择"></a>2.3 存储引擎的选择</h4><p>​	在选择存储引擎时，应该根据应用系统的特点选择合适的存储引擎。对于复杂的应用系统，还可以根据实际情况选择多种存储引擎进行组合。以下是几种常用的存储引擎的使用环境。</p>
+<ul>
+<li>InnoDB : 是Mysql的默认存储引擎，用于事务处理应用程序，支持外键。如果应用对事务的完整性有比较高的要求，在并发条件下要求数据的一致性，数据操作除了插入和查询意外，还包含很多的更新、删除操作，那么InnoDB存储引擎是比较合适的选择。InnoDB存储引擎除了有效的降低由于删除和更新导致的锁定， 还可以确保事务的完整提交和回滚，对于类似于计费系统或者财务系统等对数据准确性要求比较高的系统，InnoDB是最合适的选择。</li>
+<li>MyISAM ： 如果应用是以读操作和插入操作为主，只有很少的更新和删除操作，并且对事务的完整性、并发性要求不是很高，那么选择这个存储引擎是非常合适的。</li>
+<li>MEMORY：将所有数据保存在RAM中，在需要快速定位记录和其他类似数据环境下，可以提供几块的访问。MEMORY的缺陷就是对表的大小有限制，太大的表无法缓存在内存中，其次是要确保表的数据可以恢复，数据库异常终止后表中的数据是可以恢复的。MEMORY表通常用于更新不太频繁的小表，用以快速得到访问结果。</li>
+<li>MERGE：用于将一系列等同的MyISAM表以逻辑方式组合在一起，并作为一个对象引用他们。MERGE表的优点在于可以突破对单个MyISAM表的大小限制，并且通过将不同的表分布在多个磁盘上，可以有效的改善MERGE表的访问效率。这对于存储诸如数据仓储等VLDB环境十分合适。</li>
+</ul>
+<h3 id="3-优化SQL步骤"><a href="#3-优化SQL步骤" class="headerlink" title="3. 优化SQL步骤"></a>3. 优化SQL步骤</h3><p>在应用的的开发过程中，由于初期数据量小，开发人员写 SQL 语句时更重视功能上的实现，但是当应用系统正式上线后，随着生产数据量的急剧增长，很多 SQL 语句开始逐渐显露出性能问题，对生产的影响也越来越大，此时这些有问题的 SQL 语句就成为整个系统性能的瓶颈，因此我们必须要对它们进行优化，本章将详细介绍在 MySQL 中优化 SQL 语句的方法。</p>
+<p>当面对一个有 SQL 性能问题的数据库时，我们应该从何处入手来进行系统的分析，使得能够尽快定位问题 SQL 并尽快解决问题。</p>
+<h4 id="3-1-查看SQL执行频率"><a href="#3-1-查看SQL执行频率" class="headerlink" title="3.1 查看SQL执行频率"></a>3.1 查看SQL执行频率</h4><p>MySQL 客户端连接成功后，通过 show [session|global] status 命令可以提供服务器状态信息。show [session|global] status 可以根据需要加上参数“session”或者“global”来显示 session 级（当前连接）的计结果和 global 级（自数据库上次启动至今）的统计结果。如果不写，默认使用参数是“session”。</p>
+<p>下面的命令显示了当前 session 中所有统计参数的值：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Com_______&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1552487172501.png" srcset="/img/loading.gif" lazyload alt="1552487172501">  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Innodb_rows_%&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1552487245859.png" srcset="/img/loading.gif" lazyload alt="1552487245859"></p>
+<p>Com_xxx 表示每个 xxx 语句执行的次数，我们通常比较关心的是以下几个统计参数。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Com_select</td>
+<td>执行 select 操作的次数，一次查询只累加 1。</td>
+</tr>
+<tr>
+<td align="left">Com_insert</td>
+<td>执行 INSERT 操作的次数，对于批量插入的 INSERT 操作，只累加一次。</td>
+</tr>
+<tr>
+<td align="left">Com_update</td>
+<td>执行 UPDATE 操作的次数。</td>
+</tr>
+<tr>
+<td align="left">Com_delete</td>
+<td>执行 DELETE 操作的次数。</td>
+</tr>
+<tr>
+<td align="left">Innodb_rows_read</td>
+<td>select 查询返回的行数。</td>
+</tr>
+<tr>
+<td align="left">Innodb_rows_inserted</td>
+<td>执行 INSERT 操作插入的行数。</td>
+</tr>
+<tr>
+<td align="left">Innodb_rows_updated</td>
+<td>执行 UPDATE 操作更新的行数。</td>
+</tr>
+<tr>
+<td align="left">Innodb_rows_deleted</td>
+<td>执行 DELETE 操作删除的行数。</td>
+</tr>
+<tr>
+<td align="left">Connections</td>
+<td>试图连接 MySQL 服务器的次数。</td>
+</tr>
+<tr>
+<td align="left">Uptime</td>
+<td>服务器工作时间。</td>
+</tr>
+<tr>
+<td align="left">Slow_queries</td>
+<td>慢查询的次数。</td>
+</tr>
+</tbody></table>
+<p>Com_***      :  这些参数对于所有存储引擎的表操作都会进行累计。</p>
+<p>Innodb_*** :  这几个参数只是针对InnoDB 存储引擎的，累加的算法也略有不同。</p>
+<h4 id="3-2-定位低效率执行SQL"><a href="#3-2-定位低效率执行SQL" class="headerlink" title="3.2 定位低效率执行SQL"></a>3.2 定位低效率执行SQL</h4><p>可以通过以下两种方式定位执行效率较低的 SQL 语句。</p>
+<ul>
+<li>慢查询日志 : 通过慢查询日志定位那些执行效率较低的 SQL 语句，用–log-slow-queries[&#x3D;file_name]选项启动时，mysqld 写一个包含所有执行时间超过 long_query_time 秒的 SQL 语句的日志文件。具体可以查看本书第 26 章中日志管理的相关部分。</li>
+<li>show processlist  : 慢查询日志在查询结束以后才纪录，所以在应用反映执行效率出现问题的时候查询慢查询日志并不能定位问题，可以使用show processlist命令查看当前MySQL在进行的线程，包括线程的状态、是否锁表等，可以实时地查看 SQL 的执行情况，同时对一些锁表操作进行优化。</li>
+</ul>
+<p><img src="/images/mysql/1556098544349.png" srcset="/img/loading.gif" lazyload alt="1556098544349"> </p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs pf"><span class="hljs-number">1</span>） id列，用户登录mysql时，系统分配的<span class="hljs-string">&quot;connection_id&quot;</span>，可以使用函数connection_id()查看<br><br><span class="hljs-number">2</span>） <span class="hljs-keyword">user</span>列，显示当前用户。如果不是root，这个命令就只显示用户权限范围的sql语句<br><br><span class="hljs-number">3</span>） host列，显示这个语句是从哪个ip的哪个端口上发的，可以用来跟踪出现问题语句的用户<br><br><span class="hljs-number">4</span>） db列，显示这个进程目前连接的是哪个数据库<br><br><span class="hljs-number">5</span>） command列，显示当前连接的执行的命令，一般取值为休眠（sleep），查询（query），连接（connect）等<br><br><span class="hljs-number">6</span>） time列，显示这个状态持续的时间，单位是秒<br><br><span class="hljs-number">7</span>） <span class="hljs-keyword">state</span>列，显示使用当前连接的sql语句的状态，很重要的列。<span class="hljs-keyword">state</span>描述的是语句执行中的某一个状态。一个sql语句，以查询为例，可能需要经过copying <span class="hljs-keyword">to</span> tmp <span class="hljs-built_in">table</span>、sorting result、sending data等状态才可以完成<br><br><span class="hljs-number">8</span>） info列，显示这个sql语句，是判断问题语句的一个重要依据<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="3-3-explain分析执行计划"><a href="#3-3-explain分析执行计划" class="headerlink" title="3.3 explain分析执行计划"></a>3.3 explain分析执行计划</h4><p>通过以上步骤查询到效率低的 SQL 语句后，可以通过 EXPLAIN或者 DESC命令获取 MySQL如何执行 SELECT 语句的信息，包括在 SELECT 语句执行过程中表如何连接和连接的顺序。</p>
+<p>查询SQL语句的执行计划 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">explain  <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1552487489859.png" srcset="/img/loading.gif" lazyload alt="1552487489859"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">explain  <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> title <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;阿尔卡特 (OT-979) 冰川白 联通3G手机3&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1552487526919.png" srcset="/img/loading.gif" lazyload alt="1552487526919">  </p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>select查询的序列号，是一组数字，表示的是查询中执行select子句或者是操作表的顺序。</td>
+</tr>
+<tr>
+<td>select_type</td>
+<td>表示 SELECT 的类型，常见的取值有 SIMPLE（简单表，即不使用表连接或者子查询）、PRIMARY（主查询，即外层的查询）、UNION（UNION 中的第二个或者后面的查询语句）、SUBQUERY（子查询中的第一个 SELECT）等</td>
+</tr>
+<tr>
+<td>table</td>
+<td>输出结果集的表</td>
+</tr>
+<tr>
+<td>type</td>
+<td>表示表的连接类型，性能由好到差的连接类型为( system  —&gt;  const  —–&gt;  eq_ref  ——&gt;  ref  ——-&gt;  ref_or_null—-&gt;  index_merge  —&gt;  index_subquery  —–&gt;  range  —–&gt;  index  ——&gt; all )</td>
+</tr>
+<tr>
+<td>possible_keys</td>
+<td>表示查询时，可能使用的索引</td>
+</tr>
+<tr>
+<td>key</td>
+<td>表示实际使用的索引</td>
+</tr>
+<tr>
+<td>key_len</td>
+<td>索引字段的长度</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>扫描行的数量</td>
+</tr>
+<tr>
+<td>extra</td>
+<td>执行情况的说明和描述</td>
+</tr>
+</tbody></table>
+<h5 id="3-3-1-环境准备"><a href="#3-3-1-环境准备" class="headerlink" title="3.3.1 环境准备"></a>3.3.1 环境准备</h5><p><img src="/images/mysql/1556122799330.png" srcset="/img/loading.gif" lazyload alt="1556122799330"> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `t_role` (<br>  `id` <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `role_name` <span class="hljs-type">varchar</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `role_code` <span class="hljs-type">varchar</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `description` <span class="hljs-type">varchar</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`),<br>  <span class="hljs-keyword">UNIQUE</span> KEY `unique_role_name` (`role_name`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `t_user` (<br>  `id` <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `username` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `password` <span class="hljs-type">varchar</span>(<span class="hljs-number">96</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`),<br>  <span class="hljs-keyword">UNIQUE</span> KEY `unique_user_username` (`username`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `user_role` (<br>  `id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> auto_increment ,<br>  `user_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `role_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`),<br>  KEY `fk_ur_user_id` (`user_id`),<br>  KEY `fk_ur_role_id` (`role_id`),<br>  <span class="hljs-keyword">CONSTRAINT</span> `fk_ur_role_id` <span class="hljs-keyword">FOREIGN</span> KEY (`role_id`) <span class="hljs-keyword">REFERENCES</span> `t_role` (`id`) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">NO</span> ACTION <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">NO</span> ACTION,<br>  <span class="hljs-keyword">CONSTRAINT</span> `fk_ur_user_id` <span class="hljs-keyword">FOREIGN</span> KEY (`user_id`) <span class="hljs-keyword">REFERENCES</span> `t_user` (`id`) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">NO</span> ACTION <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">NO</span> ACTION<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8;<br><br><br><br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `t_user` (`id`, `username`, `password`, `name`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;super&#x27;</span>,<span class="hljs-string">&#x27;$2a$10$TJ4TmCdK.X4wv/tCqHW14.w70U3CC33CeVncD3SLmyMXMknstqKRe&#x27;</span>,<span class="hljs-string">&#x27;超级管理员&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `t_user` (`id`, `username`, `password`, `name`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-string">&#x27;admin&#x27;</span>,<span class="hljs-string">&#x27;$2a$10$TJ4TmCdK.X4wv/tCqHW14.w70U3CC33CeVncD3SLmyMXMknstqKRe&#x27;</span>,<span class="hljs-string">&#x27;系统管理员&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `t_user` (`id`, `username`, `password`, `name`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;itcast&#x27;</span>,<span class="hljs-string">&#x27;$2a$10$8qmaHgUFUAmPR5pOuWhYWOr291WJYjHelUlYn07k5ELF8ZCrW0Cui&#x27;</span>,<span class="hljs-string">&#x27;test02&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `t_user` (`id`, `username`, `password`, `name`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;4&#x27;</span>,<span class="hljs-string">&#x27;stu1&#x27;</span>,<span class="hljs-string">&#x27;$2a$10$pLtt2KDAFpwTWLjNsmTEi.oU1yOZyIn9XkziK/y/spH5rftCpUMZa&#x27;</span>,<span class="hljs-string">&#x27;学生1&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `t_user` (`id`, `username`, `password`, `name`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;5&#x27;</span>,<span class="hljs-string">&#x27;stu2&#x27;</span>,<span class="hljs-string">&#x27;$2a$10$nxPKkYSez7uz2YQYUnwhR.z57km3yqKn3Hr/p1FR6ZKgc18u.Tvqm&#x27;</span>,<span class="hljs-string">&#x27;学生2&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `t_user` (`id`, `username`, `password`, `name`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;6&#x27;</span>,<span class="hljs-string">&#x27;t1&#x27;</span>,<span class="hljs-string">&#x27;$2a$10$TJ4TmCdK.X4wv/tCqHW14.w70U3CC33CeVncD3SLmyMXMknstqKRe&#x27;</span>,<span class="hljs-string">&#x27;老师1&#x27;</span>);<br><br><br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `t_role` (`id`, `role_name`, `role_code`, `description`) <span class="hljs-keyword">VALUES</span>(<span class="hljs-string">&#x27;5&#x27;</span>,<span class="hljs-string">&#x27;学生&#x27;</span>,<span class="hljs-string">&#x27;student&#x27;</span>,<span class="hljs-string">&#x27;学生&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `t_role` (`id`, `role_name`, `role_code`, `description`) <span class="hljs-keyword">VALUES</span>(<span class="hljs-string">&#x27;7&#x27;</span>,<span class="hljs-string">&#x27;老师&#x27;</span>,<span class="hljs-string">&#x27;teacher&#x27;</span>,<span class="hljs-string">&#x27;老师&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `t_role` (`id`, `role_name`, `role_code`, `description`) <span class="hljs-keyword">VALUES</span>(<span class="hljs-string">&#x27;8&#x27;</span>,<span class="hljs-string">&#x27;教学管理员&#x27;</span>,<span class="hljs-string">&#x27;teachmanager&#x27;</span>,<span class="hljs-string">&#x27;教学管理员&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `t_role` (`id`, `role_name`, `role_code`, `description`) <span class="hljs-keyword">VALUES</span>(<span class="hljs-string">&#x27;9&#x27;</span>,<span class="hljs-string">&#x27;管理员&#x27;</span>,<span class="hljs-string">&#x27;admin&#x27;</span>,<span class="hljs-string">&#x27;管理员&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `t_role` (`id`, `role_name`, `role_code`, `description`) <span class="hljs-keyword">VALUES</span>(<span class="hljs-string">&#x27;10&#x27;</span>,<span class="hljs-string">&#x27;超级管理员&#x27;</span>,<span class="hljs-string">&#x27;super&#x27;</span>,<span class="hljs-string">&#x27;超级管理员&#x27;</span>);<br><br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> user_role(id,user_id,role_id) <span class="hljs-keyword">VALUES</span>(<span class="hljs-keyword">NULL</span>, <span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;5&#x27;</span>),(<span class="hljs-keyword">NULL</span>, <span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;7&#x27;</span>),(<span class="hljs-keyword">NULL</span>, <span class="hljs-string">&#x27;2&#x27;</span>, <span class="hljs-string">&#x27;8&#x27;</span>),(<span class="hljs-keyword">NULL</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;9&#x27;</span>),(<span class="hljs-keyword">NULL</span>, <span class="hljs-string">&#x27;4&#x27;</span>, <span class="hljs-string">&#x27;8&#x27;</span>),(<span class="hljs-keyword">NULL</span>, <span class="hljs-string">&#x27;5&#x27;</span>, <span class="hljs-string">&#x27;10&#x27;</span>) ;<br><br><br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-3-2-explain-之-id"><a href="#3-3-2-explain-之-id" class="headerlink" title="3.3.2 explain 之 id"></a>3.3.2 explain 之 id</h5><p>id 字段是 select查询的序列号，是一组数字，表示的是查询中执行select子句或者是操作表的顺序。id 情况有三种 ： </p>
+<p>1） id 相同表示加载表的顺序是从上到下。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">explain select * <span class="hljs-keyword">from</span> t_role r, t_user u, user_role ur <span class="hljs-keyword">where</span> r.<span class="hljs-built_in">id</span> = ur.role_id <span class="hljs-keyword">and</span> u.<span class="hljs-built_in">id</span> = ur.user_id ;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556102471304.png" srcset="/img/loading.gif" lazyload alt="1556102471304"></p>
+<p>2） id 不同id值越大，优先级越高，越先被执行。 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t_role <span class="hljs-keyword">WHERE</span> id <span class="hljs-operator">=</span> (<span class="hljs-keyword">SELECT</span> role_id <span class="hljs-keyword">FROM</span> user_role <span class="hljs-keyword">WHERE</span> user_id <span class="hljs-operator">=</span> (<span class="hljs-keyword">SELECT</span> id <span class="hljs-keyword">FROM</span> t_user <span class="hljs-keyword">WHERE</span> username <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;stu1&#x27;</span>))<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556103009534.png" srcset="/img/loading.gif" lazyload alt="1556103009534"> </p>
+<p>3） id 有相同，也有不同，同时存在。id相同的可以认为是一组，从上往下顺序执行；在所有的组中，id的值越大，优先级越高，越先执行。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> t_role r , (<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> user_role ur <span class="hljs-keyword">WHERE</span> ur.`user_id` <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;2&#x27;</span>) a <span class="hljs-keyword">WHERE</span> r.id <span class="hljs-operator">=</span> a.role_id ; <br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556103294182.png" srcset="/img/loading.gif" lazyload alt="1556103294182"> </p>
+<h5 id="3-3-3-explain-之-select-type"><a href="#3-3-3-explain-之-select-type" class="headerlink" title="3.3.3 explain 之 select_type"></a>3.3.3 explain 之 select_type</h5><p> 表示 SELECT 的类型，常见的取值，如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>select_type</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SIMPLE</td>
+<td>简单的select查询，查询中不包含子查询或者UNION</td>
+</tr>
+<tr>
+<td>PRIMARY</td>
+<td>查询中若包含任何复杂的子查询，最外层查询标记为该标识</td>
+</tr>
+<tr>
+<td>SUBQUERY</td>
+<td>在SELECT 或 WHERE 列表中包含了子查询</td>
+</tr>
+<tr>
+<td>DERIVED</td>
+<td>在FROM 列表中包含的子查询，被标记为 DERIVED（衍生） MYSQL会递归执行这些子查询，把结果放在临时表中</td>
+</tr>
+<tr>
+<td>UNION</td>
+<td>若第二个SELECT出现在UNION之后，则标记为UNION ； 若UNION包含在FROM子句的子查询中，外层SELECT将被标记为 ： DERIVED</td>
+</tr>
+<tr>
+<td>UNION RESULT</td>
+<td>从UNION表获取结果的SELECT</td>
+</tr>
+</tbody></table>
+<h5 id="3-3-4-explain-之-table"><a href="#3-3-4-explain-之-table" class="headerlink" title="3.3.4 explain 之 table"></a>3.3.4 explain 之 table</h5><p>展示这一行的数据是关于哪一张表的 </p>
+<h5 id="3-3-5-explain-之-type"><a href="#3-3-5-explain-之-type" class="headerlink" title="3.3.5 explain 之 type"></a>3.3.5 explain 之 type</h5><p>type 显示的是访问类型，是较为重要的一个指标，可取值为： </p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NULL</td>
+<td>MySQL不访问任何表，索引，直接返回结果</td>
+</tr>
+<tr>
+<td>举例</td>
+<td>select now();</td>
+</tr>
+<tr>
+<td>system</td>
+<td>表只有一行记录(等于系统表)，这是const类型的特例，一般不会出现</td>
+</tr>
+<tr>
+<td>举例</td>
+<td>select * from (select * from t_user where id&#x3D;’1’) a;5.7版本之前外层查询会是system，但是5.7是const</td>
+</tr>
+<tr>
+<td>const</td>
+<td>表示通过索引一次就找到了，const 用于比较primary key 或者 unique 索引。因为只匹配一行数据，所以很快。如将主键置于where列表中，MySQL 就能将该查询转换为一个常亮。const于将 “主键” 或 “唯一” 索引的所有部分与常量值进行比较</td>
+</tr>
+<tr>
+<td>eq_ref</td>
+<td>类似ref，区别在于使用的是唯一索引，使用主键的关联查询，关联查询出的记录只有一条。常见于主键或唯一索引扫描</td>
+</tr>
+<tr>
+<td>ref</td>
+<td>非唯一性索引扫描，返回匹配某个单独值的所有行。本质上也是一种索引访问，返回所有匹配某个单独值的所有行（多个）</td>
+</tr>
+<tr>
+<td>range</td>
+<td>只检索给定返回的行，使用一个索引来选择行。 where 之后出现 between ， &lt; , &gt; , in 等操作。</td>
+</tr>
+<tr>
+<td>index</td>
+<td>index 与 ALL的区别为  index 类型只是遍历了索引树， 通常比ALL 快， ALL 是遍历数据文件。</td>
+</tr>
+<tr>
+<td>all</td>
+<td>将遍历全表以找到匹配的行</td>
+</tr>
+</tbody></table>
+<p>结果值从最好到最坏以此是：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">NULL</span> &gt; <span class="hljs-keyword">system</span> &gt; const &gt; eq_ref &gt; <span class="hljs-keyword">ref</span> &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; <span class="hljs-keyword">index</span> &gt; <span class="hljs-keyword">ALL</span><br><br><br><span class="hljs-keyword">system</span> &gt; const &gt; eq_ref &gt; <span class="hljs-keyword">ref</span> &gt; range &gt; i<span class="hljs-comment">---+-------+---------------+---------+---------+-------+-----</span><br><span class="hljs-number">1</span> <span class="hljs-keyword">row</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span>, <span class="hljs-number">1</span> <span class="hljs-built_in">warning</span> (<span class="hljs-number">0.00</span> sec)                                                                 <br>                                                                                                   <br>mysql&gt;                               ndex &gt; <span class="hljs-keyword">ALL</span><br></code></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;一般来说， 我们需要保证查询至少达到 range 级别， 最好达到ref 。&#x3D;&#x3D;</p>
+<h5 id="3-3-6-explain-之-key"><a href="#3-3-6-explain-之-key" class="headerlink" title="3.3.6 explain 之  key"></a>3.3.6 explain 之  key</h5><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ada">possible_keys : 显示可能应用在这张表的索引， 一个或多个。 <br><br>key ： 实际使用的索引， 如果为NULL， 则没有使用索引。<br><br>key_len : 表示索引中使用的字节数， 该值为索引字段最大可能长度，并非实际使用长度，在不损失精确性的前提下， 长度越短越好 。<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-3-7-explain-之-rows"><a href="#3-3-7-explain-之-rows" class="headerlink" title="3.3.7 explain 之 rows"></a>3.3.7 explain 之 rows</h5><p>扫描行的数量。</p>
+<h5 id="3-3-8-explain-之-extra"><a href="#3-3-8-explain-之-extra" class="headerlink" title="3.3.8 explain 之 extra"></a>3.3.8 explain 之 extra</h5><p>其他的额外的执行计划信息，在该列展示 。</p>
+<table>
+<thead>
+<tr>
+<th>extra</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>using  filesort</td>
+<td>说明mysql会对数据使用一个外部的索引排序，而不是按照表内的索引顺序进行读取， 称为 “文件排序”, 效率低。需要扫描文件的内容，然后根据文件内容进行排序</td>
+</tr>
+<tr>
+<td>举例</td>
+<td>select * from t_user order by password;(password不是索引)，假如根据id，就会是null</td>
+</tr>
+<tr>
+<td>using  temporary</td>
+<td>使用了临时表保存中间结果，MySQL在对查询结果排序时使用临时表。常见于 order by 和 group by； 效率低</td>
+</tr>
+<tr>
+<td>举例</td>
+<td>explain select * from t_user group by password;  没有修改任何参数应该会报错（only_full_group_by之类的），解决办法下边</td>
+</tr>
+<tr>
+<td>using  index</td>
+<td>表示相应的select操作使用了覆盖索引， 避免访问表的数据行， 效率不错。</td>
+</tr>
+</tbody></table>
+<p><strong>注</strong>：</p>
+<p>原因：SQL 标准中不允许 SELECT 列表，HAVING 条件语句，或 ORDER BY 语句中出现 GROUP BY 中未列表的可聚合列。而 MySQL 中有一个状态 <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_only_full_group_by">ONLY_FULL_GROUP_BY</a> 来标识是否遵从这一标准，默认为开启状态。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs sql">报错示范：<br><span class="hljs-keyword">SELECT</span> gender, <br>       last_name <br><span class="hljs-keyword">FROM</span>   employees <br><span class="hljs-keyword">GROUP</span>  <span class="hljs-keyword">BY</span> gender;<br>正确：<br><span class="hljs-keyword">SELECT</span> gender,<br><span class="hljs-keyword">FROM</span>   employees <br><span class="hljs-keyword">GROUP</span>  <span class="hljs-keyword">BY</span> gender;<br>或者<br><span class="hljs-keyword">SELECT</span> gender,<br>last_name<br><span class="hljs-keyword">FROM</span> employees<br><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> gender,<br>last_name;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>解决办法：</p>
+<p>select @@sql_mode;可以查看</p>
+<p>SET SESSION sql_mode&#x3D;(SELECT REPLACE(@@sql_mode,’ONLY_FULL_GROUP_BY,’,’’)); 重新设置，再去查就没有（only_full_group_by）项了。</p>
+<h4 id="3-4-show-profile分析SQL"><a href="#3-4-show-profile分析SQL" class="headerlink" title="3.4 show profile分析SQL"></a>3.4 show profile分析SQL</h4><p>Mysql从5.0.37版本开始增加了对 show profiles 和 show profile 语句的支持。show profiles 能够在做SQL优化时帮助我们了解时间都耗费到哪里去了。</p>
+<p>通过 have_profiling 参数，能够看到当前MySQL是否支持profile：</p>
+<p><img src="/images/mysql/1552488401999.png" srcset="/img/loading.gif" lazyload alt="1552488401999"> </p>
+<p>默认profiling是关闭的，可以通过set语句在Session级别开启profiling：</p>
+<p><img src="/images/mysql/1552488372405.png" srcset="/img/loading.gif" lazyload alt="1552488372405"> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">set</span> profiling<span class="hljs-operator">=</span><span class="hljs-number">1</span>; <span class="hljs-operator">/</span><span class="hljs-operator">/</span>开启profiling 开关；<br></code></pre></td></tr></table></figure>
+
+<p>通过profile，我们能够更清楚地了解SQL执行的过程。</p>
+<p>首先，我们可以执行一系列的操作，如下图所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> databases;<br><br>use db01;<br><br><span class="hljs-keyword">show</span> tables;<br><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> id <span class="hljs-operator">&lt;</span> <span class="hljs-number">5</span>;<br><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> tb_item;<br></code></pre></td></tr></table></figure>
+
+<p>执行完上述命令之后，再执行show profiles 指令， 来查看SQL语句执行的耗时：</p>
+<p><img src="/images/mysql/1552489017940.png" srcset="/img/loading.gif" lazyload alt="1552489017940">  </p>
+<p>通过show  profile for  query  query_id 语句可以查看到该SQL执行过程中每个线程的状态和消耗的时间：</p>
+<p><img src="/images/mysql/1552489053763.png" srcset="/img/loading.gif" lazyload alt="1552489053763"> </p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs tex">TIP ：<br>	Sending data 状态表示MySQL线程开始访问数据行并把结果返回给客户端，而不仅仅是返回个客户端。由于在Sending data状态下，MySQL线程往往需要做大量的磁盘读取操作，所以经常是整各查询中耗时最长的状态。<br></code></pre></td></tr></table></figure>
+
+
+
+<p>在获取到最消耗时间的线程状态后，MySQL支持进一步选择all、cpu、block io 、context switch、page faults等明细类型类查看MySQL在使用什么资源上耗费了过高的时间。例如，选择查看CPU的耗费时间  ：</p>
+<p><img src="/images/mysql/1552489671119.png" srcset="/img/loading.gif" lazyload alt="1552489671119"> </p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Status</td>
+<td>sql 语句执行的状态</td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>sql 执行过程中每一个步骤的耗时</td>
+</tr>
+<tr>
+<td>CPU_user</td>
+<td>当前用户占有的cpu</td>
+</tr>
+<tr>
+<td>CPU_system</td>
+<td>系统占有的cpu</td>
+</tr>
+</tbody></table>
+<p>optimizing</p>
+<h4 id="3-5-trace分析优化器执行计划"><a href="#3-5-trace分析优化器执行计划" class="headerlink" title="3.5 trace分析优化器执行计划"></a>3.5 trace分析优化器执行计划</h4><p>MySQL5.6提供了对SQL的跟踪trace, 通过trace文件能够进一步了解为什么优化器选择A计划, 而不是选择B计划。</p>
+<p>打开trace ， 设置格式为 JSON，并设置trace最大能够使用的内存大小，避免解析过程中因为默认内存过小而不能够完整展示。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SET</span> optimizer_trace<span class="hljs-operator">=</span>&quot;enabled=on&quot;,end_markers_in_json<span class="hljs-operator">=</span><span class="hljs-keyword">on</span>;<br><span class="hljs-keyword">set</span> optimizer_trace_max_mem_size<span class="hljs-operator">=</span><span class="hljs-number">1000000</span>;<br></code></pre></td></tr></table></figure>
+
+<p>执行SQL语句 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> id <span class="hljs-operator">&lt;</span> <span class="hljs-number">4</span>;<br></code></pre></td></tr></table></figure>
+
+<p>最后， 检查information_schema.optimizer_trace就可以知道MySQL是如何执行SQL的 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> information_schema.optimizer_trace\G;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br></pre></td><td class="code"><pre><code class="hljs json">*************************** <span class="hljs-number">1.</span> row ***************************<br>QUERY<span class="hljs-punctuation">:</span> select * from tb_item where id &lt; <span class="hljs-number">4</span><br>TRACE<span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;steps&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;join_preparation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;select#&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;steps&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;expanded_query&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/* select#1 */ select `tb_item`.`id` AS `id`,`tb_item`.`title` AS `title`,`tb_item`.`price` AS `price`,`tb_item`.`num` AS `num`,`tb_item`.`categoryid` AS `categoryid`,`tb_item`.`status` AS `status`,`tb_item`.`sellerid` AS `sellerid`,`tb_item`.`createtime` AS `createtime`,`tb_item`.`updatetime` AS `updatetime` from `tb_item` where (`tb_item`.`id` &lt; 4)&quot;</span><br>          <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* steps */</span><br>      <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* join_preparation */</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;join_optimization&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;select#&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;steps&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;condition_processing&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>              <span class="hljs-attr">&quot;condition&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;WHERE&quot;</span><span class="hljs-punctuation">,</span><br>              <span class="hljs-attr">&quot;original_condition&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;(`tb_item`.`id` &lt; 4)&quot;</span><span class="hljs-punctuation">,</span><br>              <span class="hljs-attr">&quot;steps&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-punctuation">&#123;</span><br>                  <span class="hljs-attr">&quot;transformation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;equality_propagation&quot;</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;resulting_condition&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;(`tb_item`.`id` &lt; 4)&quot;</span><br>                <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-punctuation">&#123;</span><br>                  <span class="hljs-attr">&quot;transformation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;constant_propagation&quot;</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;resulting_condition&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;(`tb_item`.`id` &lt; 4)&quot;</span><br>                <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-punctuation">&#123;</span><br>                  <span class="hljs-attr">&quot;transformation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;trivial_condition_removal&quot;</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;resulting_condition&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;(`tb_item`.`id` &lt; 4)&quot;</span><br>                <span class="hljs-punctuation">&#125;</span><br>              <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* steps */</span><br>            <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* condition_processing */</span><br>          <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;table_dependencies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>              <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;table&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;`tb_item`&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;row_may_be_null&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;map_bit&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;depends_on_map_bits&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* depends_on_map_bits */</span><br>              <span class="hljs-punctuation">&#125;</span><br>            <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* table_dependencies */</span><br>          <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;ref_optimizer_key_uses&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>            <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* ref_optimizer_key_uses */</span><br>          <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;rows_estimation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>              <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;table&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;`tb_item`&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;range_analysis&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                  <span class="hljs-attr">&quot;table_scan&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                    <span class="hljs-attr">&quot;rows&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">9816098</span><span class="hljs-punctuation">,</span><br>                    <span class="hljs-attr">&quot;cost&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2.04e6</span><br>                  <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* table_scan */</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;potential_range_indices&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                    <span class="hljs-punctuation">&#123;</span><br>                      <span class="hljs-attr">&quot;index&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;PRIMARY&quot;</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;usable&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;key_parts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                        <span class="hljs-string">&quot;id&quot;</span><br>                      <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* key_parts */</span><br>                    <span class="hljs-punctuation">&#125;</span><br>                  <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* potential_range_indices */</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;setup_range_conditions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                  <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* setup_range_conditions */</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;group_index_range&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                    <span class="hljs-attr">&quot;chosen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span><br>                    <span class="hljs-attr">&quot;cause&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;not_group_by_or_distinct&quot;</span><br>                  <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* group_index_range */</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;analyzing_range_alternatives&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                    <span class="hljs-attr">&quot;range_scan_alternatives&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                      <span class="hljs-punctuation">&#123;</span><br>                        <span class="hljs-attr">&quot;index&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;PRIMARY&quot;</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;ranges&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                          <span class="hljs-string">&quot;id &lt; 4&quot;</span><br>                        <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* ranges */</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;index_dives_for_eq_ranges&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;rowid_ordered&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;using_mrr&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;index_only&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;rows&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;cost&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1.6154</span><span class="hljs-punctuation">,</span><br>                        <span class="hljs-attr">&quot;chosen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><br>                      <span class="hljs-punctuation">&#125;</span><br>                    <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* range_scan_alternatives */</span><span class="hljs-punctuation">,</span><br>                    <span class="hljs-attr">&quot;analyzing_roworder_intersect&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                      <span class="hljs-attr">&quot;usable&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;cause&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;too_few_roworder_scans&quot;</span><br>                    <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* analyzing_roworder_intersect */</span><br>                  <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* analyzing_range_alternatives */</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;chosen_range_access_summary&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                    <span class="hljs-attr">&quot;range_access_plan&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                      <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;range_scan&quot;</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;index&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;PRIMARY&quot;</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;rows&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;ranges&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                        <span class="hljs-string">&quot;id &lt; 4&quot;</span><br>                      <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* ranges */</span><br>                    <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* range_access_plan */</span><span class="hljs-punctuation">,</span><br>                    <span class="hljs-attr">&quot;rows_for_plan&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span><br>                    <span class="hljs-attr">&quot;cost_for_plan&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1.6154</span><span class="hljs-punctuation">,</span><br>                    <span class="hljs-attr">&quot;chosen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><br>                  <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* chosen_range_access_summary */</span><br>                <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* range_analysis */</span><br>              <span class="hljs-punctuation">&#125;</span><br>            <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* rows_estimation */</span><br>          <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;considered_execution_plans&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>              <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;plan_prefix&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* plan_prefix */</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;table&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;`tb_item`&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;best_access_path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                  <span class="hljs-attr">&quot;considered_access_paths&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                    <span class="hljs-punctuation">&#123;</span><br>                      <span class="hljs-attr">&quot;access_type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;range&quot;</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;rows&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;cost&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2.2154</span><span class="hljs-punctuation">,</span><br>                      <span class="hljs-attr">&quot;chosen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><br>                    <span class="hljs-punctuation">&#125;</span><br>                  <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* considered_access_paths */</span><br>                <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* best_accessoptimizing_path */</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;cost_for_plan&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2.2154</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;rows_for_plan&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;chosen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><br>              <span class="hljs-punctuation">&#125;</span><br>            <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* considered_execution_plans */</span><br>          <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;attaching_conditions_to_tables&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>              <span class="hljs-attr">&quot;original_condition&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;(`tb_item`.`id` &lt; 4)&quot;</span><span class="hljs-punctuation">,</span><br>              <span class="hljs-attr">&quot;attached_conditions_computation&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>              <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* attached_conditions_computation */</span><span class="hljs-punctuation">,</span><br>              <span class="hljs-attr">&quot;attached_conditions_summaryoptimizing&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-punctuation">&#123;</span><br>                  <span class="hljs-attr">&quot;table&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;`tb_item`&quot;</span><span class="hljs-punctuation">,</span><br>                  <span class="hljs-attr">&quot;attached&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;(`tb_item`.`id` &lt; 4)&quot;</span><br>                <span class="hljs-punctuation">&#125;</span><br>              <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* attached_conditions_summary */</span><br>            <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* attaching_conditions_to_tables */</span><br>          <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;refine_plan&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>              <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;table&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;`tb_item`&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;access_type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;range&quot;</span><br>              <span class="hljs-punctuation">&#125;</span>optimizing<br>            <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* refine_plan */</span><br>          <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* steps */</span><br>      <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* join_optimization */</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  optimizing  <span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;join_execution&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;select#&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;steps&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* steps */</span><br>      <span class="hljs-punctuation">&#125;</span> <span class="hljs-comment">/* join_execution */</span><br>    <span class="hljs-punctuation">&#125;</span><br>  <span class="hljs-punctuation">]</span> <span class="hljs-comment">/* steps */</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-索引的使用"><a href="#4-索引的使用" class="headerlink" title="4. 索引的使用"></a>4. 索引的使用</h3><p>索引是数据库优化最常用也是最重要的手段之一, 通过索引通常可以帮助用户解决大多数的MySQL的性能优化问题。</p>
+<h4 id="4-1-验证索引提升查询效率"><a href="#4-1-验证索引提升查询效率" class="headerlink" title="4.1 验证索引提升查询效率"></a>4.1 验证索引提升查询效率</h4><p>在我们准备的表结构tb_item 中， 一共存储了 300 万记录；</p>
+<p>A. 根据ID查询 </p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">select * <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> <span class="hljs-built_in">id</span> = <span class="hljs-number">1999</span>\G;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553261992653.png" srcset="/img/loading.gif" lazyload alt="1553261992653"> </p>
+<p>查询速度很快， 接近0s ， 主要的原因是因为id为主键， 有索引；</p>
+<p><img src="/images/mysql/1553262044466.png" srcset="/img/loading.gif" lazyload alt="1553262044466"> </p>
+<p>2). 根据 title 进行精确查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_item <span class="hljs-keyword">where</span> title <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;iphoneX 移动3G 32G941&#x27;</span>\G; <br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553262215900.png" srcset="/img/loading.gif" lazyload alt="1553262215900"> </p>
+<p>查看SQL语句的执行计划 ： </p>
+<p><img src="/images/mysql/1553262469785.png" srcset="/img/loading.gif" lazyload alt="1553262469785"> </p>
+<p>处理方案 ， 针对title字段， 创建索引 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">create</span> index idx_item_title <span class="hljs-keyword">on</span> tb_item(title);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1553263229523.png" srcset="/img/loading.gif" lazyload alt="1553263229523"> </p>
+<p>索引创建完成之后，再次进行查询 ： </p>
+<p><img src="/images/mysql/1553263302706.png" srcset="/img/loading.gif" lazyload alt="1553263302706"> </p>
+<p>通过explain ， 查看执行计划，执行SQL时使用了刚才创建的索引 </p>
+<p><img src="/images/mysql/1553263355262.png" srcset="/img/loading.gif" lazyload alt="1553263355262"> </p>
+<h4 id="4-2-索引的使用"><a href="#4-2-索引的使用" class="headerlink" title="4.2 索引的使用"></a>4.2 索引的使用</h4><h5 id="4-2-1-准备环境"><a href="#4-2-1-准备环境" class="headerlink" title="4.2.1 准备环境"></a>4.2.1 准备环境</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> `tb_seller` (<br>	`sellerid` <span class="hljs-type">varchar</span> (<span class="hljs-number">100</span>),<br>	`name` <span class="hljs-type">varchar</span> (<span class="hljs-number">100</span>),<br>	`nickname` <span class="hljs-type">varchar</span> (<span class="hljs-number">50</span>),<br>	`password` <span class="hljs-type">varchar</span> (<span class="hljs-number">60</span>),<br>	`status` <span class="hljs-type">varchar</span> (<span class="hljs-number">1</span>),<br>	`address` <span class="hljs-type">varchar</span> (<span class="hljs-number">100</span>),<br>	`createtime` datetime,<br>    <span class="hljs-keyword">primary</span> key(`sellerid`)<br>)engine<span class="hljs-operator">=</span>innodb <span class="hljs-keyword">default</span> charset<span class="hljs-operator">=</span>utf8mb4; <br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;alibaba&#x27;</span>,<span class="hljs-string">&#x27;阿里巴巴&#x27;</span>,<span class="hljs-string">&#x27;阿里小店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;baidu&#x27;</span>,<span class="hljs-string">&#x27;百度科技有限公司&#x27;</span>,<span class="hljs-string">&#x27;百度小店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;huawei&#x27;</span>,<span class="hljs-string">&#x27;华为科技有限公司&#x27;</span>,<span class="hljs-string">&#x27;华为小店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;itcast&#x27;</span>,<span class="hljs-string">&#x27;传智播客教育科技有限公司&#x27;</span>,<span class="hljs-string">&#x27;传智播客&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;itheima&#x27;</span>,<span class="hljs-string">&#x27;黑马程序员&#x27;</span>,<span class="hljs-string">&#x27;黑马程序员&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>optimizing,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;luoji&#x27;</span>,<span class="hljs-string">&#x27;罗技科技有限公司&#x27;</span>,<span class="hljs-string">&#x27;罗技小店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;oppo&#x27;</span>,<span class="hljs-string">&#x27;OPPO科技有限公司&#x27;</span>,<span class="hljs-string">&#x27;OPPO官方旗舰店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;ourpalm&#x27;</span>,<span class="hljs-string">&#x27;掌趣科技股份有限公司&#x27;</span>,<span class="hljs-string">&#x27;掌趣小店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;qiandu&#x27;</span>,<span class="hljs-string">&#x27;千度科技&#x27;</span>,<span class="hljs-string">&#x27;千度小店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;sina&#x27;</span>,<span class="hljs-string">&#x27;新浪科技有限公司&#x27;</span>,<span class="hljs-string">&#x27;新浪官方旗舰店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;xiaomi&#x27;</span>,<span class="hljs-string">&#x27;小米科技&#x27;</span>,<span class="hljs-string">&#x27;小米官方旗舰店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;西安市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `tb_seller` (`sellerid`, `name`, `nickname`, `password`, `status`, `address`, `createtime`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;yijia&#x27;</span>,<span class="hljs-string">&#x27;宜家家居&#x27;</span>,<span class="hljs-string">&#x27;宜家家居旗舰店&#x27;</span>,<span class="hljs-string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;北京市&#x27;</span>,<span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>);<br><br><br><span class="hljs-keyword">create</span> index idx_seller_name_sta_addr <span class="hljs-keyword">on</span> tb_seller(name,status,address);<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="4-2-2-避免索引失效"><a href="#4-2-2-避免索引失效" class="headerlink" title="4.2.2 避免索引失效"></a>4.2.2 避免索引失效</h5><h6 id="1、全值匹配-，对索引中所有列都指定具体值。"><a href="#1、全值匹配-，对索引中所有列都指定具体值。" class="headerlink" title="1、全值匹配 ，对索引中所有列都指定具体值。"></a>1、全值匹配 ，对索引中所有列都指定具体值。</h6><p>该情况下，索引生效，执行效率高。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">explain <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_seller <span class="hljs-keyword">where</span> name<span class="hljs-operator">=</span><span class="hljs-string">&#x27;小米科技&#x27;</span> <span class="hljs-keyword">and</span> status<span class="hljs-operator">=</span><span class="hljs-string">&#x27;1&#x27;</span> <span class="hljs-keyword">and</span> address<span class="hljs-operator">=</span><span class="hljs-string">&#x27;北京市&#x27;</span>\G;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556170997921.png" srcset="/img/loading.gif" lazyload alt="1556170997921"> </p>
+<h6 id="2、最左前缀法则"><a href="#2、最左前缀法则" class="headerlink" title="2、最左前缀法则"></a>2、最左前缀法则</h6><p>如果索引了多列，要遵守最左前缀法则。指的是查询从索引的最左前列开始，并且不跳过索引中的列。</p>
+<p>比如组合索引为name、status、address，主要是看包不包括name，并不是关注条件里三者顺序</p>
+<p>匹配最左前缀法则，走索引：</p>
+<p><img src="/images/mysql/1556171348995.png" srcset="/img/loading.gif" lazyload alt="1556171348995">  </p>
+<p>违法最左前缀法则 ， 索引失效：</p>
+<p><img src="/images/mysql/1556171428140.png" srcset="/img/loading.gif" lazyload alt="1556171428140"> </p>
+<p>如果符合最左法则，但是出现跳跃某一列，只有最左列索引生效：</p>
+<p><img src="/images/mysql/1556171662203.png" srcset="/img/loading.gif" lazyload alt="1556171662203"> </p>
+<h6 id="3、范围查询右边的列，不能使用索引-。"><a href="#3、范围查询右边的列，不能使用索引-。" class="headerlink" title="3、范围查询右边的列，不能使用索引 。"></a>3、范围查询右边的列，不能使用索引 。</h6><p><img src="/images/mysql/1556172256791.png" srcset="/img/loading.gif" lazyload alt="1556172256791"> </p>
+<p>根据前面的两个字段name ， status 查询是走索引的， 但是最后一个条件address 没有用到索引。</p>
+<h6 id="4、不要在索引列上进行运算操作，-索引将失效。"><a href="#4、不要在索引列上进行运算操作，-索引将失效。" class="headerlink" title="4、不要在索引列上进行运算操作， 索引将失效。"></a>4、不要在索引列上进行运算操作， 索引将失效。</h6><p><img src="/images/mysql/1556172813715.png" srcset="/img/loading.gif" lazyload alt="1556172813715"> </p>
+<h6 id="5、字符串不加单引号，造成索引失效。"><a href="#5、字符串不加单引号，造成索引失效。" class="headerlink" title="5、字符串不加单引号，造成索引失效。"></a>5、字符串不加单引号，造成索引失效。</h6><p><img src="/images/mysql/1556172967493.png" srcset="/img/loading.gif" lazyload alt="1556172967493"> </p>
+<p>由于，在查询是，没有对字符串加单引号，MySQL的查询优化器，会自动的进行类型转换，造成索引失效。</p>
+<h6 id="6、尽量使用覆盖索引，避免select"><a href="#6、尽量使用覆盖索引，避免select" class="headerlink" title="6、尽量使用覆盖索引，避免select *"></a>6、尽量使用覆盖索引，避免select *</h6><p>尽量使用覆盖索引（只访问索引的查询（索引列完全包含查询列）），减少select * 。</p>
+<p><img src="/images/mysql/1556173928299.png" srcset="/img/loading.gif" lazyload alt="1556173928299"> </p>
+<p>如果查询列，超出索引列，也会降低性能。</p>
+<p><img src="/images/mysql/1556173986068.png" srcset="/img/loading.gif" lazyload alt="1556173986068"> </p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs axapta">TIP : <br>	<br>    <span class="hljs-keyword">using</span> <span class="hljs-keyword">index</span> ：使用覆盖索引的时候就会出现<br><br>    <span class="hljs-keyword">using</span> <span class="hljs-keyword">where</span>：在查找使用索引的情况下，需要回表去查询所需的数据(获取数据还需要去表里拿改行数据，索引只保存了索引部分值)<br><br>    <span class="hljs-keyword">using</span> <span class="hljs-keyword">index</span> condition：查找使用了索引，但是需要回表查询数据<br><br>    <span class="hljs-keyword">using</span> <span class="hljs-keyword">index</span> ; <span class="hljs-keyword">using</span> <span class="hljs-keyword">where</span>：查找使用了索引，但是需要的数据都在索引列中能找到，所以不需要回表查询数据<br></code></pre></td></tr></table></figure>
+
+<h6 id="7、用or分割开的条件，-如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。"><a href="#7、用or分割开的条件，-如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。" class="headerlink" title="7、用or分割开的条件， 如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。"></a>7、用or分割开的条件， 如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及的索引都不会被用到。</h6><p>示例，name字段是索引列 ， 而createtime不是索引列，中间是or进行连接是不走索引的 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">explain <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tb_seller <span class="hljs-keyword">where</span> name<span class="hljs-operator">=</span><span class="hljs-string">&#x27;黑马程序员&#x27;</span> <span class="hljs-keyword">or</span> createtime <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;2088-01-01 12:00:00&#x27;</span>\G;	<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556174994440.png" srcset="/img/loading.gif" lazyload alt="1556174994440"> </p>
+<h6 id="8、以-开头的Like模糊查询，索引失效。"><a href="#8、以-开头的Like模糊查询，索引失效。" class="headerlink" title="8、以%开头的Like模糊查询，索引失效。"></a>8、以%开头的Like模糊查询，索引失效。</h6><p>如果仅仅是尾部模糊匹配，索引不会失效。如果是头部模糊匹配，索引失效。</p>
+<p><img src="/images/mysql/1556175114369.png" srcset="/img/loading.gif" lazyload alt="1556175114369"> </p>
+<p>解决方案 ： </p>
+<p>通过覆盖索引来解决 </p>
+<p><img src="/images/mysql/1556247686483.png" srcset="/img/loading.gif" lazyload alt="1556247686483"> </p>
+<h6 id="9、如果MySQL评估使用索引比全表更慢，则不使用索引。"><a href="#9、如果MySQL评估使用索引比全表更慢，则不使用索引。" class="headerlink" title="9、如果MySQL评估使用索引比全表更慢，则不使用索引。"></a>9、如果MySQL评估使用索引比全表更慢，则不使用索引。</h6><p><img src="/images/mysql/1556175445210.png" srcset="/img/loading.gif" lazyload alt="1556175445210"> </p>
+<p>如果not in检索的数据量大，不走索引，但是如果not in检索的数据量小，走索引。同理，in也一样。跟null   not null 是一样的</p>
+<h6 id="10、is-NULL-，-is-NOT-NULL-有时索引失效。"><a href="#10、is-NULL-，-is-NOT-NULL-有时索引失效。" class="headerlink" title="10、is  NULL ， is NOT NULL  有时索引失效。"></a>10、is  NULL ， is NOT NULL  <font color='red'>有时</font>索引失效。</h6><p><img src="/images/mysql/1556180634889.png" srcset="/img/loading.gif" lazyload alt="1556180634889">  </p>
+<h6 id="11、in走索引，-not-in-索引失效。"><a href="#11、in走索引，-not-in-索引失效。" class="headerlink" title="11、in走索引， not in 索引失效。"></a>11、in走索引， not in 索引失效。</h6><p><img src="/images/mysql/1556249602732.png" srcset="/img/loading.gif" lazyload alt="1556249602732">  </p>
+<h6 id="12、单列索引和复合索引。"><a href="#12、单列索引和复合索引。" class="headerlink" title="12、单列索引和复合索引。"></a>12、单列索引和复合索引。</h6><p>尽量使用复合索引，而少使用单列索引 。</p>
+<p>创建复合索引 </p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs fortran">create <span class="hljs-built_in">index</span> idx_name_sta_address on tb_seller(<span class="hljs-keyword">name</span>, <span class="hljs-keyword">status</span>, address);<br><br>就相当于创建了三个索引 ： <br>	<span class="hljs-keyword">name</span><br>	<span class="hljs-keyword">name</span> + <span class="hljs-keyword">status</span><br>	<span class="hljs-keyword">name</span> + <span class="hljs-keyword">status</span> + address<br><br></code></pre></td></tr></table></figure>
+
+<p>创建单列索引 </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">index</span> idx_seller_name <span class="hljs-keyword">on</span> tb_seller(<span class="hljs-type">name</span>);<br><span class="hljs-keyword">create</span> <span class="hljs-keyword">index</span> idx_seller_status <span class="hljs-keyword">on</span> tb_seller(status);<br><span class="hljs-keyword">create</span> <span class="hljs-keyword">index</span> idx_seller_address <span class="hljs-keyword">on</span> tb_seller(address);<br></code></pre></td></tr></table></figure>
+
+<p>数据库会选择一个最优的索引（辨识度最高索引）来使用，并不会使用全部索引 。</p>
+<h4 id="4-3-查看索引使用情况"><a href="#4-3-查看索引使用情况" class="headerlink" title="4.3 查看索引使用情况"></a>4.3 查看索引使用情况</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Handler_read%&#x27;</span>;	<br><br><span class="hljs-keyword">show</span> <span class="hljs-keyword">global</span> status <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;Handler_read%&#x27;</span>;	<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1552885364563.png" srcset="/img/loading.gif" lazyload alt="1552885364563"> </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">Handler_read_first：索引中第一条被读的次数。如果较高，表示服务器正执行大量全索引扫描（这个值越低越好）。<br><br>Handler_read_key：如果索引正在工作，这个值代表一个行被索引值读的次数，如果值越低，表示索引得到的性能改善不高，因为索引不经常使用（这个值越高越好）。<br><br>Handler_read_next ：按照键顺序读下一行的请求数。如果你用范围约束或如果执行索引扫描来查询索引列，该值增加。<br><br>Handler_read_prev：按照键顺序读前一行的请求数。该读方法主要用于优化<span class="hljs-keyword">ORDER</span> <span class="hljs-title">BY</span> ... DESC。<br><br>Handler_read_rnd ：根据固定位置读一行的请求数。如果你正执行大量查询并需要对结果进行排序该值较高。你可能使用了大量需要MySQL扫描整个表的查询或你的连接没有正确使用键。这个值较高，意味着运行效率低，应该建立索引来补救。<br><br>Handler_read_rnd_next：在数据文件中读下一行的请求数。如果你正进行大量的表扫描，该值较高。通常说明你的表索引不正确或写入的查询没有利用索引。<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-SQL优化"><a href="#5-SQL优化" class="headerlink" title="5. SQL优化"></a>5. SQL优化</h3><h4 id="5-1-大批量插入数据"><a href="#5-1-大批量插入数据" class="headerlink" title="5.1 大批量插入数据"></a>5.1 大批量插入数据</h4><p>环境准备 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `tb_user_2` (<br>  `id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `username` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `password` <span class="hljs-type">varchar</span>(<span class="hljs-number">96</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `birthday` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `sex` <span class="hljs-type">char</span>(<span class="hljs-number">1</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `email` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `phone` <span class="hljs-type">varchar</span>(<span class="hljs-number">45</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `qq` <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  `status` <span class="hljs-type">varchar</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;用户状态&#x27;</span>,<br>  `create_time` datetime <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `update_time` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`),<br>  <span class="hljs-keyword">UNIQUE</span> KEY `unique_user_username` (`username`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8 ;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">load data <span class="hljs-keyword">local</span> infile <span class="hljs-string">&#x27;/home/muzili/sql2.log&#x27;</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span> `tb_user_2` fields terminated <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;,&#x27;</span> lines terminated <span class="hljs-keyword">by</span> <span class="hljs-string">&#x27;\n&#x27;</span>;<br>加载本地文件，表名用的是``，不是<span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>当使用load 命令导入数据的时候，适当的设置可以提高导入的效率。</p>
+<p><img src="/images/mysql/1556269346488.png" srcset="/img/loading.gif" lazyload alt="1556269346488"> </p>
+<p>对于 InnoDB 类型的表，有以下几种方式可以提高导入的效率：</p>
+<h5 id="1、主键顺序插入"><a href="#1、主键顺序插入" class="headerlink" title="1、主键顺序插入"></a>1、主键顺序插入</h5><p>因为InnoDB类型的表是按照主键的顺序保存的，所以将导入的数据按照主键的顺序排列，可以有效的提高导入数据的效率。如果InnoDB表没有主键，那么系统会自动默认创建一个内部列作为主键，所以如果可以给表创建一个主键，将可以利用这点，来提高导入数据的效率。</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xl">脚本文件介绍 :<br>	<span class="hljs-function"><span class="hljs-title">sql1</span>.<span class="hljs-built_in">log</span>  ----&gt;</span> 主键有序<br>	<span class="hljs-function"><span class="hljs-title">sql2</span>.<span class="hljs-built_in">log</span>  ----&gt;</span> 主键无序<br></code></pre></td></tr></table></figure>
+
+<p>插入ID顺序排列数据：</p>
+<p><img src="/images/mysql/1555771750567.png" srcset="/img/loading.gif" lazyload alt="1555771750567"></p>
+<p>插入ID无序排列数据：</p>
+<p><img src="/images/mysql/1555771959734.png" srcset="/img/loading.gif" lazyload alt="1555771959734"> </p>
+<h5 id="2、关闭唯一性校验"><a href="#2、关闭唯一性校验" class="headerlink" title="2、关闭唯一性校验"></a>2、关闭唯一性校验</h5><p>在导入数据前执行 SET UNIQUE_CHECKS&#x3D;0，关闭唯一性校验，在导入结束后执行SET UNIQUE_CHECKS&#x3D;1，恢复唯一性校验，可以提高导入的效率。</p>
+<p><img src="/images/mysql/1555772132736.png" srcset="/img/loading.gif" lazyload alt="1555772132736"> </p>
+<h5 id="3、手动提交事务"><a href="#3、手动提交事务" class="headerlink" title="3、手动提交事务"></a>3、手动提交事务</h5><p>如果应用使用自动提交的方式，建议在导入前执行 SET AUTOCOMMIT&#x3D;0，关闭自动提交，导入结束后再执行 SET AUTOCOMMIT&#x3D;1，打开自动提交，也可以提高导入的效率。</p>
+<p><img src="/images/mysql/1555772351208.png" srcset="/img/loading.gif" lazyload alt="1555772351208">&#x2F;</p>
+<h4 id="5-2-优化insert语句"><a href="#5-2-优化insert语句" class="headerlink" title="5.2 优化insert语句"></a>5.2 优化insert语句</h4><p>当进行数据的insert操作的时候，可以考虑采用以下几种优化方案。</p>
+<h5 id="1、如果需要同时对一张表插入很多行数据时，应该尽量使用多个值表的insert语句，这种方式将大大的缩减客户端与数据库之间的连接、关闭等消耗。使得效率比分开执行的单个insert语句快。"><a href="#1、如果需要同时对一张表插入很多行数据时，应该尽量使用多个值表的insert语句，这种方式将大大的缩减客户端与数据库之间的连接、关闭等消耗。使得效率比分开执行的单个insert语句快。" class="headerlink" title="1、如果需要同时对一张表插入很多行数据时，应该尽量使用多个值表的insert语句，这种方式将大大的缩减客户端与数据库之间的连接、关闭等消耗。使得效率比分开执行的单个insert语句快。"></a>1、如果需要同时对一张表插入很多行数据时，应该尽量使用多个值表的insert语句，这种方式将大大的缩减客户端与数据库之间的连接、关闭等消耗。使得效率比分开执行的单个insert语句快。</h5><p>示例， 原始方式为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Tom&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Cat&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Jerry&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>优化后的方案为 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Tom&#x27;</span>),(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Cat&#x27;</span>)，(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Jerry&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<h5 id="2、在事务中进行数据插入。事务提交改为手动提交"><a href="#2、在事务中进行数据插入。事务提交改为手动提交" class="headerlink" title="2、在事务中进行数据插入。事务提交改为手动提交"></a>2、在事务中进行数据插入。事务提交改为手动提交</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">start</span> transaction;<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Tom&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Cat&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Jerry&#x27;</span>);<br><span class="hljs-keyword">commit</span>;<br></code></pre></td></tr></table></figure>
+
+<h5 id="3、数据有序插入"><a href="#3、数据有序插入" class="headerlink" title="3、数据有序插入"></a>3、数据有序插入</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;Tim&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Tom&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Jerry&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;Rose&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Cat&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>优化后</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;Tom&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">2</span>,<span class="hljs-string">&#x27;Cat&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">3</span>,<span class="hljs-string">&#x27;Jerry&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">4</span>,<span class="hljs-string">&#x27;Tim&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tb_test <span class="hljs-keyword">values</span>(<span class="hljs-number">5</span>,<span class="hljs-string">&#x27;Rose&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<h4 id="5-3-优化order-by语句"><a href="#5-3-优化order-by语句" class="headerlink" title="5.3 优化order by语句"></a>5.3 优化order by语句</h4><h5 id="5-3-1-环境准备"><a href="#5-3-1-环境准备" class="headerlink" title="5.3.1 环境准备"></a>5.3.1 环境准备</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `emp` (<br>  `id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `age` <span class="hljs-type">int</span>(<span class="hljs-number">3</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,<br>  `salary` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB  <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4;<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;Tom&#x27;</span>,<span class="hljs-string">&#x27;25&#x27;</span>,<span class="hljs-string">&#x27;2300&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-string">&#x27;Jerry&#x27;</span>,<span class="hljs-string">&#x27;30&#x27;</span>,<span class="hljs-string">&#x27;3500&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;Luci&#x27;</span>,<span class="hljs-string">&#x27;25&#x27;</span>,<span class="hljs-string">&#x27;2800&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;4&#x27;</span>,<span class="hljs-string">&#x27;Jay&#x27;</span>,<span class="hljs-string">&#x27;36&#x27;</span>,<span class="hljs-string">&#x27;3500&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;5&#x27;</span>,<span class="hljs-string">&#x27;Tom2&#x27;</span>,<span class="hljs-string">&#x27;21&#x27;</span>,<span class="hljs-string">&#x27;2200&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;6&#x27;</span>,<span class="hljs-string">&#x27;Jerry2&#x27;</span>,<span class="hljs-string">&#x27;31&#x27;</span>,<span class="hljs-string">&#x27;3300&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;7&#x27;</span>,<span class="hljs-string">&#x27;Luci2&#x27;</span>,<span class="hljs-string">&#x27;26&#x27;</span>,<span class="hljs-string">&#x27;2700&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;8&#x27;</span>,<span class="hljs-string">&#x27;Jay2&#x27;</span>,<span class="hljs-string">&#x27;33&#x27;</span>,<span class="hljs-string">&#x27;3500&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;9&#x27;</span>,<span class="hljs-string">&#x27;Tom3&#x27;</span>,<span class="hljs-string">&#x27;23&#x27;</span>,<span class="hljs-string">&#x27;2400&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;10&#x27;</span>,<span class="hljs-string">&#x27;Jerry3&#x27;</span>,<span class="hljs-string">&#x27;32&#x27;</span>,<span class="hljs-string">&#x27;3100&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;11&#x27;</span>,<span class="hljs-string">&#x27;Luci3&#x27;</span>,<span class="hljs-string">&#x27;26&#x27;</span>,<span class="hljs-string">&#x27;2900&#x27;</span>);<br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> `emp` (`id`, `name`, `age`, `salary`) <span class="hljs-keyword">values</span>(<span class="hljs-string">&#x27;12&#x27;</span>,<span class="hljs-string">&#x27;Jay3&#x27;</span>,<span class="hljs-string">&#x27;37&#x27;</span>,<span class="hljs-string">&#x27;4500&#x27;</span>);<br><br><span class="hljs-keyword">create</span> index idx_emp_age_salary <span class="hljs-keyword">on</span> emp(age,salary);<br></code></pre></td></tr></table></figure>
+
+<h5 id="5-3-2-两种排序方式"><a href="#5-3-2-两种排序方式" class="headerlink" title="5.3.2 两种排序方式"></a>5.3.2 两种排序方式</h5><h6 id="1、第一种是通过对返回数据进行排序，也就是通常说的-filesort-排序，所有不是通过索引直接返回排序结果的排序都叫-FileSort-排序。"><a href="#1、第一种是通过对返回数据进行排序，也就是通常说的-filesort-排序，所有不是通过索引直接返回排序结果的排序都叫-FileSort-排序。" class="headerlink" title="1、第一种是通过对返回数据进行排序，也就是通常说的 filesort 排序，所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序。"></a>1、第一种是通过对返回数据进行排序，也就是通常说的 filesort 排序，所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序。</h6><p><img src="/images/mysql/1556335817763.png" srcset="/img/loading.gif" lazyload alt="1556335817763"> </p>
+<h6 id="2、第二种通过有序索引顺序扫描直接返回有序数据，这种情况即为-using-index，不需要额外排序，操作效率高。-覆盖索引"><a href="#2、第二种通过有序索引顺序扫描直接返回有序数据，这种情况即为-using-index，不需要额外排序，操作效率高。-覆盖索引" class="headerlink" title="2、第二种通过有序索引顺序扫描直接返回有序数据，这种情况即为 using index，不需要额外排序，操作效率高。(覆盖索引)"></a>2、第二种通过有序索引顺序扫描直接返回有序数据，这种情况即为 using index，不需要额外排序，操作效率高。(覆盖索引)</h6><p><img src="/images/mysql/1556335866539.png" srcset="/img/loading.gif" lazyload alt="1556335866539"> </p>
+<p>多字段排序</p>
+<p><img src="/images/mysql/1556336352061.png" srcset="/img/loading.gif" lazyload alt="1556336352061"> &#x2F;</p>
+<p>了解了MySQL的排序方式，优化目标就清晰了：尽量减少额外的排序，通过索引直接返回有序数据。where 条件和Order by 使用相同的索引，并且Order By 的顺序和索引顺序相同， 并且Order  by 的字段都是升序，或者都是降序。否则肯定需要额外的操作，这样就会出现FileSort。</p>
+<p>Order  by 的字段都是升序，或者都是降序：一个降序一个升序会出现FileSort</p>
+<p>Order By 的顺序和索引顺序相同：例如索引为索引1，索引2，order by 索引2，索引1</p>
+<p>show index find tablename查看，上边的例子，索引顺序为age,salary</p>
+<h5 id="5-3-3-Filesort-的优化"><a href="#5-3-3-Filesort-的优化" class="headerlink" title="5.3.3 Filesort 的优化"></a>5.3.3 Filesort 的优化</h5><p>通过创建合适的索引，能够减少 Filesort 的出现，但是在某些情况下，条件限制不能让Filesort消失，那就需要加快 Filesort的排序操作。对于Filesort ， MySQL 有两种排序算法：</p>
+<p>1、两次扫描算法 ：MySQL4.1 之前，使用该方式排序。首先根据条件取出排序字段和行指针信息，然后在排序区 sort buffer 中排序，如果sort buffer不够，则在临时表 temporary table 中存储排序结果。完成排序之后，再根据行指针回表读取记录，该操作可能会导致大量随机I&#x2F;O操作。</p>
+<p>2、一次扫描算法：一次性取出满足条件的所有字段，然后在排序区 sort  buffer 中排序后直接输出结果集。排序时内存开销较大，但是排序效率比两次扫描算法要高。</p>
+<p>MySQL 通过比较系统变量 max_length_for_sort_data 的大小和Query语句取出的字段总大小， 来判定是否那种排序算法，如果max_length_for_sort_data 更大，那么使用第二种优化之后的算法；否则使用第一种。</p>
+<p>可以适当提高 sort_buffer_size  和 max_length_for_sort_data  系统变量，来增大排序区的大小，提高排序的效率。</p>
+<p><img src="/images/mysql/1556338367593.png" srcset="/img/loading.gif" lazyload alt="1556338367593"> </p>
+<h4 id="5-4-优化group-by-语句"><a href="#5-4-优化group-by-语句" class="headerlink" title="5.4 优化group by 语句"></a>5.4 优化group by 语句</h4><p>由于GROUP BY 实际上也同样会进行排序操作，而且与ORDER BY 相比，GROUP BY 主要只是多了排序之后的分组操作。当然，如果在分组的时候还使用了其他的一些聚合函数，那么还需要一些聚合函数的计算。所以，在GROUP BY 的实现过程中，与 ORDER BY 一样也可以利用到索引。</p>
+<p>如果查询包含 group by 但是用户想要避免排序结果的消耗， 则可以执行order by null 禁止排序。如下 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">drop</span> index idx_emp_age_salary <span class="hljs-keyword">on</span> emp;<br><br>explain <span class="hljs-keyword">select</span> age,<span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> age;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556339573979.png" srcset="/img/loading.gif" lazyload alt="1556339573979">  </p>
+<p>优化后</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">explain <span class="hljs-keyword">select</span> age,<span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> age <span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> <span class="hljs-keyword">null</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556339633161.png" srcset="/img/loading.gif" lazyload alt="1556339633161">  </p>
+<p>从上面的例子可以看出，第一个SQL语句需要进行”filesort”，而第二个SQL由于order  by  null 不需要进行 “filesort”， 而上文提过Filesort往往非常耗费时间。</p>
+<p>创建索引 ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">create</span> index idx_emp_age_salary <span class="hljs-keyword">on</span> emp(age,salary)；<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556339688158.png" srcset="/img/loading.gif" lazyload alt="1556339688158"> </p>
+<h4 id="5-5-优化嵌套查询"><a href="#5-5-优化嵌套查询" class="headerlink" title="5.5 优化嵌套查询"></a>5.5 优化嵌套查询</h4><p>Mysql4.1版本之后，开始支持SQL的子查询。这个技术可以使用SELECT语句来创建一个单列的查询结果，然后把这个结果作为过滤条件用在另一个查询中。使用子查询可以一次性的完成很多逻辑上需要多个步骤才能完成的SQL操作，同时也可以避免事务或者表锁死，并且写起来也很容易。但是，有些情况下，子查询是可以被更高效的连接（JOIN）替代。</p>
+<p>示例 ，查找有角色的所有的用户信息 : </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL">explain <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> t_user <span class="hljs-keyword">where</span> id <span class="hljs-keyword">in</span> (<span class="hljs-keyword">select</span> user_id <span class="hljs-keyword">from</span> user_role );<br></code></pre></td></tr></table></figure>
+
+<p>执行计划为 : </p>
+<p><img src="/images/mysql/1556359399199.png" srcset="/img/loading.gif" lazyload alt="1556359399199">   </p>
+<p>优化后 :</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL">explain <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> t_user u , user_role ur <span class="hljs-keyword">where</span> u.id <span class="hljs-operator">=</span> ur.user_id;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556359482142.png" srcset="/img/loading.gif" lazyload alt="1556359482142">   </p>
+<p>连接(Join)查询之所以更有效率一些 ，是因为MySQL不需要在内存中创建临时表来完成这个逻辑上需要两个步骤的查询工作。</p>
+<h4 id="5-6-优化OR条件"><a href="#5-6-优化OR条件" class="headerlink" title="5.6 优化OR条件"></a>5.6 优化OR条件</h4><p>对于包含OR的查询子句，如果要利用索引，则OR之间的每个条件列都必须用到索引 ， 而且不能使用到复合索引； 如果没有索引，则应该考虑增加索引。</p>
+<p>获取 emp 表中的所有的索引 ： </p>
+<p><img src="/images/mysql/1556354464657.png" srcset="/img/loading.gif" lazyload alt="1556354464657">  </p>
+<p>示例 ： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL">explain <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> emp <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> age <span class="hljs-operator">=</span> <span class="hljs-number">30</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556354887509.png" srcset="/img/loading.gif" lazyload alt="1556354887509"></p>
+<p><img src="/images/mysql/1556354920964.png" srcset="/img/loading.gif" lazyload alt="1556354920964">  </p>
+<p>建议使用 union 替换 or ： </p>
+<p><img src="/images/mysql/1556355027728.png" srcset="/img/loading.gif" lazyload alt="1556355027728"> </p>
+<p>我们来比较下重要指标，发现主要差别是 type 和 ref 这两项</p>
+<p>type 显示的是访问类型，是较为重要的一个指标，结果值从好到坏依次是：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">system</span> &gt; const &gt; eq_ref &gt; <span class="hljs-keyword">ref</span> &gt; fulltext &gt; ref_or_null  &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; <span class="hljs-keyword">index</span> &gt; <span class="hljs-keyword">ALL</span><br></code></pre></td></tr></table></figure>
+
+<p>UNION 语句的 type 值为 ref，OR 语句的 type 值为 range，可以看到这是一个很明显的差距</p>
+<p>UNION 语句的 ref 值为 const，OR 语句的 type 值为 null，const 表示是常量值引用，非常快</p>
+<p>这两项的差距就说明了 UNION 要优于 OR 。</p>
+<h4 id="5-7-优化分页查询"><a href="#5-7-优化分页查询" class="headerlink" title="5.7 优化分页查询"></a>5.7 优化分页查询</h4><p>一般分页查询时，通过创建覆盖索引能够比较好地提高性能。一个常见又非常头疼的问题就是 limit 2000000,10  ，此时需要MySQL排序前2000010 记录，仅仅返回2000000 - 2000010 的记录，其他记录丢弃，查询排序的代价非常大 。</p>
+<p><img src="/images/mysql/1556361314783.png" srcset="/img/loading.gif" lazyload alt="1556361314783"> </p>
+<h5 id="5-7-1-优化思路一"><a href="#5-7-1-优化思路一" class="headerlink" title="5.7.1 优化思路一"></a>5.7.1 优化思路一</h5><p>在索引上完成排序分页操作，最后根据主键关联回原表查询所需要的其他列内容。</p>
+<p><img src="/images/mysql/1556416102800.png" srcset="/img/loading.gif" lazyload alt="1556416102800"> </p>
+<h5 id="5-7-2-优化思路二"><a href="#5-7-2-优化思路二" class="headerlink" title="5.7.2 优化思路二"></a>5.7.2 优化思路二</h5><p>该方案适用于主键自增的表，可以把Limit 查询转换成某个位置的查询 。</p>
+<p><img src="/images/mysql/1556363928151.png" srcset="/img/loading.gif" lazyload alt="1556363928151"> </p>
+<h4 id="5-8-使用SQL提示"><a href="#5-8-使用SQL提示" class="headerlink" title="5.8 使用SQL提示"></a>5.8 使用SQL提示</h4><p>SQL提示，是优化数据库的一个重要手段，简单来说，就是在SQL语句中加入一些人为的提示来达到优化操作的目的。</p>
+<h5 id="5-8-1-USE-INDEX"><a href="#5-8-1-USE-INDEX" class="headerlink" title="5.8.1 USE INDEX"></a>5.8.1 USE INDEX</h5><p>在查询语句中表名的后面，添加 use index 来提供希望MySQL去参考的索引列表，就可以让MySQL不再考虑其他可用的索引。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">index</span> idx_seller_name <span class="hljs-keyword">on</span> tb_seller(<span class="hljs-type">name</span>);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556370971576.png" srcset="/img/loading.gif" lazyload alt="1556370971576"> </p>
+<h5 id="5-8-2-IGNORE-INDEX"><a href="#5-8-2-IGNORE-INDEX" class="headerlink" title="5.8.2 IGNORE INDEX"></a>5.8.2 IGNORE INDEX</h5><p>如果用户只是单纯的想让MySQL忽略一个或者多个索引，则可以使用 ignore index 作为 hint 。</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">explain</span> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> tb_seller <span class="hljs-keyword">ignore</span> <span class="hljs-keyword">index</span>(idx_seller_name) <span class="hljs-keyword">where</span> name = <span class="hljs-string">&#x27;小米科技&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556371004594.png" srcset="/img/loading.gif" lazyload alt="1556371004594"> </p>
+<h5 id="5-8-3-FORCE-INDEX"><a href="#5-8-3-FORCE-INDEX" class="headerlink" title="5.8.3 FORCE INDEX"></a>5.8.3 FORCE INDEX</h5><p>为强制MySQL使用一个特定的索引，可在查询中使用 force index 作为hint 。 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs SQL"><span class="hljs-keyword">create</span> index idx_seller_address <span class="hljs-keyword">on</span> tb_seller(address);<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/mysql/1556371355788.png" srcset="/img/loading.gif" lazyload alt="1556371355788"> </p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/MySQL/" class="category-chain-item">MySQL</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Mysql高级二</div>
+      <div>http://www.muzili.ren/2022/06/11/Mysql高级-day02/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day04/" title="Mysql高级四">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Mysql高级四</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/Mysql%E9%AB%98%E7%BA%A7-day03/" title="Mysql高级三">
+                        <span class="hidden-mobile">Mysql高级三</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

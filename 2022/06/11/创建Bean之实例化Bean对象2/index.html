@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="创建Bean之实例化Bean对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二十二、创建Bean之实例化Bean对象二">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/%E5%88%9B%E5%BB%BABean%E4%B9%8B%E5%AE%9E%E4%BE%8B%E5%8C%96Bean%E5%AF%B9%E8%B1%A12/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="创建Bean之实例化Bean对象">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-11T09:48:09.978Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.978Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>二十二、创建Bean之实例化Bean对象二 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="二十二、创建Bean之实例化Bean对象二"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          17k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          141 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">二十二、创建Bean之实例化Bean对象二</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">创建Bean之实例化Bean对象二</font></div>
+
+<p>createBeanInstance(String beanName, RootBeanDefinition mbd, Object[] args)&#96; 方法，用于实例化 Bean 对象。它会根据不同情况，选择不同的实例化策略来完成 Bean 的初始化，主要包括：</p>
+<ul>
+<li>Supplier 回调：<code>obtainFromSupplier(final String beanName, final RootBeanDefinition mbd)</code> 方法。</li>
+<li>工厂方法初始化：<code>instantiateUsingFactoryMethod(String beanName, RootBeanDefinition mbd, @Nullable Object[] explicitArgs)</code> 方法。</li>
+<li>构造函数自动注入初始化：<code>autowireConstructor(final String beanName, final RootBeanDefinition mbd, Constructor[] chosenCtors, final Object[] explicitArgs)</code> 方法。</li>
+<li>默认构造函数注入：<code>instantiateBean(final String beanName, final RootBeanDefinition mbd)</code> 方法。</li>
+</ul>
+<h4 id="autowireConstructor"><a href="#autowireConstructor" class="headerlink" title="autowireConstructor()"></a><code>autowireConstructor()</code></h4><p>这个初始化方法，我们可以简单理解为是<strong>带有参数的构造方法</strong>，来初始化 Bean 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractAutowireCapableBeanFactory.java</span><br><br><span class="hljs-keyword">protected</span> BeanWrapper <span class="hljs-title function_">autowireConstructor</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd, <span class="hljs-meta">@Nullable</span> Constructor&lt;?&gt;[] ctors, <span class="hljs-meta">@Nullable</span> Object[] explicitArgs)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorResolver</span>(<span class="hljs-built_in">this</span>).autowireConstructor(beanName, mbd, ctors, explicitArgs);<br>&#125;<br><br><span class="hljs-comment">// ConstructorResolver.java</span><br><span class="hljs-keyword">public</span> BeanWrapper <span class="hljs-title function_">autowireConstructor</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd,</span><br><span class="hljs-params">    <span class="hljs-meta">@Nullable</span> Constructor&lt;?&gt;[] chosenCtors, <span class="hljs-meta">@Nullable</span> Object[] explicitArgs)</span> &#123;<br><br>    <span class="hljs-comment">// 封装 BeanWrapperImpl 对象，并完成初始化</span><br>    <span class="hljs-type">BeanWrapperImpl</span> <span class="hljs-variable">bw</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanWrapperImpl</span>();<br>    <span class="hljs-built_in">this</span>.beanFactory.initBeanWrapper(bw);<br><br>    <span class="hljs-comment">// 获得 constructorToUse、argsHolderToUse、argsToUse</span><br>    Constructor&lt;?&gt; constructorToUse = <span class="hljs-literal">null</span>;<span class="hljs-comment">// 构造函数</span><br>    <span class="hljs-type">ArgumentsHolder</span> <span class="hljs-variable">argsHolderToUse</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<span class="hljs-comment">// 构造参数</span><br>    Object[] argsToUse = <span class="hljs-literal">null</span>;<span class="hljs-comment">// 构造参数</span><br><br>    <span class="hljs-comment">// 确定构造参数</span><br>    <span class="hljs-comment">// 如果 getBean() 已经传递，则直接使用</span><br>    <span class="hljs-keyword">if</span> (explicitArgs != <span class="hljs-literal">null</span>) &#123;<br>        argsToUse = explicitArgs;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 尝试从缓存中获取</span><br>        Object[] argsToResolve = <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">synchronized</span> (mbd.constructorArgumentLock) &#123;<br>            <span class="hljs-comment">// 缓存中的构造函数或者工厂方法</span><br>            constructorToUse = (Constructor&lt;?&gt;) mbd.resolvedConstructorOrFactoryMethod;<br>            <span class="hljs-keyword">if</span> (constructorToUse != <span class="hljs-literal">null</span> &amp;&amp; mbd.constructorArgumentsResolved) &#123;<br>                <span class="hljs-comment">// Found a cached constructor...</span><br>                <span class="hljs-comment">// 缓存中的构造参数</span><br>                argsToUse = mbd.resolvedConstructorArguments;<br>                <span class="hljs-keyword">if</span> (argsToUse == <span class="hljs-literal">null</span>) &#123;<br>                    argsToResolve = mbd.preparedConstructorArguments;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 缓存中存在,则解析存储在 BeanDefinition 中的参数</span><br>        <span class="hljs-comment">// 如给定方法的构造函数 A(int ,int )，则通过此方法后就会把配置文件中的(&quot;1&quot;,&quot;1&quot;)转换为 (1,1)</span><br>        <span class="hljs-comment">// 缓存中的值可能是原始值也有可能是最终值</span><br>        <span class="hljs-keyword">if</span> (argsToResolve != <span class="hljs-literal">null</span>) &#123;<br>            argsToUse = resolvePreparedArguments(beanName, mbd, bw, constructorToUse, argsToResolve);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 没有缓存，则尝试从配置文件中获取参数</span><br>    <span class="hljs-keyword">if</span> (constructorToUse == <span class="hljs-literal">null</span> || argsToUse == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// Take specified constructors, if any.</span><br>        <span class="hljs-comment">// 如果 chosenCtors 未传入，则获取构造方法们</span><br>        Constructor&lt;?&gt;[] candidates = chosenCtors;<br>        <span class="hljs-keyword">if</span> (candidates == <span class="hljs-literal">null</span>) &#123;<br>            Class&lt;?&gt; beanClass = mbd.getBeanClass();<br>            <span class="hljs-keyword">try</span> &#123;<br>                candidates = (mbd.isNonPublicAccessAllowed() ?<br>                              beanClass.getDeclaredConstructors() : beanClass.getConstructors());<br>            &#125;<br>            <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                                <span class="hljs-string">&quot;Resolution of declared constructors on bean Class [&quot;</span> + beanClass.getName() +<br>                                                <span class="hljs-string">&quot;] from ClassLoader [&quot;</span> + beanClass.getClassLoader() + <span class="hljs-string">&quot;] failed&quot;</span>, ex);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">//创建 Bean</span><br>        <span class="hljs-keyword">if</span> (candidates.length == <span class="hljs-number">1</span> &amp;&amp; explicitArgs == <span class="hljs-literal">null</span> &amp;&amp; !mbd.hasConstructorArgumentValues()) &#123;<br>            Constructor&lt;?&gt; uniqueCandidate = candidates[<span class="hljs-number">0</span>];<br>            <span class="hljs-keyword">if</span> (uniqueCandidate.getParameterCount() == <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-keyword">synchronized</span> (mbd.constructorArgumentLock) &#123;<br>                    mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;<br>                    mbd.constructorArgumentsResolved = <span class="hljs-literal">true</span>;<br>                    mbd.resolvedConstructorArguments = EMPTY_ARGS;<br>                &#125;<br>                bw.setBeanInstance(instantiate(beanName, mbd, uniqueCandidate, EMPTY_ARGS));<br>                <span class="hljs-keyword">return</span> bw;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Need to resolve the constructor.</span><br>        <span class="hljs-comment">// 是否需要解析构造器</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">autowiring</span> <span class="hljs-operator">=</span> (chosenCtors != <span class="hljs-literal">null</span> ||<br>                              mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);<br>        <span class="hljs-comment">// 用于承载解析后的构造函数参数的值</span><br>        <span class="hljs-type">ConstructorArgumentValues</span> <span class="hljs-variable">resolvedValues</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br><br>        <span class="hljs-type">int</span> minNrOfArgs;<br>        <span class="hljs-keyword">if</span> (explicitArgs != <span class="hljs-literal">null</span>) &#123;<br>            minNrOfArgs = explicitArgs.length;<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 从 BeanDefinition 中获取构造参数，也就是从配置文件中提取构造参数</span><br>            <span class="hljs-type">ConstructorArgumentValues</span> <span class="hljs-variable">cargs</span> <span class="hljs-operator">=</span> mbd.getConstructorArgumentValues();<br>            resolvedValues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConstructorArgumentValues</span>();<br>            <span class="hljs-comment">// 解析构造函数的参数</span><br>            <span class="hljs-comment">// 将该 bean 的构造函数参数解析为 resolvedValues 对象，其中会涉及到其他 bean</span><br>            minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);<br>        &#125;<br><br>        <span class="hljs-comment">// 对构造函数进行排序处理</span><br>        <span class="hljs-comment">// public 构造函数优先参数数量降序，非public 构造函数参数数量降序</span><br>        AutowireUtils.sortConstructors(candidates);<br>        <span class="hljs-comment">// 最小参数类型权重</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">minTypeDiffWeight</span> <span class="hljs-operator">=</span> Integer.MAX_VALUE;<br>        Set&lt;Constructor&lt;?&gt;&gt; ambiguousConstructors = <span class="hljs-literal">null</span>;<br>        Deque&lt;UnsatisfiedDependencyException&gt; causes = <span class="hljs-literal">null</span>;<br><br>        <span class="hljs-comment">// 迭代所有构造函数</span><br>        <span class="hljs-keyword">for</span> (Constructor&lt;?&gt; candidate : candidates) &#123;<br>            <span class="hljs-comment">// 获取该构造函数的参数类型</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">parameterCount</span> <span class="hljs-operator">=</span> candidate.getParameterCount();<br><br>            <span class="hljs-comment">// 如果已经找到选用的构造函数或者需要的参数个数小于当前的构造函数参数个数，则终止。</span><br>            <span class="hljs-comment">// 因为，已经按照参数个数降序排列了</span><br>            <span class="hljs-keyword">if</span> (constructorToUse != <span class="hljs-literal">null</span> &amp;&amp; argsToUse != <span class="hljs-literal">null</span> &amp;&amp; argsToUse.length &gt; parameterCount) &#123;<br>                <span class="hljs-comment">// Already found greedy constructor that can be satisfied -&gt;</span><br>                <span class="hljs-comment">// do not look any further, there are only less greedy constructors left.</span><br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>            <span class="hljs-comment">// 参数个数不等，继续</span><br>            <span class="hljs-keyword">if</span> (parameterCount &lt; minNrOfArgs) &#123;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br><br>            <span class="hljs-comment">// 参数持有者 ArgumentsHolder 对象</span><br>            ArgumentsHolder argsHolder;<br>            Class&lt;?&gt;[] paramTypes = candidate.getParameterTypes();<br>            <span class="hljs-keyword">if</span> (resolvedValues != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 注释上获取参数名称</span><br>                    String[] paramNames = ConstructorPropertiesChecker.evaluate(candidate, parameterCount);<br>                    <span class="hljs-keyword">if</span> (paramNames == <span class="hljs-literal">null</span>) &#123;<br>                        <span class="hljs-comment">// 获取构造函数、方法参数的探测器</span><br>                        <span class="hljs-type">ParameterNameDiscoverer</span> <span class="hljs-variable">pnd</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.beanFactory.getParameterNameDiscoverer();<br>                        <span class="hljs-keyword">if</span> (pnd != <span class="hljs-literal">null</span>) &#123;<br>                            <span class="hljs-comment">// 通过探测器获取构造函数的参数名称</span><br>                            paramNames = pnd.getParameterNames(candidate);<br>                        &#125;<br>                    &#125;<br>                    <span class="hljs-comment">// 根据构造函数和构造参数，创建参数持有者 ArgumentsHolder 对象</span><br>                    argsHolder = createArgumentArray(beanName, mbd, resolvedValues, bw, paramTypes, paramNames,<br>                                                     getUserDeclaredConstructor(candidate), autowiring, candidates.length == <span class="hljs-number">1</span>);<br>                &#125;<br>                <span class="hljs-keyword">catch</span> (UnsatisfiedDependencyException ex) &#123;<br>                    <span class="hljs-comment">// 若发生 UnsatisfiedDependencyException 异常，添加到 causes 中。</span><br>                    <span class="hljs-keyword">if</span> (logger.isTraceEnabled()) &#123;<br>                        logger.trace(<span class="hljs-string">&quot;Ignoring constructor [&quot;</span> + candidate + <span class="hljs-string">&quot;] of bean &#x27;&quot;</span> + beanName + <span class="hljs-string">&quot;&#x27;: &quot;</span> + ex);<br>                    &#125;<br>                    <span class="hljs-comment">// Swallow and try next constructor.</span><br>                    <span class="hljs-keyword">if</span> (causes == <span class="hljs-literal">null</span>) &#123;<br>                        causes = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayDeque</span>&lt;&gt;(<span class="hljs-number">1</span>);<br>                    &#125;<br>                    causes.add(ex);<br>                    <span class="hljs-keyword">continue</span>;<span class="hljs-comment">// continue ，继续执行</span><br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 构造函数没有参数</span><br>                <span class="hljs-comment">// Explicit arguments given -&gt; arguments length must match exactly.</span><br>                <span class="hljs-keyword">if</span> (parameterCount != explicitArgs.length) &#123;<br>                    <span class="hljs-keyword">continue</span>;<br>                &#125;<br>                <span class="hljs-comment">// 根据 explicitArgs ，创建 ArgumentsHolder 对象</span><br>                argsHolder = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArgumentsHolder</span>(explicitArgs);<br>            &#125;<br><br>            <span class="hljs-comment">// isLenientConstructorResolution 判断解析构造函数的时候是否以宽松模式还是严格模式</span><br>            <span class="hljs-comment">// 严格模式：解析构造函数时，必须所有的都需要匹配，否则抛出异常</span><br>            <span class="hljs-comment">// 宽松模式：使用具有&quot;最接近的模式&quot;进行匹配</span><br>            <span class="hljs-comment">// typeDiffWeight：类型差异权重</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">typeDiffWeight</span> <span class="hljs-operator">=</span> (mbd.isLenientConstructorResolution() ?<br>                                  argsHolder.getTypeDifferenceWeight(paramTypes) : argsHolder.getAssignabilityWeight(paramTypes));<br>            <span class="hljs-comment">// Choose this constructor if it represents the closest match.</span><br>            <span class="hljs-comment">// 如果它代表着当前最接近的匹配则选择其作为构造函数</span><br>            <span class="hljs-keyword">if</span> (typeDiffWeight &lt; minTypeDiffWeight) &#123;<br>                constructorToUse = candidate;<br>                argsHolderToUse = argsHolder;<br>                argsToUse = argsHolder.arguments;<br>                minTypeDiffWeight = typeDiffWeight;<br>                ambiguousConstructors = <span class="hljs-literal">null</span>;<br>            &#125;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (constructorToUse != <span class="hljs-literal">null</span> &amp;&amp; typeDiffWeight == minTypeDiffWeight) &#123;<br>                <span class="hljs-keyword">if</span> (ambiguousConstructors == <span class="hljs-literal">null</span>) &#123;<br>                    ambiguousConstructors = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashSet</span>&lt;&gt;();<br>                    ambiguousConstructors.add(constructorToUse);<br>                &#125;<br>                ambiguousConstructors.add(candidate);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 没有可执行的工厂方法，抛出异常</span><br>        <span class="hljs-keyword">if</span> (constructorToUse == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">if</span> (causes != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-type">UnsatisfiedDependencyException</span> <span class="hljs-variable">ex</span> <span class="hljs-operator">=</span> causes.removeLast();<br>                <span class="hljs-keyword">for</span> (Exception cause : causes) &#123;<br>                    <span class="hljs-built_in">this</span>.beanFactory.onSuppressedException(cause);<br>                &#125;<br>                <span class="hljs-keyword">throw</span> ex;<br>            &#125;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                            <span class="hljs-string">&quot;Could not resolve matching constructor &quot;</span> +<br>                                            <span class="hljs-string">&quot;(hint: specify index/type/name arguments for simple parameters to avoid type ambiguities)&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ambiguousConstructors != <span class="hljs-literal">null</span> &amp;&amp; !mbd.isLenientConstructorResolution()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                            <span class="hljs-string">&quot;Ambiguous constructor matches found in bean &#x27;&quot;</span> + beanName + <span class="hljs-string">&quot;&#x27; &quot;</span> +<br>                                            <span class="hljs-string">&quot;(hint: specify index/type/name arguments for simple parameters to avoid type ambiguities): &quot;</span> +<br>                                            ambiguousConstructors);<br>        &#125;<br><br>        <span class="hljs-comment">// 将解析的构造函数加入缓存</span><br>        <span class="hljs-keyword">if</span> (explicitArgs == <span class="hljs-literal">null</span> &amp;&amp; argsHolderToUse != <span class="hljs-literal">null</span>) &#123;<br>            argsHolderToUse.storeCache(mbd, constructorToUse);<br>        &#125;<br>    &#125;<br><br>    Assert.state(argsToUse != <span class="hljs-literal">null</span>, <span class="hljs-string">&quot;Unresolved constructor arguments&quot;</span>);<br>    <span class="hljs-comment">// 创建 Bean 对象，并设置到 bw 中</span><br>    bw.setBeanInstance(instantiate(beanName, mbd, constructorToUse, argsToUse));<br>    <span class="hljs-keyword">return</span> bw;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>一句话概括：首先确定构造函数参数、构造函数，然后调用相应的初始化策略进行 bean 的初始化。关于如何确定构造函数、构造参数，该部分逻辑和 <code>instantiateUsingFactoryMethod(...)</code> 方法，基本一致。</li>
+</ul>
+<h5 id="instantiate"><a href="#instantiate" class="headerlink" title="instantiate"></a><code>instantiate</code></h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> Object <span class="hljs-title function_">instantiate</span><span class="hljs-params">(String beanName, RootBeanDefinition mbd,</span><br><span class="hljs-params">    <span class="hljs-meta">@Nullable</span> Object factoryBean, Method factoryMethod, Object[] args)</span> &#123;<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt;<br>                                                 <span class="hljs-built_in">this</span>.beanFactory.getInstantiationStrategy().instantiate(<br>    mbd, beanName, <span class="hljs-built_in">this</span>.beanFactory, factoryBean, factoryMethod, args),<br>                                                 <span class="hljs-built_in">this</span>.beanFactory.getAccessControlContext());<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.beanFactory.getInstantiationStrategy().instantiate(<br>                mbd, beanName, <span class="hljs-built_in">this</span>.beanFactory, factoryBean, factoryMethod, args);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(mbd.getResourceDescription(), beanName,<br>                                        <span class="hljs-string">&quot;Bean instantiation via factory method failed&quot;</span>, ex);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>首先，是获取实例化 Bean 的策略 InstantiationStrategy 对象。</li>
+<li>然后，调用其 <code>instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner, Constructor ctor, Object... args)</code> 方法，该方法在 SimpleInstantiationStrategy 中实现。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// SimpleInstantiationStrategy.java</span><br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">instantiate</span><span class="hljs-params">(RootBeanDefinition bd, <span class="hljs-meta">@Nullable</span> String beanName, BeanFactory owner,<span class="hljs-keyword">final</span> Constructor&lt;?&gt; ctor, Object... args)</span> &#123;<br><br>    <span class="hljs-comment">// &lt;x1&gt; 没有覆盖，直接使用反射实例化即可</span><br>    <span class="hljs-keyword">if</span> (!bd.hasMethodOverrides()) &#123;<br>        <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// use own privileged to change accessibility (when security is on)</span><br>            <span class="hljs-comment">// 设置构造方法，可访问</span><br>            AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; &#123;<br>                ReflectionUtils.makeAccessible(ctor);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>            &#125;);<br>        &#125;<br>        <span class="hljs-comment">// 通过 BeanUtils 直接使用构造器对象实例化 Bean 对象</span><br>        <span class="hljs-keyword">return</span> BeanUtils.instantiateClass(ctor, args);<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// &lt;x2&gt; 生成 CGLIB 创建的子类对象</span><br>        <span class="hljs-keyword">return</span> instantiateWithMethodInjection(bd, beanName, owner, ctor, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>&lt;1&gt;</code> 如果该 bean 没有配置 <code>lookup-method</code>、<code>replaced-method</code> 标签或者 <code>@Lookup</code> 注解，则直接通过<strong>反射</strong>的方式实例化 Bean 对象即可，方便快捷。</li>
+<li><code>&lt;2&gt;</code> 但是，如果存在需要覆盖的方法或者动态替换的方法时，则需要使用 CGLIB 进行动态代理，因为可以在创建代理的同时将动态方法织入类中。</li>
+</ul>
+<h6 id="反射创建-Bean-对象"><a href="#反射创建-Bean-对象" class="headerlink" title="反射创建 Bean 对象"></a>反射创建 Bean 对象</h6><p>调用工具类 BeanUtils 的 <code>instantiateClass(Constructor ctor, Object... args)</code> 方法，完成反射工作，创建对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-comment">// BeanUtils.java</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; T <span class="hljs-title function_">instantiateClass</span><span class="hljs-params">(Constructor&lt;T&gt; ctor, Object... args)</span> <span class="hljs-keyword">throws</span> BeanInstantiationException &#123;<br>    Assert.notNull(ctor, <span class="hljs-string">&quot;Constructor must not be null&quot;</span>);<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// 设置构造方法，可访问</span><br>        ReflectionUtils.makeAccessible(ctor);<br>        <span class="hljs-keyword">if</span> (KotlinDetector.isKotlinReflectPresent() &amp;&amp; KotlinDetector.isKotlinType(ctor.getDeclaringClass())) &#123;<br>            <span class="hljs-comment">// 使用构造方法，创建对象</span><br>            <span class="hljs-keyword">return</span> KotlinDelegate.instantiateClass(ctor, args);<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            Class&lt;?&gt;[] parameterTypes = ctor.getParameterTypes();<br>            Assert.isTrue(args.length &lt;= parameterTypes.length, <span class="hljs-string">&quot;Can&#x27;t specify more arguments than constructor parameters&quot;</span>);<br>            Object[] argsWithDefaultValues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[args.length];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span> ; i &lt; args.length; i++) &#123;<br>                <span class="hljs-keyword">if</span> (args[i] == <span class="hljs-literal">null</span>) &#123;<br>                    Class&lt;?&gt; parameterType = parameterTypes[i];<br>                    argsWithDefaultValues[i] = (parameterType.isPrimitive() ? DEFAULT_TYPE_VALUES.get(parameterType) : <span class="hljs-literal">null</span>);<br>                &#125;<br>                <span class="hljs-keyword">else</span> &#123;<br>                    argsWithDefaultValues[i] = args[i];<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">return</span> ctor.newInstance(argsWithDefaultValues);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 各种异常的翻译，最终统一抛出 BeanInstantiationException 异常</span><br>    <span class="hljs-keyword">catch</span> (InstantiationException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(ctor, <span class="hljs-string">&quot;Is it an abstract class?&quot;</span>, ex);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (IllegalAccessException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(ctor, <span class="hljs-string">&quot;Is the constructor accessible?&quot;</span>, ex);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (IllegalArgumentException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(ctor, <span class="hljs-string">&quot;Illegal arguments for constructor&quot;</span>, ex);<br>    &#125;<br>    <span class="hljs-keyword">catch</span> (InvocationTargetException ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(ctor, <span class="hljs-string">&quot;Constructor threw exception&quot;</span>, ex.getTargetException());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h6 id="CGLIB-创建-Bean-对象"><a href="#CGLIB-创建-Bean-对象" class="headerlink" title="CGLIB 创建 Bean 对象"></a>CGLIB 创建 Bean 对象</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// SimpleInstantiationStrategy.java</span><br><br><span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">instantiateWithMethodInjection</span><span class="hljs-params">(RootBeanDefinition bd, <span class="hljs-meta">@Nullable</span> String beanName, BeanFactory owner)</span> &#123;<br>	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnsupportedOperationException</span>(<span class="hljs-string">&quot;Method Injection not supported in SimpleInstantiationStrategy&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>方法默认是<strong>没有实现</strong>的，具体过程由其子类 <code>org.springframework.beans.factory.support.CglibSubclassingInstantiationStrategy</code> 来实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// CglibSubclassingInstantiationStrategy.java</span><br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">instantiateWithMethodInjection</span><span class="hljs-params">(RootBeanDefinition bd, <span class="hljs-meta">@Nullable</span> String beanName, BeanFactory owner)</span> &#123;<br>    <span class="hljs-keyword">return</span> instantiateWithMethodInjection(bd, beanName, owner, <span class="hljs-literal">null</span>);<br>&#125;<br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">protected</span> Object <span class="hljs-title function_">instantiateWithMethodInjection</span><span class="hljs-params">(RootBeanDefinition bd, <span class="hljs-meta">@Nullable</span> String beanName, BeanFactory owner, <span class="hljs-meta">@Nullable</span> Constructor&lt;?&gt; ctor, Object... args)</span> &#123;<br>    <span class="hljs-comment">// Must generate CGLIB subclass...</span><br>    <span class="hljs-comment">// 通过CGLIB生成一个子类对象</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CglibSubclassCreator</span>(bd, owner).instantiate(ctor, args);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>创建一个 CglibSubclassCreator 对象，后调用其 <code>instantiate(Constructor ctor, Object... args)</code> 方法，生成其子类对象。</p>
+<p><strong>注：</strong><code>CglibSubclassCreator</code>是个内部类。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// CglibSubclassingInstantiationStrategy.java</span><br><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">instantiate</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> Constructor&lt;?&gt; ctor, Object... args)</span> &#123;<br>    <span class="hljs-comment">// 通过 Cglib 创建一个代理类</span><br>    Class&lt;?&gt; subclass = createEnhancedSubclass(<span class="hljs-built_in">this</span>.beanDefinition);<br>    Object instance;<br>    <span class="hljs-comment">// 没有构造器，通过 BeanUtils 使用默认构造器创建一个bean实例</span><br>    <span class="hljs-keyword">if</span> (ctor == <span class="hljs-literal">null</span>) &#123;<br>        instance = BeanUtils.instantiateClass(subclass);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// 获取代理类对应的构造器对象，并实例化 bean</span><br>            Constructor&lt;?&gt; enhancedSubclassConstructor = subclass.getConstructor(ctor.getParameterTypes());<br>            instance = enhancedSubclassConstructor.newInstance(args);<br>        &#125; <span class="hljs-keyword">catch</span> (Exception ex) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(<span class="hljs-built_in">this</span>.beanDefinition.getBeanClass(),<br>                    <span class="hljs-string">&quot;Failed to invoke constructor for CGLIB enhanced subclass [&quot;</span> + subclass.getName() + <span class="hljs-string">&quot;]&quot;</span>, ex);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// SPR-10785: set callbacks directly on the instance instead of in the</span><br>    <span class="hljs-comment">// enhanced class (via the Enhancer) in order to avoid memory leaks.</span><br>    <span class="hljs-comment">// 为了避免 memory leaks 异常，直接在 bean 实例上设置回调对象</span><br>    <span class="hljs-type">Factory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> (Factory) instance;<br>    factory.setCallbacks(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Callback</span>[] &#123;NoOp.INSTANCE,<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">LookupOverrideMethodInterceptor</span>(<span class="hljs-built_in">this</span>.beanDefinition, <span class="hljs-built_in">this</span>.owner),<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReplaceOverrideMethodInterceptor</span>(<span class="hljs-built_in">this</span>.beanDefinition, <span class="hljs-built_in">this</span>.owner)&#125;);<br>    <span class="hljs-keyword">return</span> instance;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="instantiateBean-方法"><a href="#instantiateBean-方法" class="headerlink" title="instantiateBean()方法"></a><code>instantiateBean()</code>方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// AbstractAutowireCapableBeanFactory.java</span><br><br><span class="hljs-keyword">protected</span> BeanWrapper <span class="hljs-title function_">instantiateBean</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String beanName, <span class="hljs-keyword">final</span> RootBeanDefinition mbd)</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        Object beanInstance;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">BeanFactory</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>;<br>        <span class="hljs-comment">// 安全模式</span><br>        <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123;<br>            beanInstance = AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt;<br>                    <span class="hljs-comment">// 获得 InstantiationStrategy 对象，并使用它，创建 Bean 对象</span><br>                    getInstantiationStrategy().instantiate(mbd, beanName, parent),<br>                    getAccessControlContext());<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 获得 InstantiationStrategy 对象，并使用它，创建 Bean 对象</span><br>            beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);<br>        &#125;<br>        <span class="hljs-comment">// 封装 BeanWrapperImpl  并完成初始化</span><br>        <span class="hljs-type">BeanWrapper</span> <span class="hljs-variable">bw</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanWrapperImpl</span>(beanInstance);<br>        initBeanWrapper(bw);<br>        <span class="hljs-keyword">return</span> bw;<br>    &#125; <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanCreationException</span>(<br>                mbd.getResourceDescription(), beanName, <span class="hljs-string">&quot;Instantiation of bean failed&quot;</span>, ex);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="instantiate-方法"><a href="#instantiate-方法" class="headerlink" title="instantiate()方法"></a><code>instantiate()</code>方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// SimpleInstantiationStrategy.java</span><br><br><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">instantiate</span><span class="hljs-params">(RootBeanDefinition bd, <span class="hljs-meta">@Nullable</span> String beanName, BeanFactory owner)</span> &#123;<br>    <span class="hljs-comment">// Don&#x27;t override the class with CGLIB if no overrides.</span><br>    <span class="hljs-comment">// 没有覆盖，直接使用反射实例化即可</span><br>    <span class="hljs-keyword">if</span> (!bd.hasMethodOverrides()) &#123;<br>        Constructor&lt;?&gt; constructorToUse;<br>        <span class="hljs-keyword">synchronized</span> (bd.constructorArgumentLock) &#123;<br>            <span class="hljs-comment">// 获得构造方法 constructorToUse</span><br>            constructorToUse = (Constructor&lt;?&gt;) bd.resolvedConstructorOrFactoryMethod;<br>            <span class="hljs-keyword">if</span> (constructorToUse == <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">final</span> Class&lt;?&gt; clazz = bd.getBeanClass();<br>                <span class="hljs-comment">// 如果是接口，抛出 BeanInstantiationException 异常</span><br>                <span class="hljs-keyword">if</span> (clazz.isInterface()) &#123;<br>                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(clazz, <span class="hljs-string">&quot;Specified class is an interface&quot;</span>);<br>                &#125;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 从 clazz 中，获得构造方法</span><br>                    <span class="hljs-keyword">if</span> (System.getSecurityManager() != <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// 安全模式</span><br>                        constructorToUse = AccessController.doPrivileged(<br>                                (PrivilegedExceptionAction&lt;Constructor&lt;?&gt;&gt;) clazz::getDeclaredConstructor);<br>                    &#125; <span class="hljs-keyword">else</span> &#123;<br>                        constructorToUse =  clazz.getDeclaredConstructor();<br>                    &#125;<br>                    <span class="hljs-comment">// 标记 resolvedConstructorOrFactoryMethod 属性</span><br>                    bd.resolvedConstructorOrFactoryMethod = constructorToUse;<br>                &#125; <span class="hljs-keyword">catch</span> (Throwable ex) &#123;<br>                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BeanInstantiationException</span>(clazz, <span class="hljs-string">&quot;No default constructor found&quot;</span>, ex);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 通过 BeanUtils 直接使用构造器对象实例化 Bean 对象</span><br>        <span class="hljs-keyword">return</span> BeanUtils.instantiateClass(constructorToUse);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// Must generate CGLIB subclass.</span><br>        <span class="hljs-comment">// 生成 CGLIB 创建的子类对象</span><br>        <span class="hljs-keyword">return</span> instantiateWithMethodInjection(bd, beanName, owner);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>对于 <code>createBeanInstance(...)</code> 方法而言，他就是<strong>选择合适实例化策略</strong>来为 bean 创建实例对象，具体的策略有：</p>
+<ul>
+<li>Supplier 回调方式</li>
+<li>工厂方法初始化</li>
+<li>构造函数自动注入初始化</li>
+<li>默认构造函数注入。</li>
+</ul>
+<p>其中，工厂方法初始化和构造函数自动注入初始化两种方式<strong>最为复杂</strong>，主要是因为构造函数和构造参数的不确定性，Spring 需要花大量的精力来确定构造函数和构造参数，如果确定了则好办，直接选择实例化策略即可。</p>
+<p>当然，在实例化的时候会根据是否有需要覆盖或者动态替换掉的方法，因为存在覆盖或者织入的话需要创建动态代理将方法织入，这个时候就只能选择 CGLIB 的方式来实例化，否则直接利用反射的方式即可，方便快捷。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/spring/IOC/" class="category-chain-item">IOC</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>二十二、创建Bean之实例化Bean对象二</div>
+      <div>http://www.muzili.ren/2022/06/11/创建Bean之实例化Bean对象2/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E5%8A%A0%E8%BD%BDBeanDefinition/" title="三、加载BeanDefinition">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">三、加载BeanDefinition</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E5%88%9B%E5%BB%BABean%E4%B9%8B%E5%B1%9E%E6%80%A7%E5%A1%AB%E5%85%85/" title="二十三、创建Bean之属性填充">
+                        <span class="hidden-mobile">二十三、创建Bean之属性填充</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

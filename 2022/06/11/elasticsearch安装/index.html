@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="elasticsearch、kibana、分词器安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elasticsearch安装">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/elasticsearch%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="elasticsearch、kibana、分词器安装">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-11T09:48:09.973Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.973Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="elasticsearch">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>elasticsearch安装 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="elasticsearch安装"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">elasticsearch安装</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">elasticsearch安装</font></div>
+
+<p>elasticsearch、kibana、分词器安装，同时设置elasticsearch、kibana账号密码。</p>
+<h3 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h3><p>防止开启防火墙，安装完成后未设置端口导致访问异常，所以优先放开对应端口。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs routeros">firewall-cmd <span class="hljs-attribute">--zone</span>=public <span class="hljs-attribute">--add-port</span>=9200/tcp --permanent<br>firewall-cmd <span class="hljs-attribute">--zone</span>=public <span class="hljs-attribute">--add-port</span>=9300/tcp --permanent<br>firewall-cmd <span class="hljs-attribute">--zone</span>=public <span class="hljs-attribute">--add-port</span>=5601/tcp --permanent<br>firewall-cmd --list-ports<br><span class="hljs-comment"># 重新加载</span><br>firewall-cmd --reload<br></code></pre></td></tr></table></figure>
+
+<h3 id="elasticsearch"><a href="#elasticsearch" class="headerlink" title="elasticsearch"></a>elasticsearch</h3><h4 id="获取elasticsearch相关配置"><a href="#获取elasticsearch相关配置" class="headerlink" title="获取elasticsearch相关配置"></a>获取elasticsearch相关配置</h4><p>直接安装，未映射目录。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> run -d --name elasticsearch -e <span class="hljs-string">&quot;discovery.type=single-node&quot;</span> -p <span class="hljs-number">9200</span>:<span class="hljs-number">9200</span> -p <span class="hljs-number">9300</span>:<span class="hljs-number">9300</span> -e ES_JAVA_OPTS=<span class="hljs-string">&quot;-Xms256m -Xmx256m&quot;</span> elasticsearch:<span class="hljs-number">7</span>.<span class="hljs-number">16</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>copy容器内的配置文件到本地指定文件夹（之后映射到docker内指定目录）</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker cp elasticsearch:<span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/elasticsearch/</span>config<span class="hljs-regexp">/ /</span>etc<span class="hljs-regexp">/local/</span>docker<span class="hljs-regexp">/elasticsearch/</span>conf<br></code></pre></td></tr></table></figure>
+
+<h4 id="编辑配置文件elasticsearch-yml"><a href="#编辑配置文件elasticsearch-yml" class="headerlink" title="编辑配置文件elasticsearch.yml"></a>编辑配置文件elasticsearch.yml</h4><p>进入配置文件目录，编辑elasticsearch.yml文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">cd <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>elasticsearch/conf<br>vim elasticsearch.yml<br></code></pre></td></tr></table></figure>
+
+<p>新增如下内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 添加下面两行允许跨域使用，等会使用elasticsearch-head要用到</span><br><span class="hljs-attr">http.cors.enabled:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">http.cors.allow-origin:</span> <span class="hljs-string">&quot;*&quot;</span><br><span class="hljs-comment"># 配置需校验密码</span><br><span class="hljs-attr">http.cors.allow-headers:</span> <span class="hljs-string">Authorization</span><br><span class="hljs-attr">xpack.security.enabled:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">xpack.security.transport.ssl.enabled:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="给data和conf目录授权"><a href="#给data和conf目录授权" class="headerlink" title="给data和conf目录授权"></a>给data和conf目录授权</h4><p>当然data和conf都是先创建好的，不授权的话，安装启动的时候会因为没有权限导致异常，或者不安装在<kbd>etc</kbd>目录，安装在<kbd>mnt</kbd>目录。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">chmod <span class="hljs-number">777</span> <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>elasticsearch/data<br>chmod <span class="hljs-number">777</span> <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>elasticsearch/conf<br></code></pre></td></tr></table></figure>
+
+<h4 id="重新安装elasticsearch"><a href="#重新安装elasticsearch" class="headerlink" title="重新安装elasticsearch"></a>重新安装elasticsearch</h4><p>先暂停之前的容器并删除。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arduino">docker stop elasticsearch<br>docker rm elasticsearch<br></code></pre></td></tr></table></figure>
+
+<p>重新安装，并映射elasticsearch的数据和配置目录。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker run -d --restart=always --name elasticsearch -e <span class="hljs-string">&quot;discovery.type=single-node&quot;</span> -p <span class="hljs-number">9200</span>:<span class="hljs-number">9200</span> -p <span class="hljs-number">9300</span>:<span class="hljs-number">9300</span> -v <span class="hljs-regexp">/etc/</span>localtime:<span class="hljs-regexp">/etc/</span>localtime -v <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>elasticsearch<span class="hljs-regexp">/conf/</span>:<span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/elasticsearch/</span>config<span class="hljs-regexp">/ -v /</span>etc<span class="hljs-regexp">/local/</span>docker<span class="hljs-regexp">/elasticsearch/</span>data:<span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/elasticsearch/</span>data -v <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>elasticsearch<span class="hljs-regexp">/plugins:/u</span>sr<span class="hljs-regexp">/share/</span>elasticsearch/plugins -e ES_JAVA_OPTS=<span class="hljs-string">&quot;-Xms256m -Xmx256m&quot;</span> elasticsearch:<span class="hljs-number">7.16</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h4><p>启动容器，并进入容器内部。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs applescript">docker restart elasticsearch <br>docker exec -<span class="hljs-keyword">it</span> elasticsearch bash<br></code></pre></td></tr></table></figure>
+
+<p>进入bin目录，然后开始设置密码，设置会提示一段话，可以看到elasticsearch系列的所有账号都会一并设置密码，账号一定要记住（因为云服务器过小，已经开了好几个服务，再开一个es会导致服务器卡死，故未截图）。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">cd</span> bin<br>elastic<span class="hljs-built_in">search-setup</span><span class="hljs-literal">-passwords</span> interactive  直接y回车开始输入密码（elasticsearch账号elastic，kibana使用的是kibana_system），密码******<br></code></pre></td></tr></table></figure>
+
+<h4 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h4><p>直接浏览器打开<kbd>服务器域名或者IP:9200</kbd>，或者直接命令行<kbd>curl 服务器域名或者IP:9200</kbd>，看到版本信息就是安装成功。</p>
+<h3 id="kibana"><a href="#kibana" class="headerlink" title="kibana"></a>kibana</h3><p>安装如上，优先获取初始化的配置（容器内部目录&#x2F;usr&#x2F;share&#x2F;kibana&#x2F;config&#x2F;），不做阐述。</p>
+<p>假如没有相关目录，直接执行以下步骤。</p>
+<h4 id="设置配置文件"><a href="#设置配置文件" class="headerlink" title="设置配置文件"></a>设置配置文件</h4><p>本地新建kibana的目录，并创建配置文件。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">mkdir -p <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>kibana/conf<br>cd <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>kibana/conf<br>touch kibana.yml<br></code></pre></td></tr></table></figure>
+
+<p>编辑kibana.yml并设置elasticsearch账号密码</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-meta">#</span><br><span class="hljs-meta"># ** THIS IS AN AUTO-GENERATED FILE **</span><br><span class="hljs-meta">#</span><br><br><span class="hljs-meta"># Default Kibana configuration for docker target</span><br><span class="hljs-meta"># 不配置的话浏览器打开kibana，右下角会提示警告未设置publicBaseUrl</span><br><span class="hljs-symbol">server.publicBaseUrl:</span> <span class="hljs-string">&quot;kibana请求的地址&quot;</span><br><span class="hljs-symbol">server.name:</span> kibana<br><span class="hljs-symbol">server.host:</span> <span class="hljs-string">&quot;0.0.0.0&quot;</span><br><span class="hljs-symbol">elasticsearch.hosts:</span> [ <span class="hljs-string">&quot;自己服务地址&quot;</span> ]<br><span class="hljs-symbol">monitoring.ui.container.elasticsearch.enabled:</span> true<br><span class="hljs-symbol">elasticsearch.username:</span> <span class="hljs-string">&quot;kibana_system&quot;</span><br><span class="hljs-symbol">elasticsearch.password:</span> <span class="hljs-string">&quot;******&quot;</span><br><span class="hljs-symbol">xpack.security.sessionTimeout:</span> <span class="hljs-number">600000</span><br><span class="hljs-meta"># 以下两个配置不设置启动也会有警告</span><br><span class="hljs-symbol">xpack.security.encryptionKey:</span> <span class="hljs-string">&quot;************************************&quot;</span>  <span class="hljs-meta">#任意32或者以上的字符串</span><br><span class="hljs-symbol">xpack.reporting.encryptionKey:</span> <span class="hljs-string">&quot;******&quot;</span><br><span class="hljs-symbol">i18n.locale:</span> <span class="hljs-string">&quot;zh-CN&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="安装kibana"><a href="#安装kibana" class="headerlink" title="安装kibana"></a>安装kibana</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker run -d --name=kibana --restart=always -p <span class="hljs-number">5601</span>:<span class="hljs-number">5601</span> -v <span class="hljs-regexp">/etc/</span>localtime:<span class="hljs-regexp">/etc/</span>localtime -v <span class="hljs-regexp">/etc/</span>local<span class="hljs-regexp">/docker/</span>kibana<span class="hljs-regexp">/conf:/u</span>sr<span class="hljs-regexp">/share/</span>kibana<span class="hljs-regexp">/config/</span> kibana:<span class="hljs-number">7.16</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="验证-1"><a href="#验证-1" class="headerlink" title="验证"></a>验证</h4><p>直接浏览器打开<kbd>服务器域名或者IP:5601</kbd>，会让输入账号密码。</p>
+<h3 id="elasticsearch-analysis-ik"><a href="#elasticsearch-analysis-ik" class="headerlink" title="elasticsearch-analysis-ik"></a>elasticsearch-analysis-ik</h3><p>进入容器内部，切到elasticsearch的bin目录，然后执行如下命令（切换到自己需要的版本）:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">elasticsearch-plugin install https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/medcl/</span>elasticsearch-analysis-ik<span class="hljs-regexp">/releases/</span>download<span class="hljs-regexp">/v7.16.1/</span>elasticsearch-analysis-ik-<span class="hljs-number">7.16</span>.<span class="hljs-number">1</span>.zip<br></code></pre></td></tr></table></figure>
+
+
+
+<p>至此，elasticsearch、kibana、ik安装完毕，因为安装过程整理了笔记，但是没有截图，故没有验证过程和截图。</p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/elasticsearch/" class="category-chain-item">elasticsearch</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/elasticsearch/">#elasticsearch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>elasticsearch安装</div>
+      <div>http://www.muzili.ren/2022/06/11/elasticsearch安装/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/intrrup%E3%80%81interrupted%E3%80%81isInterrupted/" title="interrupt、interrupted和isInterrupted的区别">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">interrupt、interrupted和isInterrupted的区别</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/" title="nginx动静分离">
+                        <span class="hidden-mobile">nginx动静分离</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,719 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前端从后端获取minio签名地址，直传到minio服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="el-upload + 前端直传minio(通过签名地址)">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/11/el-upload%20+%20%E5%89%8D%E7%AB%AF%E7%9B%B4%E4%BC%A0minio/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="前端从后端获取minio签名地址，直传到minio服务器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/minio/post%E8%AF%B7%E6%B1%82%E6%8A%A5%E9%94%99.png">
+<meta property="og:image" content="http://www.muzili.ren/images/minio/ajax-post.png">
+<meta property="og:image" content="http://www.muzili.ren/images/minio/%E4%B8%8A%E4%BC%A0.png">
+<meta property="og:image" content="http://www.muzili.ren/images/minio/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E4%BC%A0%E6%88%90%E5%8A%9F.png">
+<meta property="og:image" content="http://www.muzili.ren/images/minio/bucket%E6%9D%83%E9%99%90.png">
+<meta property="article:published_time" content="2022-06-11T09:48:09.972Z">
+<meta property="article:modified_time" content="2022-06-11T09:48:09.972Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="minio">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/minio/post%E8%AF%B7%E6%B1%82%E6%8A%A5%E9%94%99.png">
+  
+  
+  
+  <title>el-upload + 前端直传minio(通过签名地址) - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="el-upload + 前端直传minio(通过签名地址)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-11 17:48" pubdate>
+          2022年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">el-upload + 前端直传minio(通过签名地址)</h1>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">el-upload + 前端直传minio(通过签名地址)</font></div>
+
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><p>前端请求后端获取预签名url（其中包含了上传到AWS S3所需要的认证信息），然后通过该签名url将文件直传到minio服务器。</p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>minio签名url只支持put请求，使用其他请求会提示错误的请求方法：</p>
+<p><img src="/images/minio/post%E8%AF%B7%E6%B1%82%E6%8A%A5%E9%94%99.png" srcset="/img/loading.gif" lazyload alt="post请求报错"></p>
+<p>前端使用el-upload，默认调用其内部action，通过查看源码，可以看到el-upload组件引用了upload组件，进入upload发现还引入了ajax组件，在ajax组件的upload方法内部，可以看到请求方式是<kbd>post</kbd>请求（vue不熟悉，具体原理不清楚，只是站在自己理解的角度）：</p>
+<p><img src="/images/minio/ajax-post.png" srcset="/img/loading.gif" lazyload alt="ajax-post请求"></p>
+<p>故通过minio签名url直传方式不能成功。</p>
+<h4 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h4><p>最后为了使用el-upload，只好折中，引入axios，即<kbd>el-upload + axios + minio</kbd>上传方式。</p>
+<h3 id="后端生成签名地址"><a href="#后端生成签名地址" class="headerlink" title="后端生成签名地址"></a>后端生成签名地址</h3><p>minio具体相关信息在yml文件配置，或者交给nacos管理，不做讨论。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.jivehaha.gulimall.thirdparty.controller;<br><br><span class="hljs-keyword">import</span> com.jievhaha.common.utils.Constant;<br><span class="hljs-keyword">import</span> com.jievhaha.common.utils.R;<br><span class="hljs-keyword">import</span> io.minio.GetPresignedObjectUrlArgs;<br><span class="hljs-keyword">import</span> io.minio.MinioClient;<br><span class="hljs-keyword">import</span> io.minio.http.Method;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.GetMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestParam;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-keyword">import</span> java.time.LocalDateTime;<br><span class="hljs-keyword">import</span> java.time.format.DateTimeFormatter;<br><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.LinkedHashMap;<br><span class="hljs-keyword">import</span> java.util.Map;<br><span class="hljs-keyword">import</span> java.util.UUID;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Author</span>: jievhaha</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Date</span>: 2022/5/20 8:56</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MinioController</span> &#123;<br>    <span class="hljs-meta">@Value(&quot;$&#123;minio.endpoint&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String endpoint;<br>    <span class="hljs-meta">@Value(&quot;$&#123;minio.accessKey&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String accessKey;<br>    <span class="hljs-meta">@Value(&quot;$&#123;minio.secretKey&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String secretKey;<br>    <span class="hljs-meta">@Value(&quot;$&#123;minio.bucket&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String bucket;<br><br>    <span class="hljs-meta">@GetMapping(&quot;/minio/policy&quot;)</span><br>    <span class="hljs-keyword">private</span> R <span class="hljs-title function_">policy</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;pic&quot;)</span>String pic)</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">name</span>  <span class="hljs-operator">=</span> UUID.randomUUID() + <span class="hljs-string">&quot;-&quot;</span> + pic; <span class="hljs-comment">// 修改文件名防止上传相同文件被覆盖</span><br>        <span class="hljs-type">DateTimeFormatter</span> <span class="hljs-variable">dateTimeFormatter</span> <span class="hljs-operator">=</span> DateTimeFormatter.ofPattern(<span class="hljs-string">&quot;yyyy-MM-dd&quot;</span>);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">format</span> <span class="hljs-operator">=</span> dateTimeFormatter.format(LocalDateTime.now());<br>        <span class="hljs-type">String</span> <span class="hljs-variable">dir</span> <span class="hljs-operator">=</span> format; <span class="hljs-comment">// 用户上传文件时指定的前缀，即上传目录。</span><br>        pic = dir + <span class="hljs-string">&quot;/&quot;</span> + name;<span class="hljs-comment">// 文件上传目录+名称</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">path</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;/&quot;</span> + bucket + <span class="hljs-string">&quot;/&quot;</span> +  pic;<span class="hljs-comment">// 该值暂没用到，前端不熟直接使用没用域名的图片地址不知道怎么处理</span><br><br>        Map&lt;String, String&gt; respMap=<span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br><br>            <span class="hljs-type">MinioClient</span> <span class="hljs-variable">minioClient</span> <span class="hljs-operator">=</span> MinioClient.builder().endpoint(endpoint)<br>                    .credentials(accessKey,secretKey).build();<br>            Map&lt;String, String&gt; reqParams = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>            reqParams.put(<span class="hljs-string">&quot;response-content-type&quot;</span>, <span class="hljs-string">&quot;application/json&quot;</span>);<br>            url = minioClient.getPresignedObjectUrl(<br>                    GetPresignedObjectUrlArgs.builder()<br>                            .method(Method.PUT)<span class="hljs-comment">//这里必须是PUT，如果是GET的话就是文件访问地址了。如果是POST上传会报错.</span><br>                            .bucket(bucket)<br>                            .object(pic)<br>                            .expiry(<span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">24</span>)<br>                            .extraQueryParams(reqParams)<br>                            .build());<br>            System.out.println(url); <span class="hljs-comment">// 前端直传需要的url地址</span><br>            respMap= <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashMap</span>&lt;&gt;();<br>            respMap.put(<span class="hljs-string">&quot;name&quot;</span>, name);<br>            respMap.put(<span class="hljs-string">&quot;host&quot;</span>, url);<br>            respMap.put(<span class="hljs-string">&quot;path&quot;</span>, path);<br>            respMap.put(<span class="hljs-string">&quot;url&quot;</span>, Constant.MINIO_URL + path);<span class="hljs-comment">// Constant.MINIO_URL自己的minio服务器地址</span><br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            System.out.println(<span class="hljs-string">&quot;Error occurred: &quot;</span> + e);<br>        &#125;<br>        <span class="hljs-keyword">return</span> R.ok().put(<span class="hljs-string">&quot;data&quot;</span>, respMap);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="el-upload-axios"><a href="#el-upload-axios" class="headerlink" title="el-upload + axios"></a>el-upload + axios</h3><h4 id="引入axios"><a href="#引入axios" class="headerlink" title="引入axios"></a>引入axios</h4><p>安装axios：</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs q">npm install axios --<span class="hljs-built_in">save</span>-<span class="hljs-built_in">dev</span><br></code></pre></td></tr></table></figure>
+
+<p>在main.js引用axios</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">import axios from <span class="hljs-string">&#x27;axios&#x27;</span>;<br>Vue.prototype.<span class="hljs-variable">$axios</span> = axios <span class="hljs-regexp">//</span>全局注册，使用方法为:this.<span class="hljs-variable">$axios</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="前端获取签名url"><a href="#前端获取签名url" class="headerlink" title="前端获取签名url"></a>前端获取签名url</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> http <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@/utils/httpRequest.js&#x27;</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">policy</span>(<span class="hljs-params">pic</span>) &#123;<br>   <span class="hljs-keyword">return</span>  <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve,reject</span>)=&gt;</span>&#123;<br>        <span class="hljs-title function_">http</span>(&#123;<br>            <span class="hljs-attr">url</span>: http.<span class="hljs-title function_">adornUrl</span>(<span class="hljs-string">&quot;/thirdparty/minio/policy&quot;</span>),<br>            <span class="hljs-attr">method</span>: <span class="hljs-string">&quot;get&quot;</span>,<br>            <span class="hljs-attr">params</span>: http.<span class="hljs-title function_">adornParams</span>(&#123;pic&#125;)<br>        &#125;).<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">&#123; data &#125;</span>) =&gt;</span> &#123;<br>            <span class="hljs-title function_">resolve</span>(data);<br>        &#125;)<br>    &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="上传组件"><a href="#上传组件" class="headerlink" title="上传组件"></a>上传组件</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>  &lt;div&gt;<br>    &lt;el-upload<br>      action = &#x27;&#x27;<br>      list-type=&quot;picture&quot;<br>      :multiple=&quot;false&quot; :show-file-list=&quot;showFileList&quot;<br>      :file-list=&quot;fileList&quot;<br>      :before-upload=&quot;beforeUpload&quot;<br>      :on-remove=&quot;handleRemove&quot;<br>      :on-success=&quot;handleUploadSuccess&quot;<br>      :on-preview=&quot;handlePreview&quot;&gt;<br>      &lt;el-button size=&quot;small&quot; type=&quot;primary&quot;&gt;点击上传&lt;/el-button&gt;<br>      &lt;div slot=&quot;tip&quot; class=&quot;el-upload__tip&quot;&gt;只能上传jpg/png文件，且不超过10MB&lt;/div&gt;<br>    &lt;/el-upload&gt;<br>    &lt;el-dialog :visible.sync=&quot;dialogVisible&quot;&gt;<br>      &lt;img width=&quot;100%&quot; :src=&quot;fileList[0].url&quot; alt=&quot;&quot;&gt;<br>    &lt;/el-dialog&gt;<br>  &lt;/div&gt;<br>&lt;/template&gt;<br>&lt;script&gt;<br>   import &#123;policy&#125; from &#x27;./policy_minio&#x27;<br>  export default &#123;<br>    name: &#x27;singleUpload&#x27;,<br>    props: &#123;<br>      value: String<br>    &#125;,<br>    computed: &#123;<br>      imageUrl() &#123;<br>        return this.value;<br>      &#125;,<br>      imageName() &#123;<br>        if (this.value != null &amp;&amp; this.value !== &#x27;&#x27;) &#123;<br>          return this.value.substring(this.value.lastIndexOf(&quot;/&quot;) + 1);<br>        &#125; else &#123;<br>          return null;<br>        &#125;<br>      &#125;,<br>      fileList() &#123;<br>        return [&#123;<br>          name: this.imageName,<br>          url: this.imageUrl<br>        &#125;]<br>      &#125;,<br>      showFileList: &#123;<br>        get: function () &#123;<br>          return this.value !== null &amp;&amp; this.value !== &#x27;&#x27;&amp;&amp; this.value!==undefined;<br>        &#125;,<br>        set: function (newValue) &#123;<br>        &#125;<br>      &#125;<br>    &#125;,<br>    data() &#123;<br>      return &#123;<br>        dialogVisible: false<br>      &#125;;<br>    &#125;,<br>    methods: &#123;<br>      emitInput(val) &#123;<br>        this.$emit(&#x27;input&#x27;, val)<br>      &#125;,<br>      handleRemove(file, fileList) &#123;<br>        this.emitInput(&#x27;&#x27;);<br>      &#125;,<br>      handlePreview(file) &#123;<br>        this.dialogVisible = true;<br>      &#125;,<br>      beforeUpload(file) <br>        // 上传之前先调用policy_minio组件的policy方法获取签名url<br>        return new Promise((resolve, reject) =&gt; &#123;<br>          policy(file.name).then(response =&gt; &#123;<br>            let url = response.data.url;<br>            //将文件名改为后台返回的（原文件名前拼了段uuid），不然同名文件会覆盖<br>            let newFileName = response.data.name;<br>            let imageType = &quot;image/&quot; + newFileName.substring(newFileName.lastIndexOf(&quot;.&quot;) + 1);<br>            let newFile = new File([file], response.data.name,&#123;type:imageType&#125;);<br>            this.$axios.request(&#123;<br>              url: response.data.host,<br>              method: &#x27;put&#x27;,<br>              data: newFile<br>            &#125;).then((res)=&gt; &#123;<br>              this.showFileList = true;<br>              this.fileList.pop();<br>              this.fileList.push(&#123;name: file.name, url: url&#125;);<br>              this.emitInput(this.fileList[0].url);<br>            &#125;).catch(()=&gt; &#123;<br>              console.log(&quot;响应数据:上传失败&quot;);<br>            &#125;)<br><br>          &#125;).catch(err =&gt; &#123;<br>            console.log(JSON.stringify(err));<br>            reject(false)<br>          &#125;)<br>        &#125;)<br>      &#125;,<br>      handleUploadSuccess(res, file) &#123;<br>      &#125;<br>    &#125;<br>  &#125;<br>&lt;/script&gt;<br>&lt;style&gt;<br><br>&lt;/style&gt;<br></code></pre></td></tr></table></figure>
+
+<p>着重点在<kbd>beforeUpload</kbd>方法，上传之前先调用policy_minio组件的policy方法获取签名url，然后再通过axios组件上传（假如使用FormData对象传递，最后会发现上传成功后，文件大小改变，且打开失败，故直接上传文件对象）。</p>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p>通过组件上传，上传成功预览。</p>
+<p><img src="/images/minio/%E4%B8%8A%E4%BC%A0.png" srcset="/img/loading.gif" lazyload alt="上传并预览"></p>
+<p>上传成功后服务器文件。</p>
+<p><img src="/images/minio/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E4%BC%A0%E6%88%90%E5%8A%9F.png" srcset="/img/loading.gif" lazyload alt="服务器上传成功"></p>
+<p>注意：需要正常展示下载文件需要修改对应bucket权限，否则直接通过文件在服务器的路径访问，会直接进入文件夹，新增<kbd>read and write</kbd>权限。</p>
+<p><img src="/images/minio/bucket%E6%9D%83%E9%99%90.png" srcset="/img/loading.gif" lazyload alt="bucket权限"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/minio/" class="category-chain-item">minio</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/minio/">#minio</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>el-upload + 前端直传minio(通过签名地址)</div>
+      <div>http://www.muzili.ren/2022/06/11/el-upload + 前端直传minio/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/11/nginx%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB/" title="nginx动静分离">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">nginx动静分离</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/Volatile/" title="Volatile简介">
+                        <span class="hidden-mobile">Volatile简介</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
