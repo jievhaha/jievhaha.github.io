@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Docker安装mongodb，搭建副本集">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker-mongodb副本集">
+<meta property="og:url" content="http://www.muzili.ren/2022/06/12/Docker-mongodb%E5%89%AF%E6%9C%AC%E9%9B%86/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="Docker安装mongodb，搭建副本集">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-12T10:08:08.933Z">
+<meta property="article:modified_time" content="2022-06-12T11:04:36.524Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="mongodb">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Docker-mongodb副本集 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Docker-mongodb副本集"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-12 18:08" pubdate>
+          2022年6月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Docker-mongodb副本集</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年6月12日 晚上
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">Docker-mongodb副本集</font></div>
+
+<p><strong>注：</strong> <em>已经过实测，如果启动失败，注意权限问题。</em></p>
+<p>虽然是创建mongodb副本集，其实第一步就是mongodb的docker安装。</p>
+<h3 id="副本集创建-配置"><a href="#副本集创建-配置" class="headerlink" title="副本集创建-配置"></a>副本集创建-配置</h3><p>一台作为主库，其他两台作为副本。</p>
+<h4 id="宿主机创建待映射目录"><a href="#宿主机创建待映射目录" class="headerlink" title="宿主机创建待映射目录"></a>宿主机创建待映射目录</h4><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mkdir</span> -p /mnt/environment/mongodb/<span class="hljs-number">2701</span>&#123;<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;/data<br><span class="hljs-attribute">mkdir</span> -p /mnt/environment/mongodb/<span class="hljs-number">2701</span>&#123;<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;/conf<br><span class="hljs-attribute">mkdir</span> -p /mnt/environment/mongodb/<span class="hljs-number">2701</span>&#123;<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;/log<br></code></pre></td></tr></table></figure>
+
+<h4 id="宿主机新建配置文件"><a href="#宿主机新建配置文件" class="headerlink" title="宿主机新建配置文件"></a>宿主机新建配置文件</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27017</span><span class="hljs-regexp">/conf/m</span>ongodb.conf<br>vim <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27018</span><span class="hljs-regexp">/conf/m</span>ongodb.conf<br>vim <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27019</span><span class="hljs-regexp">/conf/m</span>ongodb.conf<br></code></pre></td></tr></table></figure>
+
+<p>各配置文件新增如下内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment">#端口</span><br><span class="hljs-attr">port</span>=<span class="hljs-number">27017</span><br><span class="hljs-comment">#数据库文件存放目录</span><br><span class="hljs-attr">dbpath</span>=/data/db<br><span class="hljs-comment">#日志文件存放路径，******日志切记设置权限，权限，权限，不然会一直启动失败（正常是不需要的因为我宿主机所有文件放在了etc目录，所以会出现各种权限问题）******</span><br><span class="hljs-attr">logpath</span>=/var/log/mongodb/mongod.log<br><span class="hljs-comment">#使用追加方式写日志</span><br><span class="hljs-attr">logappend</span>=<span class="hljs-literal">true</span><br><span class="hljs-comment">#以守护线程的方式运行，创建服务器进程,******以守护线程运行日志，导致主进程退出，暂未找到原因******</span><br><span class="hljs-comment">#fork=true</span><br><span class="hljs-comment">#最大同时连接数</span><br><span class="hljs-attr">maxConns</span>=<span class="hljs-number">100</span><br><span class="hljs-comment">#每次写入会记录一条操作日志</span><br><span class="hljs-attr">journal</span>=<span class="hljs-literal">true</span><br><span class="hljs-comment">#存储引擎有mmapv1、wiredTiger、mongorocks</span><br><span class="hljs-attr">storageEngine</span>=wiredTiger<br><span class="hljs-comment">#访问IP</span><br><span class="hljs-attr">bind_ip</span>=<span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span><br><span class="hljs-comment"># 副本集名称</span><br><span class="hljs-attr">replSet</span>=test<br><span class="hljs-comment">#不启用验证</span><br><span class="hljs-attr">noauth</span>=<span class="hljs-literal">true</span><br><span class="hljs-comment">#auth=true</span><br><span class="hljs-comment">#keyFile=/data/configdb/keyfile</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="副本集创建-启动"><a href="#副本集创建-启动" class="headerlink" title="副本集创建-启动"></a>副本集创建-启动</h3><ol>
+<li>通过不同的容器名称，映射不同的端口和挂载不同的目录，分别启动三个mongodb实例：</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># mongodb1，端口号:27017</span><br>docker run -d --privileged -p <span class="hljs-number">27017</span>:<span class="hljs-number">27017</span> -v <span class="hljs-regexp">/etc/</span>localtime:<span class="hljs-regexp">/etc/</span>localtime -v <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27017</span><span class="hljs-regexp">/data:/</span>data<span class="hljs-regexp">/db -v /m</span>nt<span class="hljs-regexp">/environment/m</span>ongodb<span class="hljs-regexp">/27017/</span>conf:<span class="hljs-regexp">/data/</span>configdb -v <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27017</span><span class="hljs-regexp">/log:/</span>var<span class="hljs-regexp">/log/m</span>ongodb<span class="hljs-regexp">/ --name mongodb1  mongo:latest -f /</span>data<span class="hljs-regexp">/configdb/m</span>ongodb.conf<br><span class="hljs-comment"># mongodb2，端口号:27018</span><br>docker run -d --privileged -p <span class="hljs-number">27018</span>:<span class="hljs-number">27017</span> -v <span class="hljs-regexp">/etc/</span>localtime:<span class="hljs-regexp">/etc/</span>localtime -v <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27018</span><span class="hljs-regexp">/data:/</span>data<span class="hljs-regexp">/db -v /m</span>nt<span class="hljs-regexp">/environment/m</span>ongodb<span class="hljs-regexp">/27018/</span>conf:<span class="hljs-regexp">/data/</span>configdb -v <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27018</span><span class="hljs-regexp">/log:/</span>var<span class="hljs-regexp">/log/m</span>ongodb<span class="hljs-regexp">/ --name mongodb2  mongo:latest -f /</span>data<span class="hljs-regexp">/configdb/m</span>ongodb.conf<br><span class="hljs-comment"># mongodb3，端口号:27019</span><br>docker run -d --privileged -p <span class="hljs-number">27019</span>:<span class="hljs-number">27017</span> -v <span class="hljs-regexp">/etc/</span>localtime:<span class="hljs-regexp">/etc/</span>localtime -v <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27019</span><span class="hljs-regexp">/data:/</span>data<span class="hljs-regexp">/db -v /m</span>nt<span class="hljs-regexp">/environment/m</span>ongodb<span class="hljs-regexp">/27019/</span>conf:<span class="hljs-regexp">/data/</span>configdb -v <span class="hljs-regexp">/mnt/</span>environment<span class="hljs-regexp">/mongodb/</span><span class="hljs-number">27019</span><span class="hljs-regexp">/log:/</span>var<span class="hljs-regexp">/log/m</span>ongodb<span class="hljs-regexp">/ --name mongodb3  mongo:latest -f /</span>data<span class="hljs-regexp">/configdb/m</span>ongodb.conf<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>进入其中一台，配置副本集信息，本次进入mongodb1。</li>
+</ol>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs dts">docker exec -it mongodb1 bash<br><span class="hljs-meta"># 因为配置设置了noauth=true，所以暂时不需要密码可直接进入mongodb控制台</span><br>mongo<br><span class="hljs-meta"># 输入以下内容</span><br><span class="hljs-meta">####注即便是本地，ip也不能直接写localhost，如果是虚拟机，切记查看虚拟机IP,</span><br><span class="hljs-attr">rsconf</span> <span class="hljs-operator">=</span> <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">     _id:</span> <span class="hljs-string">&quot;test&quot;</span>,<br><span class="hljs-symbol">     members:</span> [<br>         <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">             _id:</span> <span class="hljs-number">0</span>,<br><span class="hljs-symbol">             host:</span> <span class="hljs-string">&quot;127.0.0.1:27018&quot;</span>,<br><span class="hljs-symbol">			 priority:</span><span class="hljs-number">3</span><br>         <span class="hljs-punctuation">&#125;</span>,<br>         <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">             _id:</span> <span class="hljs-number">1</span>,<br><span class="hljs-symbol">             host:</span> <span class="hljs-string">&quot;127.0.0.1:27019&quot;</span>,<br><span class="hljs-symbol">			 priority:</span><span class="hljs-number">1</span><br>         <span class="hljs-punctuation">&#125;</span>,<br>         <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">             _id:</span> <span class="hljs-number">2</span>,<br><span class="hljs-symbol">             host:</span> <span class="hljs-string">&quot;127.0.0.1:27020&quot;</span>,<br><span class="hljs-symbol">			 priority:</span><span class="hljs-number">1</span><br>         <span class="hljs-punctuation">&#125;</span><br>     ]<br><span class="hljs-punctuation">&#125;</span><br><br>rs.initiate(rsconf)<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>退出重启数据库，然后进入查看是否配置成功，忘记截图（懒）。</li>
+</ol>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">rs.conf();<br># 最后输出<span class="hljs-type">json</span>对象，里边会出现<span class="hljs-keyword">primary</span>（主库）或者secondary（副本）字样<br>db.ismaster()<br># 会输出<span class="hljs-keyword">true</span>或者<span class="hljs-keyword">false</span>字样<br># 同时mongo进入控制台，开头字样会变为：xxx:<span class="hljs-keyword">primary</span>&gt;或者xxx:secodary&gt;<br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>开启身份认证</li>
+</ol>
+<p>切换到admin数据库，添加的账号才是管理员账号。</p>
+<p>用户只能在用户所在数据库登录，包括管理员账号。</p>
+<p>管理员可以管理所有数据库，但是不能直接管理其他数据库，要先在admin数据库认证后才可以。</p>
+<p>以下账号不能操作其他库：这是因为给root授权的userAdminAnyDatabase权限只是针对用户管理的，对其它的表示没有操作权限的。</p>
+<p>因为对权限这里还不是很熟，故直接创建超级用户。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">use</span> admin<br><span class="hljs-keyword">db</span>.createUser(<br>  &#123;<br>    user: <span class="hljs-string">&quot;root&quot;</span>,<br>    <span class="hljs-keyword">pwd</span>: <span class="hljs-string">&quot;root&quot;</span>,<br>    roles: [ &#123; role: <span class="hljs-string">&quot;root&quot;</span>, <span class="hljs-keyword">db</span>: <span class="hljs-string">&quot;admin&quot;</span> &#125; ]<br>  &#125;<br>);<br></code></pre></td></tr></table></figure>
+
+<p>可以使用该命令给用户增加权限<kbd>db.grantRolesToUser("root", ["xxxxxx"])</kbd>。</p>
+<p>配置文件打开#启用验证，注掉#不启用验证，并设置keyFile路径。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment">#不启用验证</span><br><span class="hljs-comment">#noauth=true</span><br><span class="hljs-attr">auth</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">keyFile</span>=/data/configdb/keyfile<br></code></pre></td></tr></table></figure>
+
+<p>在宿主机映射的conf目录生成keyfile文件（任意目录都可以，映射到容器里就行，20可以随意填写，不需要必须20），切记<strong>keyfile文件权限必须是600，新版是400</strong>，否则启动失败。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">openssl</span> rand -base64 <span class="hljs-number">20</span> &gt; keyfile<br><span class="hljs-attribute">chmod</span> <span class="hljs-number">600</span> keyfile 或者 chmod <span class="hljs-number">400</span> keyfile<br></code></pre></td></tr></table></figure>
+
+<p>重启，如果上步创建的不是超级用户，需要给用户添加集群的权限，否则创建的用户无法操作。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">use</span> admin<br><span class="hljs-keyword">db</span>.grantRolesToUser(<span class="hljs-string">&quot;root&quot;</span>, [<span class="hljs-string">&quot;clusterAdmin&quot;</span>])<br></code></pre></td></tr></table></figure>
+
+<p>至此，副本集搭建完成。</p>
+<h3 id="额外配置"><a href="#额外配置" class="headerlink" title="额外配置"></a>额外配置</h3><p>以下配置看自己情况。</p>
+<p>设置主写完，得到所有副本确认才算成功。</p>
+<p>默认配置 {“w”：1}，这样表示主节点写入数据成功即可给客户端返回成功，“w” 配置为2，则表示除了主节点，还需要收到其中一个副本节点返回写入成功，“w” 还可以配置为 “majority”，表示需要集群中大多数承载数据且有选举权限的节点返回写入成功。</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs markdown">db.adminCommand(&#123;<br>  &quot;setDefaultRWConcern&quot; : 1,<br>  &quot;defaultWriteConcern&quot; : &#123;<br><span class="hljs-code">    &quot;w&quot; : &quot;majority&quot;</span><br><span class="hljs-code">  &#125;,</span><br><span class="hljs-code">  &quot;defaultReadConcern&quot; : &#123; &quot;level&quot; : &quot;majority&quot; &#125;</span><br><span class="hljs-code">&#125;)</span><br><span class="hljs-code"></span><br><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">**已弃用**</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-emphasis">*</span><br><span class="hljs-emphasis">cfg = rs.conf()</span><br><span class="hljs-emphasis">cfg.settings.getLastErrorDefaults = &#123; w: &quot;majority&quot;, wtimeout: 5000 &#125;</span><br><span class="hljs-emphasis">rs.reconfig(cfg)</span><br><span class="hljs-emphasis"><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">***</span></span><br></code></pre></td></tr></table></figure>
+
+<p>以下两种读取方式来自自己测试，并未找到相关文档说明：</p>
+<p>查看自定义的：db.adminCommand(“getDefaultRWConcern”)。</p>
+<p>查看默认的：rs.conf()。</p>
+<h3 id="springboot整合"><a href="#springboot整合" class="headerlink" title="springboot整合"></a>springboot整合</h3><p>只需修改平常的配置为如下：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-meta"># readPreference设置从副本读，但是实验下来，资源紧张，主库也会参与读操作</span><br><span class="hljs-meta"># 注意ip</span><br><span class="hljs-symbol">spring:</span><br><span class="hljs-symbol">  data:</span><br><span class="hljs-symbol">    mongodb:</span><br><span class="hljs-symbol">      uri:</span> mongodb:<span class="hljs-comment">//root:root@127.0.0.1:27017,127.0.0.1:27018,127.0.0.1:27019/living_circle?authSource=admin&amp;replicaSet=test&amp;readPreference=secondaryPreferred</span><br></code></pre></td></tr></table></figure>
+
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/mongodb/" class="category-chain-item">mongodb</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/mongodb/">#mongodb</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Docker-mongodb副本集</div>
+      <div>http://www.muzili.ren/2022/06/12/Docker-mongodb副本集/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月12日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/06/11/%E8%A7%A3%E6%9E%90%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E7%AD%BE%E4%BA%8C/" title="十三、解析bean标签子元素二">
+                        <span class="hidden-mobile">十三、解析bean标签子元素二</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
