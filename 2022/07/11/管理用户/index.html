@@ -24,7 +24,7 @@
 <meta property="og:description" content="用户、用户组、相关系统文件。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-07-11T13:24:42.923Z">
-<meta property="article:modified_time" content="2022-07-11T13:35:39.547Z">
+<meta property="article:modified_time" content="2022-07-11T13:39:06.283Z">
 <meta property="article:author" content="jievhaha">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -217,7 +217,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          759 字
+          744 字
         
       </span>
     
@@ -279,12 +279,12 @@
             <div class="markdown-body">
               
               <div align="center"><font color="#000" size="5rem">管理用户</font></div>
-### 用户
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">用户是否存在：id 用户名<br>新增用户：useradd 用户名<br>新增用户并加入用户组：useradd -g 用户组 用户名<br>对用户设置密码：passwd 新建的用户名  回车<br>删除用户：userdel [-r] 用户名  -r也会删除相关的所有文件<br>切换用户：su - 用户名<br>查看当前用户：whoami/who am i<br>将用户加入用户组：usermod -g 用户组 用户名<br></code></pre></td></tr></table></figure>
-### 用户组
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">新增用户组：groupadd 组名<br>删除用户组：groupdel 组名<br>修改用户组：groupmod -n 新组名 老组名<br></code></pre></td></tr></table></figure>
-### 管理用户相关的系统文件
-`/etc/passwd`  ` /etc/shadow`   ` /etc/group`
+
+<h3 id="用户"><a href="#用户" class="headerlink" title="用户"></a>用户</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">用户是否存在：id 用户名<br>新增用户：useradd 用户名<br>新增用户并加入用户组：useradd -g 用户组 用户名<br>对用户设置密码：passwd 新建的用户名  回车<br>删除用户：userdel [-r] 用户名  -r也会删除相关的所有文件<br>切换用户：su - 用户名<br>查看当前用户：whoami/who am i<br>将用户加入用户组：usermod -g 用户组 用户名<br></code></pre></td></tr></table></figure>
+
+<h3 id="用户组"><a href="#用户组" class="headerlink" title="用户组"></a>用户组</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">新增用户组：groupadd 组名<br>删除用户组：groupdel 组名<br>修改用户组：groupmod -n 新组名 老组名<br></code></pre></td></tr></table></figure>
+
+<h3 id="管理用户相关的系统文件"><a href="#管理用户相关的系统文件" class="headerlink" title="管理用户相关的系统文件"></a>管理用户相关的系统文件</h3><p><code>/etc/passwd</code>  <code> /etc/shadow</code>   <code> /etc/group</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat /etc/passwd   对所有用户都可读，一行记录对应着一个用户，每行记录被 ：分为7段<br>	结果举例：zhangsan:x:1001:1001::/home/zhangsan:/bin/bash<br>			  用户名  口令（加密的密码）  用户标识号（0是超级用户，1~99保留，作为管理账号，普通用户从100开始）  组标识号（记录用户所属的用户组，对应着/etc/group中的一条记录）  注释性描述  主目录  登录Shell<br>cat /etc/shadow   超级用户才能访问，用户加密后的口令分离出来单独存放在该文件<br>	结果举例：zhangsan:!!:18535:0:99999:7:::<br>			  用户名  加密口令  最后一次修改时间  最小时间间隔（两次修改口令所需最小天数）  最大时间间隔（口令有效的最大天数）  警告时间（从系统警告用户到用户密码正式失效的天数）  不活动时间（用户没有登录活动但账号仍可用的最大天数）  失效时间  标志<br>cat /etc/group    用户组的所有信息<br>	结果举例：test:x:1001:<br>			  用户组名  口令  组标识号  组内用户列表（属于这个组的用户列表，用，分隔开）<br></code></pre></td></tr></table></figure>
 
 
