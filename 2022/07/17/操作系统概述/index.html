@@ -44,8 +44,18 @@
 <meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8719.png">
 <meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8720.png">
 <meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8721.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8722.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8723.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8724.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8725.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8726.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8727.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8728.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8729.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8730.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8731.png">
 <meta property="article:published_time" content="2022-07-17T03:12:01.729Z">
-<meta property="article:modified_time" content="2022-07-17T03:10:21.526Z">
+<meta property="article:modified_time" content="2022-07-17T04:27:34.540Z">
 <meta property="article:author" content="jievhaha">
 <meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary_large_image">
@@ -239,7 +249,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k 字
+          9.1k 字
         
       </span>
     
@@ -250,7 +260,7 @@
         
         
         
-          20 分钟
+          76 分钟
         
       </span>
     
@@ -293,7 +303,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2022年7月17日 上午
+                    本文最后更新于：2022年7月17日 中午
                   
                 
               </p>
@@ -399,6 +409,196 @@
 <p><img src="/images/os/%E5%9B%BE%E7%89%8720.png" srcset="/img/loading.gif" lazyload alt="图片20"></p>
 <p>下图为她在航天器模拟器中调试代码。</p>
 <p><img src="/images/os/%E5%9B%BE%E7%89%8721.png" srcset="/img/loading.gif" lazyload alt="图片21"></p>
+<h5 id="分时系统"><a href="#分时系统" class="headerlink" title="分时系统"></a>分时系统</h5><p><strong>发展动力</strong></p>
+<p>如果说多道批处理系统的发展动力主要是提高CPU的利用率，提升系统的吞吐量，那么分时系统的发展动力就是为了满足人机交互需求。用户对于操作系统的需求主要表现在两方面：</p>
+<ul>
+<li>人机交互：从用户体验上讲，用户希望在调试、修改一个程序时，能独占全机。可随时修改、调试，无需等待其它程序运行结束。</li>
+<li>共享主机：从资源利用上讲，在20世纪60年代，昂贵的计算机资源需要通过共享来达到资源充分利用的目的。</li>
+</ul>
+<p>以上两种需求出现了矛盾。而分时系统则解决了这个矛盾。</p>
+<p><strong>什么是分时系统</strong></p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8722.png" srcset="/img/loading.gif" lazyload alt="图片22"></p>
+<p>分时系统是指，在一台主机上连接多个配有显示器与键盘的终端并由此构成的系统。该系统允许多个用户同时通过自己的终端，以交互方式使用计算机，共享主机中的资源。</p>
+<blockquote>
+<p>无盘工作站</p>
+</blockquote>
+<p>下图为Vax-11小型机，其就是一个分时系统，一个主机携带很多套终端。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8723.png" srcset="/img/loading.gif" lazyload alt="图片23"></p>
+<p><strong>多路卡</strong></p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8724.png" srcset="/img/loading.gif" lazyload alt="图片24"></p>
+<p>在系统中配置一个多路卡，用于及时接收多终端的用户输入，实现分时多路复用。主机会以很快的速度周期性的扫描各个终端，在每个终端处停留很短的时间（如30ms），用于接收从终端 发来的数据。</p>
+<blockquote>
+<p>例如具有<em>15</em>个终端，每个终端在 <em>30ms x 15 &#x3D; 450ms</em> 后会再将被主机处理。</p>
+</blockquote>
+<p>终端输入通过多路卡进入主机内存，以期将来获得到CPU资源进行运算。</p>
+<p><strong>时间片</strong></p>
+<p>在多道批处理系统中，对于一个没有IO的长作业，其会长时间独占处理器直至其运行完毕。而这将导致其它作业无法被处理。这是与分时系统的两大特征（人机交互、共享主机）相违背的。为了避免这种情况的发生，分时系统中引入了时间片概念。</p>
+<p>一个时间片就是一段很短的时间（如30ms）。系统规定每个作业每次只能运行一个时间片，然后就暂停该作业的执行，并调度下一个作业运行。这样，在较短的时间内就能使所有作业都能执行一个时间片，使每个用户都能及时与自己的作业交互。</p>
+<p>实现了“宏观上的并行，微观上的串行”——并发。</p>
+<h5 id="实时系统"><a href="#实时系统" class="headerlink" title="实时系统"></a>实时系统</h5><p><strong>什么是实时系统</strong></p>
+<p>实时系统是指，系统能及时响应外部事件的请求，在规定时间内完成对该事件的处理，并控制所有实时任务协调一致地运行。</p>
+<blockquote>
+<p>即，系统的正确性，不仅由计算逻辑结果确定，还取决于产生结果的时间。也就是说，实时系 统将时间作为一个关键参数。</p>
+</blockquote>
+<p><strong>实时任务分类</strong></p>
+<p>站在不同的角度，实时任务有不同的分类方式：</p>
+<p>（1）周期性实时任务与非周期性实时任务。非周期性实时任务又可以分为开始截止时间任务与完成截止时间任务。</p>
+<p>（2）硬实时任务HRT（必须满足截止时间要求）与软实时任务SRT（偶尔错过截止时间也不会有太大影响）。</p>
+<h5 id="微机操作系统"><a href="#微机操作系统" class="headerlink" title="微机操作系统"></a>微机操作系统</h5><p>随着大规模集成电路与计算机体系结构的发展，出现了微机，即PC机，相应的也形成了微机操作系统。</p>
+<p>下图为一些集成电路：</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8725.png" srcset="/img/loading.gif" lazyload alt="图片25"></p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8726.png" srcset="/img/loading.gif" lazyload alt="图片26"></p>
+<p>微机操作系统也有一个发展过程：</p>
+<ul>
+<li>单用户单任务系统</li>
+<li>单用户多任务系统</li>
+<li>多用户多任务系统</li>
+</ul>
+<h5 id="网络操作系统"><a href="#网络操作系统" class="headerlink" title="网络操作系统"></a>网络操作系统</h5><p>与微机操作系统类似，只不过其提供的服务类型不同。</p>
+<h5 id="云操作系统"><a href="#云操作系统" class="headerlink" title="云操作系统"></a>云操作系统</h5><p>云操作系统，又称为云计算操作系统、云计算中心操作系统，是以云计算、云存储技术作为支撑的操作系统，是云计算后台数据中心的整体管理运营系统。云操作系统是一个构架于服务器、存储、网络等基础硬件资源和单机操作系统、中间件、数据库等基础软件之上的、管理海量的基础硬件、软件资源的云平台综合管理系统。</p>
+<blockquote>
+<p> 例如，<em>VMware</em>的<em>vSphere</em>、浪潮的云海、阿里的<em>AliOS</em>，都是云操作系统。 </p>
+</blockquote>
+<h4 id="4-操作系统的基本特性"><a href="#4-操作系统的基本特性" class="headerlink" title="4 操作系统的基本特性"></a><strong>4</strong> 操作系统的基本特性</h4><p>不同的操作系统具有不同的特征，但它们还共同具有以下四大特性。</p>
+<h5 id="并发Concurrence"><a href="#并发Concurrence" class="headerlink" title="并发Concurrence"></a>并发Concurrence</h5><p>正是该特性使得OS能有效提高系统中资源的利用率，增加系统的吞吐量。</p>
+<p><strong>什么是并发</strong></p>
+<p>并发是指，两个或多个事件在同一时间间隔内发生。</p>
+<blockquote>
+<p>与并行对比： </p>
+<ul>
+<li>并行：两个或多个事件在同一时刻发生。 </li>
+<li>并发：宏观上的并行，微观上的串行。</li>
+</ul>
+</blockquote>
+<p><strong>并发的实现</strong></p>
+<p>只所以可以实现并发，是因为引入了进程这个概念。</p>
+<p>所谓进程，是指在系统中能独立运行并作为资源分配的基本单位，有一组指令、数据和堆栈等组成，是一个能独立运行的活动实体。</p>
+<blockquote>
+<p>简单来说，进程就是一个正在执行的程序；或者说，进程就是一个具有独立功能的程序在其数据集上的运行过程。 </p>
+</blockquote>
+<h5 id="共享Sharing"><a href="#共享Sharing" class="headerlink" title="共享Sharing"></a>共享Sharing</h5><p>OS系统中的资源共享，也称为资源复用，是指系统中的资源可供内存中多个并发执行的进程共同使用。当系统中资源数量少于多个进程对资源的需求数量时，就会形成对共享资源的争夺。根据进程对资源复用方式的不同，目前主要实现资源共享的方式有两种：</p>
+<p><strong>互斥共享</strong></p>
+<p>某些资源只能互斥访问，如打印机、磁带机等。虽然可供多个进程使用，但在一段时间内，只允许一个进程访问该资源。这种互斥访问的资源，称为临界资源，或独占资源。</p>
+<p><strong>同时访问</strong></p>
+<p>系统中还有一类资源，允许在一段时间内由多个进程同时访问。不过，对于这个“同时”需要注意，在单处理机环境中，其是宏观上的意义，微观上对这些资源的访问是交替进行，最典型的就是磁盘。</p>
+<blockquote>
+<p>数据库中的数据本身属于<em>“</em>同时访问资源<em>”</em>。而<em>“</em>写锁<em>”</em>属于互斥共享资源，<em>“</em>读锁<em>”</em>属于同时访问 资源</p>
+</blockquote>
+<h5 id="虚拟Virtual"><a href="#虚拟Virtual" class="headerlink" title="虚拟Virtual"></a>虚拟Virtual</h5><p>通过某种技术将一个物理实体变为若干个逻辑上的对应物，在OS中这种功能称为虚拟。而实现虚拟的</p>
+<p>技术称为虚拟技术。常用的虚拟技术有两种：</p>
+<p><strong>时分复用技术</strong></p>
+<p>复用“某设备为一用户服务的空闲时间”为其它用户服务，以达到充分复用设备的目的。使得看起来好像是多个用户在同时使用多台相同设备。这种虚拟技术称为时分复用技术。</p>
+<blockquote>
+<p>虚拟处理机技术、虚拟打印机技术、虚拟存储器技术等，都属于时分复用技术。 </p>
+</blockquote>
+<blockquote>
+<p>需要注意速度问题：若某物理设备采用时分复用技术虚拟出了<em>N</em>个虚拟设备，那么每个虚拟设备的平均速度一定是小于等于物理设备速度的 <em>1&#x2F;N</em> 的。 </p>
+</blockquote>
+<p><strong>空分复用技术</strong> </p>
+<p>20世纪初，电信业就已经使用频分复用技术来提高信道的复用率。它是指将一个频率范围比较宽的信道划分为多个频率范围较窄的信道（称为频带），其中的任何一个频带都仅供一对用户通话。这种频分复用技术就属于空分复用技术。</p>
+<blockquote>
+<p>需要注意空间问题：若某物理设备采用空分复用技术虚拟出了<em>N</em>个虚拟设备，则第个虚拟设备 占用的实际空间一定是小于等于物理设备部空间的 <em>1&#x2F;N</em> 的。 </p>
+</blockquote>
+<p><strong>Dubbo中的虚拟化</strong></p>
+<p>这种“虚拟化”思想，在开发中也经常用到，可以解决很多不方便解决的问题。例如，Dubbo在采用一致性Hash算法实现负载均衡时会出现一个问题：提供者Server的增减，仅对某个提供者的负载状态有影响，对其它提供者没有任何帮助。Dubbo使用“虚拟化思想”对该算进行了优化，默认将一台物理提供者虚拟为了360个，解决了原来的问题。</p>
+<h5 id="异步Asynchronism"><a href="#异步Asynchronism" class="headerlink" title="异步Asynchronism"></a>异步Asynchronism</h5><p><strong>什么是异步性</strong></p>
+<p>异步性也称为不可预知性，不确定性。</p>
+<p>对于内存中的每个进程，有的侧重于计算而IO少，有的则计算少而IO多。它们何时能够获取到处理器运行、何时由于提出临界资源请求而暂停，每道作业总共需要多少时间才能完成，都是不可预知的，不确定的。可能先进入内存的进程后完成，而后进入内存的作业先完成。这种进程以不可预知的速度向前推进的特性，称为异步性。</p>
+<p>只要OS中配置有完善的进程同步机制，且运行环境相同，则作业即使经过多次运行，也可以获得完全相同的结果。即OS的异步性是不会影响到作业的运行结果的。</p>
+<p>同步就是确定的，可预知的，可再现的。</p>
+<p><strong>Zookeeper的协调性</strong></p>
+<p>Zookeeper被称为分布式协调服务器，通过对Zookeeper的应用，可以实现分布式系统同步运行，实现各系统功能的协调推进。例如，可以实现集群管理、Master选举、分布式锁、分布式队列等功能，都是ZK协调性机制的体现。</p>
+<blockquote>
+<p><em>MySQL</em>集群中的<em>Master</em> </p>
+<p><em>Kafka</em>集群中的<em>Broker Controller</em> </p>
+<p>广告推荐系统</p>
+</blockquote>
+<p><strong>Redis的协调性</strong> </p>
+<p>Redis一样也可以实现分布锁，实现分布式协调功能。</p>
+<h4 id="5-微内核OS结构"><a href="#5-微内核OS结构" class="headerlink" title="5 微内核OS结构"></a><strong>5</strong> 微内核OS结构</h4><p>微内核（MicroKernel）操作系统结构是20世纪80年代后期发展起来的。现在的操作系统基本都是微内核结构的。</p>
+<h5 id="微内核特征"><a href="#微内核特征" class="headerlink" title="微内核特征"></a>微内核特征</h5><p>什么是微内核操作系统结构，现在尚无一致公认的定义，但微内核操作系统具有一些共同的特征。</p>
+<blockquote>
+<p><em>Linus</em>开发了<em>Linux</em>内核，并不是开发了某个具体可直接使用的<em>Linux</em>发行版。 </p>
+</blockquote>
+<p><strong>提供基础核心功能</strong></p>
+<p>在微内核操作系统中，内核是指精心设计的、能实现现代OS最基本核心功能的小型内核，微内核并非是一个完整的OS，而只是将操作系统中最基本、最核心的功能放入微内核。这些基本功能大体可以划分为支撑功能与资源管理功能两大功能。详细功能后面会学习。</p>
+<blockquote>
+<p> 例如，进程管理、线程管理、低级存储器管理、中断处理等</p>
+</blockquote>
+<p>这些基本核心功能运行的环境，我们通常称为内核态，或内核上下文。</p>
+<p><strong>基于C&#x2F;S模式</strong></p>
+<p>将操作系统中最基本最核心的功能放入内核中，将绝大部分功能放在微内核之外的服务进程（也称为服务器）中。客户进程与服务进程间的通信，及服务进程间的通信，都是通过消息传递机制来实现信息交互的。即它们间不能直接相互访问，必须通过内核进行消息传递：通过调用内核提供的系统调用实现。</p>
+<p>这些服务进程（服务器）运行的环境与客户进程运行的环境相同，都是在内核之外，我们通常称为用户态，或用户上下文。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8727.png" srcset="/img/loading.gif" lazyload alt="图片27"></p>
+<p><strong>机制与策略分离原理</strong></p>
+<p>在现代操作系统的结构设计中，经常采用“机制与策略分离原理”来构造OS。</p>
+<blockquote>
+<p>机制：实现某一功能的具体执行机构。</p>
+<p>策略：在机制基础上借助某些参数和算法来实现对该功能的优化。</p>
+</blockquote>
+<p>机制处于系统的低层，而策略处于系统的高层。在微内核OS中，通常将机制放在微内核中，策略放在微内核外围的服务进程中。</p>
+<blockquote>
+<p>例如，进程管理中设置一些进程优先级队列，然后就可以按照优先级从队列中取出进程，为之分配<em>CPU</em>让其运行。这一部分调度功能属于机制问题。而进程优先级算法就属于策略问题。 </p>
+<p>再如，对于 虚拟存储器管理，将用户空间中的逻辑页地址转换为内存空间中的物理块地址，需 要页表机制与地址转换机制，应在内核中实现。而页面转换所采用的算法，内存分配与回收等策略，应在内核的外置（服务进程）中实现。 </p>
+</blockquote>
+<h5 id="Dubbo中的微内核"><a href="#Dubbo中的微内核" class="headerlink" title="Dubbo中的微内核"></a>Dubbo中的微内核</h5><p>微内核设计模式，在开发中也很常见。例如，RPC框架Dubbo。 </p>
+<blockquote>
+<p><em>SPI</em>，<em>Service Provider Interface</em>，服务提供者接口，是一种服务发现机制。 </p>
+</blockquote>
+<p>Dubbo作为一个优秀的RPC框架，一个Apache的顶级项目，其最大的亮点之一就是其优秀的无限开放性设计架构——“微内核+插件”的架构设计思想，使得其几乎所有组件均可方便的进行扩展、增强、替换。内核只负责组装插件（扩展点），Dubbo的功能都是由插件实现的。</p>
+<h5 id="支撑功能"><a href="#支撑功能" class="headerlink" title="支撑功能"></a>支撑功能</h5><p>该功能是内核提供给OS其它服务进程（服务器）模块的基本功能，是其它服务进程模块功能实现的支撑。主要包含三方面的支撑功能：</p>
+<p><strong>中断处理</strong></p>
+<p>中断处理是内核最基本的功能，是整个OS工作的基础，没有中断处理就没有OS的并发，OS中的许多重要活动无不依赖于中断。</p>
+<p>当然，为了减少CPU中断的时间，提高程序执行的并发性，内核也只是对中断进行“短暂处理”，继而转入相关其它进程去完成后续工作。</p>
+<p><strong>时钟管理</strong></p>
+<p>时钟管理是内核的一项基本功能，在OS中的许多功能都需要它的支撑。例如，时间片轮转调度中，每当时间片用完，时钟管理就会产生一个中断信号，使调度程序重新进行调度。</p>
+<p><strong>原语操作</strong></p>
+<p>原语操作，由一组指令构成，用于完成某一特定功能。这组操作中的指令具有的一个特征是，要么全做，要么全不做，即原子性。它们的执行过程是不允许被中断的。原语操作在系统态下执行，常驻内存。</p>
+<h5 id="资源管理功能"><a href="#资源管理功能" class="headerlink" title="资源管理功能"></a>资源管理功能</h5><p>该功能实现了OS对系统中软、硬件资源的管理。</p>
+<blockquote>
+<p> <em>OS</em>的四大资源：处理器、存储器、<em>IO</em>设备、文件 </p>
+</blockquote>
+<p><strong>进程管理</strong> </p>
+<p>OS内核可以实现对进程的基础化管理，这些基础化管理功能要么使用频率很高，要么属于可以为其它服务进程提供基础化功能。将这些功能放入到内核中，可以大大提高OS的性能。</p>
+<p><strong>存储器管理</strong> </p>
+<p>OS中存储器管理相关进程的运行频率非常得高，将它们放入到内核中，可以大大提升存储器的运行效率，提高读写速度。</p>
+<p><strong>设备管理</strong></p>
+<p>由于设备管理与计算机硬件紧密相关，所以大部分功能都是常驻内核的。</p>
+<h5 id="ZK、Nacos、Apollo中的“中断”"><a href="#ZK、Nacos、Apollo中的“中断”" class="headerlink" title="ZK、Nacos、Apollo中的“中断”"></a>ZK、Nacos、Apollo中的“中断”</h5><p>中断处理的思想，反映到同一JVM中的开发中，其实就是监听机制。反映到分布式开发中，其实就是发布&#x2F;订阅模式。关于监听机制Listener过于基础，应用过于广泛，这里就不举例了。分布式开发中的发布&#x2F;订阅模式的应用也较多。例如，Zookeeper的Watcher机制、Zookeeper作为注册中心时的服务注册与订阅、Zookeeper、Nacos、Apollo作为配置中心时微服务对配置文件的订阅、消费者对Kafka、RocketMQ等消息中间件中相关主题消息的订阅……</p>
+<h5 id="ZK、Eureka、Netty中的“时钟”"><a href="#ZK、Eureka、Netty中的“时钟”" class="headerlink" title="ZK、Eureka、Netty中的“时钟”"></a>ZK、Eureka、Netty中的“时钟”</h5><p>时钟管理的思想，体现在开发中就是定时任务。例如，Zookeeper的会话管理中的分桶策略中，定时会清除会话桶中的过期会话与会话桶；Eureka Client在启动时会初始化三个定时任务（定时更新客户端注册表、定时发送心跳、定时更新Client信息给Server）；NettyClient与NettyServer间的心跳机制，是使用的定时任务完成的；NettyServer中对于读写操作空闲检测的处理，也是启用的定时任务进行的检测。</p>
+<h5 id="Seata中的“原语”"><a href="#Seata中的“原语”" class="headerlink" title="Seata中的“原语”"></a>Seata中的“原语”</h5><p>在开发中的原语操作，即原子性操作，应用也很多，最典型的就是数据库四大特征ACID之一的原子性。当然，还有分布式事务中的原子性。例如，当前非常流行的阿里的分布式事务框架Seata，就是在分布式架构中实现了“原语操作”。</p>
+<h4 id="6-处理器执行状态"><a href="#6-处理器执行状态" class="headerlink" title="6 处理器执行状态"></a><strong>6</strong> <strong>处理器执行状态</strong></h4><h5 id="用户态与系统态"><a href="#用户态与系统态" class="headerlink" title="用户态与系统态"></a>用户态与系统态</h5><p>为了防止OS本身及关键数据遭到应用程序有意或无意的破坏，通常将CPU的执行状态分为用户态与系统态。</p>
+<p><strong>系统态</strong></p>
+<p>系统态也称为内核态、管态。运行在此状态的CPU具有较高的特权，能执行一切指令，可以访问所有寄存器及存储区。传统的OS都在系统态运行，微内核OS只有微内核运行在系统态。</p>
+<p><strong>用户态</strong></p>
+<p>用户态也称为目态。运行在此状态的CPU具有较低的特权，仅能执行规定的指令，访问指定的寄存器与存储区。应用程序只能在用户态运行，不能执行OS指令及访问OS区域。微内核OS中的服务进程（服务器）也是运行在用户态。</p>
+<h5 id="带来的问题"><a href="#带来的问题" class="headerlink" title="带来的问题"></a>带来的问题</h5><p>在微内核OS中，C&#x2F;S模式和消息传递机制给系统带来了很多的优点，但也存在着潜在问题，使系统运行效率有所降低。</p>
+<blockquote>
+<p>微内核系统的优点：提高了系统的扩展性</p>
+<p>增强了系统的可靠性 </p>
+<p>提升了系统的可移植性</p>
+</blockquote>
+<p>系统运行效率下降的主要原因是，在完成一次客户对OS提出的服务请求时，CPU需要在用户态与内核态进行多次上下文切换。</p>
+<h5 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h5><p>用户态与内核态的上下文切换过多引发的性能下降问题，目前有两种解决方案：</p>
+<ul>
+<li>改内核</li>
+<li>零拷贝</li>
+</ul>
+<h4 id="7-零拷贝"><a href="#7-零拷贝" class="headerlink" title="7 零拷贝"></a><strong>7</strong> <strong>零拷贝</strong></h4><h5 id="什么是零拷贝"><a href="#什么是零拷贝" class="headerlink" title="什么是零拷贝"></a>什么是零拷贝</h5><p>零拷贝指的是，从一个存储区域到另一个存储区域的copy任务无需CPU参与就可完成。零拷贝的底层是通过DMA总线技术实现的。零拷贝与具体的编程语言无关，完全依赖于OS，OS支持就可使用，不支持设置了也不起作用。</p>
+<p>DMA（Direct Memory Access，直接内存访问）是一种计算机系统内部的数据传输技术，需要DMA总线（硬件的体系结构）的硬件支持。其整个数据传输过程是在DMA控制器下完成的。</p>
+<p>零拷贝在计算机内部数据拷贝及网络传输中都大量使用，用于减少CPU消耗和内存带宽占用，减少用户空间与内核空间的拷贝过程，减少用户态与内核态间的切换次数，提高系统效率，提升系统性能。例如远程服务器处理客户端浏览器的主页打开请求过程，就是一个零拷贝在网络传输中的典型应用。下面全部以该场景为例进行分析。</p>
+<h5 id="传统拷贝方式"><a href="#传统拷贝方式" class="headerlink" title="传统拷贝方式"></a>传统拷贝方式</h5><p>站在服务器角度，服务器操作系统经历了以下过程：</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8728.png" srcset="/img/loading.gif" lazyload alt="图片28"></p>
+<p>该拷贝方式共进行了16次用户空间与内核空间的上下文切换，以及4次数据拷贝，其中两次拷贝存在CPU参与。</p>
+<h5 id="零拷贝方式"><a href="#零拷贝方式" class="headerlink" title="零拷贝方式"></a>零拷贝方式</h5><p><img src="/images/os/%E5%9B%BE%E7%89%8729.png" srcset="/img/loading.gif" lazyload alt="图片29"></p>
+<p>该拷贝方式共进行了14次用户空间与内核空间的上下文切换，以及3次数据拷贝，但整个拷贝过程均没有CPU的参与，这就是零拷贝。</p>
+<h5 id="Gather-Copy零拷贝"><a href="#Gather-Copy零拷贝" class="headerlink" title="Gather Copy零拷贝"></a>Gather Copy零拷贝</h5><p>该拷贝方式是由DMA完成，当然，需要当前主机的DMA支持Gather Copy方式。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8730.png" srcset="/img/loading.gif" lazyload alt="图片30"></p>
+<p>该方式中没有数据拷贝到socket buffer。取而代之的是只是将kernel buffer中的数据描述信息写到了socket buffer中。数据描述信息包含了两方面的信息：kernel buffer中数据的地址及偏移量。</p>
+<p>该拷贝方式共进行了14次用户空间与内核空间的上下文切换，以及2次数据拷贝，并且整个拷贝过程均没有CPU的参与。</p>
+<h5 id="mmap零拷贝"><a href="#mmap零拷贝" class="headerlink" title="mmap零拷贝"></a>mmap零拷贝</h5><p>mmap，Memory Map，存储映射。mmap零拷贝是对零拷贝的改进。当然，若当前主机的DMA支持Gather Copy，mmap同样可以实现Gather Copy DMA的零拷贝。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8731.png" srcset="/img/loading.gif" lazyload alt="图片31"></p>
+<p>该方式与普通零拷贝的唯一区别是，应用程序与内核共享了Kernel buffer。由于是共享，所以应用程序也就可以操作该buffer了。当然，应用程序对于Kernel buffer的操作，就会引发用户空间与内核空间的相互切换。</p>
 
               
             </div>
