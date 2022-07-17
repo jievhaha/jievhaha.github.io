@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="es集群搭建及搭建过程碰到的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="es集群搭建">
+<meta property="og:url" content="http://www.muzili.ren/2022/07/17/es%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="es集群搭建及搭建过程碰到的问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/elasticsearch/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AACA%E6%8E%88%E6%9D%83%E8%AF%81%E4%B9%A6.png">
+<meta property="og:image" content="http://www.muzili.ren/images/elasticsearch/%E9%9B%86%E7%BE%A4%E4%B8%AD%E8%8A%82%E7%82%B9%E4%BD%BF%E7%94%A8%E7%9A%84%E8%AF%81%E4%B9%A6.png">
+<meta property="og:image" content="http://www.muzili.ren/images/elasticsearch/%E8%8A%82%E7%82%B9%E4%BD%BF%E7%94%A8%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://www.muzili.ren/images/elasticsearch/%E4%BF%AE%E6%94%B9%E8%AF%81%E4%B9%A6%E6%9D%83%E9%99%90.png">
+<meta property="og:image" content="http://www.muzili.ren/images/elasticsearch/%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99.png">
+<meta property="og:image" content="http://www.muzili.ren/images/elasticsearch/keystorePassword%E9%94%99%E8%AF%AF.png">
+<meta property="article:published_time" content="2022-07-17T03:12:01.731Z">
+<meta property="article:modified_time" content="2022-07-17T03:10:21.520Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/elasticsearch/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AACA%E6%8E%88%E6%9D%83%E8%AF%81%E4%B9%A6.png">
+  
+  
+  
+  <title>es集群搭建 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="es集群搭建"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-17 11:12" pubdate>
+          2022年7月17日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          48 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">es集群搭建</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年7月17日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">es集群搭建</font></div>
+
+<h4 id="启动问题"><a href="#启动问题" class="headerlink" title="启动问题"></a>启动问题</h4><p>因条件不允许，故es集群安装在同一台虚拟机，然后会引发内存不足问题。</p>
+<h5 id="报错内容"><a href="#报错内容" class="headerlink" title="报错内容"></a>报错内容</h5><p>max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]。</p>
+<h5 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h5><p>以下操作均在宿主机执行，不是docker容器内部。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment"># 优先备份</span><br><span class="hljs-attr">vim</span> <span class="hljs-string">/etc/sysctl.conf</span><br><span class="hljs-comment"># 最后一行添加</span><br><span class="hljs-attr">vm.max_map_count</span>=<span class="hljs-string">262144</span><br><span class="hljs-comment"># 执行以下命令立即生效</span><br><span class="hljs-attr">/sbin/sysctl</span> <span class="hljs-string">-p</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h4><h5 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 集群名称</span><br><span class="hljs-attr">cluster.name:</span> <span class="hljs-string">es-itcast-cluster</span><br><span class="hljs-comment">### 当前节点名称</span><br><span class="hljs-attr">node.name:</span> <span class="hljs-string">node3</span><br><span class="hljs-comment">### 是否有资格当选主节点</span><br><span class="hljs-attr">node.master:</span> <span class="hljs-literal">true</span><br><span class="hljs-comment">### 是否存储数据</span><br><span class="hljs-attr">node.data:</span> <span class="hljs-literal">true</span><br><span class="hljs-comment">### 链接地址</span><br><span class="hljs-attr">network.host:</span> <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br><span class="hljs-comment">### 端口号</span><br><span class="hljs-attr">http.port:</span> <span class="hljs-number">9200</span><br><span class="hljs-comment">### 实例之间的通信端口</span><br><span class="hljs-attr">transport.port:</span> <span class="hljs-number">9300</span><br><span class="hljs-attr">transport.tcp.port:</span> <span class="hljs-number">9300</span><br><span class="hljs-comment">### 集群信息，集群节点列表，每个值应采用host：port或host的形式</span><br><span class="hljs-attr">discovery.seed_hosts:</span> [<span class="hljs-string">&quot;192.168.124.145:9301&quot;</span>,<span class="hljs-string">&quot;192.168.124.145:9302&quot;</span>,<span class="hljs-string">&quot;192.168.124.145:9303&quot;</span>]<br><span class="hljs-attr">cluster.initial_master_nodes:</span> [<span class="hljs-string">&quot;node1&quot;</span>,<span class="hljs-string">&quot;node2&quot;</span>,<span class="hljs-string">&quot;node3&quot;</span>]<br><span class="hljs-comment">### 最少主节点数量</span><br><span class="hljs-attr">discovery.zen.minimum_master_nodes:</span> <span class="hljs-number">1</span><br><span class="hljs-comment">### 开放网络权限</span><br><span class="hljs-attr">http.cors.enabled:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">http.cors.allow-origin:</span> <span class="hljs-string">&quot;*&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>需要注意：<code>discovery.zen.ping.unicast.hosts</code>和<code>discovery.seed_hosts</code>二者的区别。</p>
+<h5 id="启动es"><a href="#启动es" class="headerlink" title="启动es"></a>启动es</h5><p>根据情况自己启动es容器，因为当前配置了3台机器，故执行三次如下命令，端口号、映射目录和容器名称自己定义，记得文件目录权限。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml">docker run -d --restart=always --name elasticsearch --privileged=true<br>-p 9200:9200<br>-p 9300:9300<br>-v /etc/localtime:/etc/localtime<br>-v /etc/local/docker/elasticsearch/conf/:/usr/share/elasticsearch/config/<br>-v /etc/local/docker/elasticsearch/data:/usr/share/elasticsearch/data<br>-v /etc/local/docker/elasticsearch/plugins:/usr/share/elasticsearch/plugins<br>-e ES_JAVA_OPTS=&quot;-Xms256m -Xmx256m&quot; elasticsearch:7.16.1<br></code></pre></td></tr></table></figure>
+
+<p>所有容器启动完成，随意登录一台<code>http://192.168.124.145:9201</code>就会看到节点信息（未截图）。</p>
+<h5 id="脑裂"><a href="#脑裂" class="headerlink" title="脑裂"></a>脑裂</h5><p><code>discovery.zen.minimum_master_nodes</code>对集群的稳定性至关重要，防止脑裂的出现。</p>
+<p><code>discovery.zen.minimum_master_nodes</code>的作用是只有足够的master候选节点时，才可以选举出一个master。该参数必须设置为集群中master候选节点的<code>quorum</code>数量。</p>
+<p><em>quorum的算法&#x3D;master候选节点数量&#x2F;2+1。</em></p>
+<p>如果网络的故障导致一个集群被划分成两片，每片都有多个<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=node&spm=1001.2101.3001.7020">node</a>，以及一个master。因为master是维护集群状态，以及shard的分配。如果出现了两个master，可能导致数据破损。</p>
+<h5 id="脑裂原因"><a href="#脑裂原因" class="headerlink" title="脑裂原因"></a>脑裂原因</h5><ol>
+<li><p>网络问题：集群间的网络延迟导致一些节点访问不到master，认为master挂掉了从而选举出新的master，并对master上的分片和副本标红，分配新的主分片</p>
+</li>
+<li><p>节点负载：主节点的角色既为master又为data，访问量较大时可能会导致ES停止响应造成大面积延迟，此时其他节点得不到主节点的响应认为主节点挂掉了，会重新选取主节点。</p>
+</li>
+<li><p>内存回收：data节点上的ES进程占用的内存较大，引发JVM的大规模内存回收，造成ES进程失去响应。</p>
+</li>
+</ol>
+<h4 id="添加密码验证机制"><a href="#添加密码验证机制" class="headerlink" title="添加密码验证机制"></a>添加密码验证机制</h4><p>设置密码和单体机一样，但是设置一个节点即可，其他节点会同步（需要全部节点都正常在线），但是在设置密码之前需要完成以下操作。</p>
+<h5 id="打开安全设置"><a href="#打开安全设置" class="headerlink" title="打开安全设置"></a>打开安全设置</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 配置需校验密码</span><br><span class="hljs-attr">http.cors.allow-headers:</span> <span class="hljs-string">Authorization</span><br><span class="hljs-attr">xpack.security.enabled:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">xpack.security.transport.ssl.enabled:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="创建证书颁发机构以及为节点生成证书"><a href="#创建证书颁发机构以及为节点生成证书" class="headerlink" title="创建证书颁发机构以及为节点生成证书"></a>创建证书颁发机构以及为节点生成证书</h5><p>为Elasticsearch集群创建一个CA授权证书，随意进入一个容器即可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml">bin/elasticsearch-certutil ca<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/elasticsearch/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AACA%E6%8E%88%E6%9D%83%E8%AF%81%E4%B9%A6.png" srcset="/img/loading.gif" lazyload alt="创建一个CA授权证书"></p>
+<p>①：此位置设置文档输出地址和名称。默认名称为elastic-stack-ca.p12。这个文件是PKCS#12密钥存储库，它包含您的CA的公共证书和用于为每个节点签署证书的私有密钥。<br> (也可以无需输入，直接回车，则会再当前目录，elasticsearch-7.16.1目录下,  和bin同级目录，生成文件elastic-certificates.p12，然后在elasticsearch-7.16.1&#x2F;config目录下，新建一个文件夹certs, 把文件elastic-certificates.p12复制到certs文件夹下即可。)<br> ②：此位置设置证书的密码。计划将来向集群添加更多的节点，请记住其密码。</p>
+<p>为Elasticsearch集群中的节点生成证书，elastic-stack-ca.p12为上一步生成CA证书。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml">bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/elasticsearch/%E9%9B%86%E7%BE%A4%E4%B8%AD%E8%8A%82%E7%82%B9%E4%BD%BF%E7%94%A8%E7%9A%84%E8%AF%81%E4%B9%A6.png" srcset="/img/loading.gif" lazyload alt="集群中节点使用的证书"></p>
+<p><img src="/images/elasticsearch/%E8%8A%82%E7%82%B9%E4%BD%BF%E7%94%A8%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90%E8%BF%87%E7%A8%8B.png" srcset="/img/loading.gif" lazyload alt="节点使用证书生成过程"></p>
+<p>① ： 此位置需要输入elastic-stack-ca.p12 CA授权证书的密码，即第一步设置的密码。<br>② ： 此位置为需要输出证书位置，可不输。<br>③ ： 此位置为证书的密码。使用空密码可以直接回车结束。</p>
+<h5 id="修改每个节点的配置"><a href="#修改每个节点的配置" class="headerlink" title="修改每个节点的配置"></a>修改每个节点的配置</h5><p>将上步生成的<code>elastic-certificates.p12</code>文件(只需要此文件)复制到每个节点上的Elasticsearch配置目录中的一个目录中。比如我是放到了每个节点的config&#x2F;certs目录下。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml">mkdir certs<br>mv elastic-certificates.p12 certs<br></code></pre></td></tr></table></figure>
+
+<p>修改<code>elastic-certificates.p12</code>文件的权限。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml">sudo chmod 644 elastic-certificates.p12<br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/elasticsearch/%E4%BF%AE%E6%94%B9%E8%AF%81%E4%B9%A6%E6%9D%83%E9%99%90.png" srcset="/img/loading.gif" lazyload alt="修改证书权限"></p>
+<p>未修改权限，配置完成重启会报如下错误。</p>
+<p><img src="/images/elasticsearch/%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99.png" srcset="/img/loading.gif" lazyload alt="相对路径启动报错"></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 验证模式</span><br><span class="hljs-attr">xpack.security.transport.ssl.verification_mode:</span> <span class="hljs-string">certificate</span><br><span class="hljs-attr">xpack.security.transport.ssl.keystore.path:</span> <span class="hljs-string">certs/elastic-certificates.p12</span>   <br><span class="hljs-attr">xpack.security.transport.ssl.truststore.path:</span> <span class="hljs-string">certs/elastic-certificates.p12</span><br><span class="hljs-comment"># 以前使用的是如下方式</span><br><span class="hljs-attr">xpack.security.transport.ssl.keystore.password:</span> <span class="hljs-number">123456</span><br><span class="hljs-attr">xpack.security.transport.ssl.truststore.password:</span> <span class="hljs-number">123456</span><br></code></pre></td></tr></table></figure>
+
+<p>关于设置ssl的keystore、truststore的密码，可以如上，在配置文件添加，也可如下命令设置，密码为上一步的第三步骤设置的密码，没有设置可以忽略该配置。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs xml">bin/elasticsearch-keystore add xpack.security.transport.ssl.keystore.secure_password   输入自定义的密码<br>bin/elasticsearch-keystore add xpack.security.transport.ssl.truststore.secure_password  输入自定义的密码<br></code></pre></td></tr></table></figure>
+
+<p>设置了密码，不配置会出现如下错误。</p>
+<p><img src="/images/elasticsearch/keystorePassword%E9%94%99%E8%AF%AF.png" srcset="/img/loading.gif" lazyload alt="keystorePassword错误"></p>
+<p>以上配置完成，重启所有容器，即可随意进入一台容器设置密码（和单机步骤一样）。</p>
+<h4 id="springboot整合es集群"><a href="#springboot整合es集群" class="headerlink" title="springboot整合es集群"></a>springboot整合es集群</h4><h5 id="nacos配置"><a href="#nacos配置" class="headerlink" title="nacos配置"></a>nacos配置</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">elasticsearch:</span><br>    <span class="hljs-attr">username:</span> <span class="hljs-string">elastic</span><br>    <span class="hljs-attr">password:</span> <span class="hljs-number">123456</span><br>    <span class="hljs-attr">host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.124</span><span class="hljs-number">.145</span><span class="hljs-string">,192.168.124.145,192.168.124.145</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">9201</span><span class="hljs-string">,9202,9203</span><br></code></pre></td></tr></table></figure>
+
+<p>host按照如上方式配置，原因：条件有限，所有容器都在一台虚拟机，为了使用单机的时候不需要修改配置类，只需要nacos配置删掉相应的节点和端口，具体如何配置还是要看配置类如何实现。</p>
+<h5 id="elasticsearch配置类"><a href="#elasticsearch配置类" class="headerlink" title="elasticsearch配置类"></a>elasticsearch配置类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.ulilink.business.config;<br><br><span class="hljs-keyword">import</span> org.apache.http.HttpHost;<br><span class="hljs-keyword">import</span> org.apache.http.auth.AuthScope;<br><span class="hljs-keyword">import</span> org.apache.http.auth.UsernamePasswordCredentials;<br><span class="hljs-keyword">import</span> org.apache.http.client.CredentialsProvider;<br><span class="hljs-keyword">import</span> org.apache.http.impl.client.BasicCredentialsProvider;<br><span class="hljs-keyword">import</span> org.elasticsearch.client.RestClient;<br><span class="hljs-keyword">import</span> org.elasticsearch.client.RestClientBuilder;<br><span class="hljs-keyword">import</span> org.elasticsearch.client.RestHighLevelClient;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> jievhaha</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2022/6/8</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ElasticSearchConfig</span> &#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;spring.elasticsearch.host&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String host;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;spring.elasticsearch.port&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String port;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;spring.elasticsearch.username&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String username;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;spring.elasticsearch.password&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> String password;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> RestHighLevelClient <span class="hljs-title function_">restHighLevelClient</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-type">CredentialsProvider</span> <span class="hljs-variable">credentialsProvider</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BasicCredentialsProvider</span>();<br>        credentialsProvider.setCredentials(AuthScope.ANY, <span class="hljs-keyword">new</span> <span class="hljs-title class_">UsernamePasswordCredentials</span>(username, password));<br>        String[] hosts = <span class="hljs-built_in">this</span>.host.split(<span class="hljs-string">&quot;,&quot;</span>);<br>        String[] ports = <span class="hljs-built_in">this</span>.port.split(<span class="hljs-string">&quot;,&quot;</span>);<br>        HttpHost[] httpHosts = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpHost</span>[hosts.length];<br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;hosts.length;i++) &#123;<br>            httpHosts[i] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpHost</span>(hosts[i], Integer.parseInt(ports[i]), HttpHost.DEFAULT_SCHEME_NAME);<br>        &#125;<br>        <span class="hljs-type">RestClientBuilder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> RestClient.builder(httpHosts);<br>        builder.setHttpClientConfigCallback(f -&gt; f.setDefaultCredentialsProvider(credentialsProvider));<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestHighLevelClient</span>(builder);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/elasticsearch/" class="category-chain-item">elasticsearch</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/">#java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>es集群搭建</div>
+      <div>http://www.muzili.ren/2022/07/17/es集群搭建/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" title="操作系统概述">
+                        <span class="hidden-mobile">操作系统概述</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

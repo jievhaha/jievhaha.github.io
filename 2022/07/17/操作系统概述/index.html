@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jievhaha">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="操作系统基本理论知识。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统概述">
+<meta property="og:url" content="http://www.muzili.ren/2022/07/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="沐子">
+<meta property="og:description" content="操作系统基本理论知识。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%871.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%872.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%873.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%874.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%875.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%876.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%877.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%878.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%879.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8710.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8711.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8712.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8713.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8714.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8715.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8716.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8717.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8718.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8719.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8720.png">
+<meta property="og:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%8721.png">
+<meta property="article:published_time" content="2022-07-17T03:12:01.729Z">
+<meta property="article:modified_time" content="2022-07-17T03:10:21.526Z">
+<meta property="article:author" content="jievhaha">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://www.muzili.ren/images/os/%E5%9B%BE%E7%89%871.png">
+  
+  
+  
+  <title>操作系统概述 - 沐子</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.muzili.ren","root":"/","version":"1.9.1","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>muzili</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="操作系统概述"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-17 11:12" pubdate>
+          2022年7月17日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">操作系统概述</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2022年7月17日 上午
+                  
+                
+              </p>
+            
+            <div class="markdown-body">
+              
+              <div align="center"><font color="#000" size="5rem">操作系统概述</font></div>
+
+<h4 id="1-什么是操作系统"><a href="#1-什么是操作系统" class="headerlink" title="1 什么是操作系统"></a><strong>1</strong> <strong>什么是操作系统</strong></h4><p>操作系统，Operating System，简称OS，是覆盖在计算机硬件系统之上的一套软件系统，是第一层软件。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%871.png" srcset="/img/loading.gif" lazyload alt="图片1"></p>
+<p>【百度百科】操作系统是管理计算机硬件与软件资源的计算机程序。操作系统需要处理如管理与配置内存、决定系统资源供需的优先次序、控制输入设备与输出设备、操作网络与管理文件系统等基本事务。操作系统也提供一个让用户与系统交互操作的界面。</p>
+<h4 id="2-OS的作用"><a href="#2-OS的作用" class="headerlink" title="2 OS的作用"></a><strong>2 OS的作用</strong></h4><p>前面对于OS的认识并不全面，可以从操作系统的功能作用角度来理解什么是操作系统。从以下三个角度来说明OS的作用。</p>
+<h5 id="OS是用户与计算机硬件之间的接口"><a href="#OS是用户与计算机硬件之间的接口" class="headerlink" title="OS是用户与计算机硬件之间的接口"></a>OS是用户与计算机硬件之间的接口</h5><p>OS处于用户与硬件系统之间，用户通过OS来使用计算机硬件系统。或者说，用户在OS帮助下可以方便、快捷、可靠地操作计算机硬件和运行自己的程序。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%872.png" srcset="/img/loading.gif" lazyload alt="图片2"></p>
+<h5 id="OS是计算机系统资源的管理者"><a href="#OS是计算机系统资源的管理者" class="headerlink" title="OS是计算机系统资源的管理者"></a>OS是计算机系统资源的管理者</h5><p>一个计算机系统包含的软硬件资源可分为四类：处理器、存储器、IO设备，及文件（数据和程序）。<br>OS就是对这四类资源进行有效管理的。</p>
+<blockquote>
+<p>对不同资源的管理方式与目标是不同的： </p>
+<ul>
+<li><p><em>CPU</em>：分配、控制 </p>
+</li>
+<li><p>存储器：分配、管理、回收 </p>
+</li>
+<li><p><em>IO</em>设备：分配、操纵、回收 </p>
+</li>
+<li><p>文件：存取、共享、保护</p>
+</li>
+</ul>
+</blockquote>
+<p><img src="/images/os/%E5%9B%BE%E7%89%873.png" srcset="/img/loading.gif" lazyload alt="图片3"></p>
+<h5 id="OS实现了对计算机资源的抽象"><a href="#OS实现了对计算机资源的抽象" class="headerlink" title="OS实现了对计算机资源的抽象"></a>OS实现了对计算机资源的抽象</h5><p>为了方便用户对系统资源的使用，OS将计算机资源抽象为一组数据结构及操作命令（对象），然后再设计出对这些抽象资源的管理软件，然后再将这些管理软件逐层覆盖在计算机硬件之上，于是便形成了一层层的虚机器。这些虚机器是逐层系统软件覆盖在裸机上而成的逻辑计算机。</p>
+<blockquote>
+<p>用户对计算机的使用大多集中中<em>IO</em>操作上。 </p>
+<ul>
+<li>第<em>1</em>层抽象：对<em>IO</em>设备的管理。 </li>
+<li>第<em>2</em>层抽象：对文件的管理。 </li>
+<li>第<em>3</em>层抽象：对图形操作的管理。 </li>
+<li><em>……</em></li>
+<li>第<em>n</em>层抽象：</li>
+</ul>
+</blockquote>
+<p><img src="/images/os/%E5%9B%BE%E7%89%874.png" srcset="/img/loading.gif" lazyload alt="图片4"></p>
+<h4 id="3-操作系统的发展历程"><a href="#3-操作系统的发展历程" class="headerlink" title="3 操作系统的发展历程"></a><strong>3</strong> <strong>操作系统的发展历程</strong></h4><p>若要想真正理解操作系统，就要深入了解操作系统的发展历程，理解促使操作系统发展的动力。</p>
+<blockquote>
+<p>大家要关注两点：作业调度算法与用户体验。 </p>
+</blockquote>
+<h5 id="裸机"><a href="#裸机" class="headerlink" title="裸机"></a>裸机</h5><p>从1946年第一台计算机诞生，到20世纪50年代中期。其为电子管计算机（第一代计算机），计算机资源非常昂贵且操作异常复杂，所以全部是在计算中心进行的集中计算。<br>下图为上世纪60年代老上海海燕牌电子管老收音机内部。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%875.png" srcset="/img/loading.gif" lazyload alt="图片5"></p>
+<p>下图为上世纪50年代的电子管计算机。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%876.png" srcset="/img/loading.gif" lazyload alt="图片6"></p>
+<p>下图为冯诺依曼与冯诺依曼电子管计算机。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%877.png" srcset="/img/loading.gif" lazyload alt="图片7"></p>
+<p>裸机的发展过程也经历了两个阶段。</p>
+<p><strong>纯人工操作阶段</strong></p>
+<p>最初使用的是纯人工操作。其缺点很明显：用户独占全机，CPU等待人工操作。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%878.png" srcset="/img/loading.gif" lazyload alt="图片8"></p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%879.png" srcset="/img/loading.gif" lazyload alt="图片9"></p>
+<p><strong>脱机IO阶段</strong></p>
+<p>为了解决人机矛盾及CPU与IO设备速度不匹配矛盾，在20世纪50年代末出现了脱机IO技术。脱机IO技术：将IO设备从主机中分离，主机只对磁带进行读写操作。主机不再直接与慢速的IO设备打交道，而是与速度相对较快的磁带机发生关系。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8710.png" srcset="/img/loading.gif" lazyload alt="图片10"></p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8711.png" srcset="/img/loading.gif" lazyload alt="图片11"></p>
+<h5 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h5><p>单道批处理系统出现在20世纪50年代末到60年代中期，其为晶体管计算机（第二代计算机）。<br>下图就是各式各样的晶体管：</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8712.png" srcset="/img/loading.gif" lazyload alt="图片12"></p>
+<p>下图是1953年11月诞生于曼彻斯特大学的世界上第一台晶体管计算机Manchester TC。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8713.png" srcset="/img/loading.gif" lazyload alt="图片13"></p>
+<p>下图为1965年由中科院计算所研制，1966年由国营第830厂（军工）生产的中国第一台晶体管电子计算机。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8714.png" srcset="/img/loading.gif" lazyload alt="图片14"></p>
+<p>单道批处理系统需要用户事先将一批作业以脱机方式输入到磁带上。该系统中配置了监督程序Monitor。在Monitor控制下，使这批作业逐个连续被处理，充分利用了主机资源。</p>
+<ul>
+<li>单道：内存中始终只有一道作业</li>
+<li>批处理：磁带上有多道作业，安装一次磁带，可以处理一批作业</li>
+</ul>
+<p>其具体处理过程：</p>
+<ul>
+<li>Monitor将磁带上的第一个作业装入内存，并将运行控制权交给该作业</li>
+<li>当该作业处理完毕后，再将运行控制权还给Monitor </li>
+<li>Monitor会再将磁带上的第二个作业装入内存，并将运行控制权交给该作业</li>
+<li>以此类推，走到当前磁带中的所有作业运行完毕。整个过程中是无法与人进行交互的</li>
+</ul>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8715.png" srcset="/img/loading.gif" lazyload alt="图片15"></p>
+<p>单道批处理系统存在的问题是：IO执行过程中，主机是闲置状态，主机利用率低。因为内存中只有一道作业。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8716.png" srcset="/img/loading.gif" lazyload alt="图片16"></p>
+<h5 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h5><p><strong>原理</strong></p>
+<p>1964年IBM生产了第一台小规模集成电路计算机IBM System&#x2F;360（第三代计算机），并为该计算机开发了OS&#x2F;360操作系统，其为第一个多道批处理系统。<br>下图为IBM360计算机。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8717.png" srcset="/img/loading.gif" lazyload alt="图片17"></p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8718.png" srcset="/img/loading.gif" lazyload alt="图片18"></p>
+<p>多道批处理系统同样要求事先将多道作业存放到外存上并排成一个队列，称为后备队列。然后由作业调度程序Monitor按照一定的算法，从后备队列中选择出若干作业调入内存，使它们共享CPU与系统中的其它资源。为充分利用作业调用IO期间的间隙，在Monitor的控制下完成这些作业间CPU使用权的切换。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8719.png" srcset="/img/loading.gif" lazyload alt="图片19"></p>
+<p>多道批处理系统的优点：处理机利用率高、系统吞吐量大。但缺点是：作业平均周转时间长、无交互能力</p>
+<p><strong>需要解决的问题</strong></p>
+<p>多道批处理系统已经可以大量且较高效地运行作业了，其已经具备真正操作系统的雏形了。其要形成真正的操作系统，还需要解决以下问题：</p>
+<ul>
+<li>处理机竞争问题</li>
+<li>内存分配和保护问题</li>
+<li>IO设备分配问题</li>
+<li>文件的组织与管理问题</li>
+<li>作业管理问题</li>
+<li>用户与系统接口问题</li>
+</ul>
+<p><strong>操作系统定义</strong></p>
+<p>为了实现前述功能，应在多道批处理系统之上增加一组软件，这组软件应包括：能有效组织和管理四大资源（处理器、存储器、IO设备、文件）的软件，能合理对各类作业进行调度和控制的软件，能方便用户使用计算机的软件。而这样一组软件便构成了操作系统。所以，操作系统也可以定义为：操作系统是一组能有效地组织和管理计算机软硬件资源，合理对各类作业进行调度，及方便用户使用的程序的集合。</p>
+<p><strong>扩展</strong></p>
+<p>在上世纪60年代，程序已经很复杂了。阿波罗11号航天飞机在1969年7月20日实现了人类第一次登月任务。而该航天飞机的计算机系统是由Margaret Hamilton（玛格丽特·汉密尔顿）设计实现，同时也是由她提出了“软件”的这个概念的。下图是她站在阿波罗11号航天飞机计算机系统的代码旁的照片：</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8720.png" srcset="/img/loading.gif" lazyload alt="图片20"></p>
+<p>下图为她在航天器模拟器中调试代码。</p>
+<p><img src="/images/os/%E5%9B%BE%E7%89%8721.png" srcset="/img/loading.gif" lazyload alt="图片21"></p>
+
+              
+            </div>
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="category-chain-item">操作系统</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A6%82%E8%BF%B0/" class="category-chain-item">概述</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">#操作系统</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>操作系统概述</div>
+      <div>http://www.muzili.ren/2022/07/17/操作系统概述/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jievhaha</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/17/es%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" title="es集群搭建">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">es集群搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/11/%E7%AE%A1%E7%90%86%E7%94%A8%E6%88%B7/" title="管理用户">
+                        <span class="hidden-mobile">管理用户</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <i class="iconfont icon-bilibili"></i> <a href="https://space.bilibili.com/13743933" target="_blank" rel="nofollow noopener" style="color:#939393;"><span>宅男空间</span></a> <br> <div> <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">晋ICP备2022002628号-1</a> </div> <div> <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=61011302001418" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/images/备案图标.png" srcset="/img/loading.gif" lazyload style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">陕公网安备 61011302001418号</p></a> </div>
+
+
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script>
+  (function() {
+    var enableLang = CONFIG.code_language.enable && CONFIG.code_language.default;
+    var enableCopy = CONFIG.copy_btn;
+    if (!enableLang && !enableCopy) {
+      return;
+    }
+
+    function getBgClass(ele) {
+      return Fluid.utils.getBackgroundLightness(ele) >= 0 ? 'code-widget-light' : 'code-widget-dark';
+    }
+
+    var copyTmpl = '';
+    copyTmpl += '<div class="code-widget">';
+    copyTmpl += 'LANG';
+    copyTmpl += '</div>';
+    jQuery('.markdown-body pre').each(function() {
+      var $pre = jQuery(this);
+      if ($pre.find('code.mermaid').length > 0) {
+        return;
+      }
+      if ($pre.find('span.line').length > 0) {
+        return;
+      }
+
+      var lang = '';
+
+      if (enableLang) {
+        lang = CONFIG.code_language.default;
+        if ($pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2 && $pre.children().hasClass('hljs')) {
+          lang = $pre[0].children[0].classList[1];
+        } else if ($pre[0].getAttribute('data-language')) {
+          lang = $pre[0].getAttribute('data-language');
+        } else if ($pre.parent().hasClass('sourceCode') && $pre[0].children.length > 0 && $pre[0].children[0].classList.length >= 2) {
+          lang = $pre[0].children[0].classList[1];
+          $pre.parent().addClass('code-wrapper');
+        } else if ($pre.parent().hasClass('markdown-body') && $pre[0].classList.length === 0) {
+          $pre.wrap('<div class="code-wrapper"></div>');
+        }
+        lang = lang.toUpperCase().replace('NONE', CONFIG.code_language.default);
+      }
+      $pre.append(copyTmpl.replace('LANG', lang).replace('code-widget">',
+        getBgClass($pre[0]) + (enableCopy ? ' code-widget copy-btn" data-clipboard-snippet><i class="iconfont icon-copy"></i>' : ' code-widget">')));
+
+      if (enableCopy) {
+        Fluid.utils.createScript('https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js', function() {
+          var clipboard = new window.ClipboardJS('.copy-btn', {
+            target: function(trigger) {
+              var nodes = trigger.parentNode.childNodes;
+              for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].tagName === 'CODE') {
+                  return nodes[i];
+                }
+              }
+            }
+          });
+          clipboard.on('success', function(e) {
+            e.clearSelection();
+            e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-copy', 'icon-success');
+            setTimeout(function() {
+              e.trigger.innerHTML = e.trigger.innerHTML.replace('icon-success', 'icon-copy');
+            }, 2000);
+          });
+        });
+      }
+    });
+  })();
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
